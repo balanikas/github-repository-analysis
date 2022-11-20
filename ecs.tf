@@ -19,7 +19,7 @@ resource "aws_ecs_task_definition" "gra-ecs-task-definition" {
     "memory": 1024,
     "cpu": 512,
     "essential": true,
-    "entryPoint": ["dotnet", "BlazorApp.dll"],
+    "entryPoint": ["dotnet", "Frontend.dll"],
     "portMappings": [
       {
         "containerPort": 80,

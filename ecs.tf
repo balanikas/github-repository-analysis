@@ -51,7 +51,6 @@ resource "aws_ecs_service" "gra-ecs-service" {
   desired_count = 1
 }
 
-
 resource "aws_cloudwatch_log_group" "gra-log-group" {
   name = var.ecs_log_group
 }

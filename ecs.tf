@@ -54,3 +54,5 @@ resource "aws_ecs_service" "gra-ecs-service" {
 resource "aws_cloudwatch_log_group" "gra-log-group" {
   name = var.ecs_log_group
 }
+
+

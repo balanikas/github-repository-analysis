@@ -2,6 +2,13 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Frontend", "src\Frontend\Frontend.csproj", "{CCCFB445-6D12-4589-817B-292EDF4A10C5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepositoryAnalysis", "src\RepositoryAnalysis\RepositoryAnalysis.csproj", "{44F51C41-3FC0-493C-822B-B51AB02D9A27}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionFolder", "SolutionFolder", "{F522BCBA-809C-44FD-88FA-D0617758759A}"
+	ProjectSection(SolutionItems) = preProject
+		src\Dockerfile = src\Dockerfile
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +19,9 @@ Global
 		{CCCFB445-6D12-4589-817B-292EDF4A10C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CCCFB445-6D12-4589-817B-292EDF4A10C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CCCFB445-6D12-4589-817B-292EDF4A10C5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{44F51C41-3FC0-493C-822B-B51AB02D9A27}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{44F51C41-3FC0-493C-822B-B51AB02D9A27}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{44F51C41-3FC0-493C-822B-B51AB02D9A27}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{44F51C41-3FC0-493C-822B-B51AB02D9A27}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

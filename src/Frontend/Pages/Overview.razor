@@ -1,0 +1,27 @@
+@using RepositoryAnalysis.Model
+<MudPaper Class="d-flex flex-row-reverse flex-grow-1 gap-16 mt-4" Elevation="0">
+    <MudImage ObjectFit="ObjectFit.Fill" Width="600" Height="300" Src="@Data.ImageUrl" Alt="@Data.Url" Elevation="25" Class="rounded-lg"/>
+    <MudCard Width="600px" Height="300px">
+        <MudCardContent >
+            <MudText >@Data.Description</MudText>
+            <br/>
+            <MudText Typo="Typo.body2">License: @(Data.License ?? "no license")</MudText>
+            <MudText Typo="Typo.body2">Primary language: @Data.PrimaryLanguage</MudText>
+            <MudText Typo="Typo.body2">Last updated: @Data.LastUpdated</MudText>
+            @if (Data.HomePageUrl is not null)
+            {
+                <MudLink Typo="Typo.body2" Target="_blank" Href="@Data.HomePageUrl">@Data.HomePageUrl</MudLink>
+            }
+            <MudText Typo="Typo.body2">Disk usage: @(Data.DiskUsage) Kb</MudText>
+
+        </MudCardContent>
+    </MudCard>
+</MudPaper>
+
+@code {
+
+    [Parameter]
+    public OverView Data { get; set; } = new();
+
+
+}

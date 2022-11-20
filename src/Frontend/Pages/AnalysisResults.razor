@@ -1,0 +1,95 @@
+@using RepositoryAnalysis.Model
+<MudTable Items="@Items" Hover="true" Breakpoint="Breakpoint.Sm" Elevation="5">
+    <ColGroup>
+        <col style="width:200px;"/>
+        <col style="width:200px;"/>
+        <col style="width:400px;"/>
+        <col style="width:300px;"/>
+        <col/>
+        <col style="width:100px;"/>
+
+    </ColGroup>
+    <HeaderContent>
+        <MudTh></MudTh>
+        <MudTh>Name</MudTh>
+        <MudTh>Note</MudTh>
+        <MudTh>Location</MudTh>
+        <MudTh></MudTh>
+
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd>
+            <MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => ShowBtnPress(context.Id))">@(context.ShowDetails ? "Hide" : "Show") Details</MudButton>
+        </MudTd>
+        <MudTd DataLabel="Name">@context.Name</MudTd>
+        <MudTd DataLabel="Note">@context.Note</MudTd>
+        <MudTd DataLabel="Location">
+            @if (!string.IsNullOrEmpty(context.ResourceName))
+            {
+                <MudLink Target="_blank" Href="@context.ResourceUrl">@context.ResourceName</MudLink>
+            }
+
+
+        </MudTd>
+        <MudTd DataLabel="Diagnosis">
+            @switch (context.Diagnosis)
+            {
+                case Diagnosis.Warning:
+                    <MudChip Size="Size.Small" Label="true" Color="Color.Info">Can be improved</MudChip>
+                    break;
+                case Diagnosis.Error:
+                    <MudChip Size="Size.Small" Label="true" Color="Color.Warning">Warning</MudChip>
+
+                    break;
+                default:
+                    <MudChip Size="Size.Small" Label="true">Okay</MudChip>
+                    break;
+            }
+
+        </MudTd>
+
+
+    </RowTemplate>
+    <ChildRowContent>
+        @if (context.ShowDetails)
+        {
+            <MudTr>
+                <td colspan="4">
+                    <MudCard Elevation="0">
+                        <MudCardHeader>
+                            <CardHeaderContent>
+                                <MudText Typo="Typo.body1">@((MarkupString)context.Explanation.Text)</MudText>
+                                <br/>
+                                @if (context.Explanation.AboutUrl is not null)
+                                {
+                                    <MudText Typo="Typo.body1">For more information, see</MudText>
+                                    <MudLink Target="_blank" Href="@context.Explanation.AboutUrl">@context.Explanation.AboutHeader</MudLink>
+                                }
+                                @if (context.Explanation.GuidanceUrl is not null)
+                                {
+                                    <MudText Typo="Typo.body1">For guidance, see</MudText>
+                                    <MudLink Target="_blank" Href="@context.Explanation.GuidanceUrl">@context.Explanation.GuidanceHeader</MudLink>
+                                }
+
+                            </CardHeaderContent>
+                        </MudCardHeader>
+                    </MudCard>
+                </td>
+            </MudTr>
+        }
+    </ChildRowContent>
+</MudTable>
+
+@code {
+
+    [Parameter]
+    public IReadOnlyList<Rule> Items { get; set; } = new List<Rule>();
+
+    private void ShowBtnPress(
+        Guid nr)
+    {
+        var s = Items.First(f => f.Id == nr);
+        s.ShowDetails = !s.ShowDetails;
+    }
+
+}

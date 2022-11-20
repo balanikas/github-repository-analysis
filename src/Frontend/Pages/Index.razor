@@ -1,7 +1,152 @@
 ﻿@page "/"
+@using RepositoryAnalysis
+@using RepositoryAnalysis.Model
+@inject IDialogService DialogService
+@inject AnalysisService AnalysisService
+<PageTitle>Github Repository Analysis</PageTitle>
 
-<PageTitle>Index</PageTitle>
+<MudPaper Height="250px" Width="100%" Class="mb-4 pb-4" Elevation="5">
+    <MudContainer MaxWidth="MaxWidth.Medium">
 
-<MudText Typo="Typo.h3" GutterBottom="true">Hello, world!</MudText>
-<MudText Class="mb-8">Welcome to your new app, powered by MudBlazor!</MudText>
-<MudAlert Severity="Severity.Normal">You can find documentation and examples on our website here: <MudLink Href="https://mudblazor.com" Typo="Typo.body2" Color="Color.Inherit"><b>www.mudblazor.com</b></MudLink></MudAlert>
+        <MudItem Class="mt-2 pt-2">
+            <MudTextField Disabled="@LockUI" InputType="InputType.Url"
+                          Adornment="Adornment.End" AdornmentIcon="@Icons.Filled.Search"
+                          AdornmentColor="Color.Primary"
+                          OnAdornmentClick="OnSubmit"
+                          InputMode="InputMode.url"
+                          HelperText="Enter a github repository url and scan for any issues"
+                          @bind-Value="RepositoryUrl" Label="https://github.com/owner/repo" Variant="Variant.Outlined">
+            </MudTextField>
+
+        </MudItem>
+
+        <MudProgressLinear Class=@(LockUI ? "" : "invisible") Color="Color.Primary" Size="Size.Large" Indeterminate="true"/>
+        <br/>
+
+        <MudText Align="Align.Center">Try these examples: </MudText>
+        <MudButton Color="Color.Info" Size="Size.Small" OnClick='() => OnExampleSubmit("https://github.com/dotnet/runtime")' Variant="Variant.Text">https://github.com/dotnet/runtime</MudButton>
+        <MudButton Color="Color.Info" Size="Size.Small" OnClick='() => OnExampleSubmit("https://github.com/balanikas/github-repository-analysis")' Variant="Variant.Text">https://github.com/balanikas/github-repository-analysis</MudButton>
+        <MudButton Color="Color.Info" Size="Size.Small" OnClick='() => OnExampleSubmit("https://github.com/balanikas/FluentAssertions.Http")' Variant="Variant.Text">https://github.com/balanikas/FluentAssertions.Http</MudButton>
+        <MudButton Color="Color.Info" Size="Size.Small" OnClick='() => OnExampleSubmit("https://github.com/Fody/NullGuard")' Variant="Variant.Text">https://github.com/Fody/NullGuard</MudButton>
+        <MudButton Color="Color.Info" Size="Size.Small" OnClick='() => OnExampleSubmit("https://github.com/dotnet/roslyn")' Variant="Variant.Text">https://github.com/dotnet/roslyn</MudButton>
+        <MudButton Color="Color.Info" Size="Size.Small" OnClick='() => OnExampleSubmit("https://github.com/shouldly/shouldly")' Variant="Variant.Text">https://github.com/shouldly/shouldly</MudButton>
+
+    </MudContainer>
+</MudPaper>
+
+
+<MudTabs Class="@(LockUI ? "invisible" : "visible")" Elevation="5" Rounded="true" Centered="true" Color="@Color.Default" Style="position: relative;">
+
+
+    <MudTabPanel Text="Overview">
+        <MudContainer >
+            <Overview Data="Analysis.OverView"></Overview>
+        </MudContainer>
+
+    </MudTabPanel>
+    <MudTabPanel Text="Documentation">
+        <AnalysisResults Items="Analysis.Documentation"></AnalysisResults>
+    </MudTabPanel>
+
+    <MudTabPanel Text="Quality">
+        <AnalysisResults Items="Analysis.Quality"></AnalysisResults>
+    </MudTabPanel>
+    <MudTabPanel Text="Community">
+        <AnalysisResults Items="Analysis.Community"></AnalysisResults>
+    </MudTabPanel>
+    <MudTabPanel Text="Security">
+        <AnalysisResults Items="Analysis.Security"></AnalysisResults>
+    </MudTabPanel>
+    <MudTabPanel Text="Language Specific">
+        <AnalysisResults Items="Analysis.LanguageSpecific"></AnalysisResults>
+    </MudTabPanel>
+
+
+</MudTabs>
+
+@code {
+
+    public string RepositoryUrl { get; set; } = "https://github.com/balanikas/FluentAssertions.Http";
+    public RepoAnalysis Analysis { get; set; } = RepoAnalysis.Empty;
+    public bool LockUI { get; set; }
+
+    private async Task ShowInvalidInputMessage()
+    {
+        await DialogService.ShowMessageBox(
+            "Not a valid repository url",
+            "Needs to be in this form: https://github.com/owner/repo");
+
+        StateHasChanged();
+    }
+
+    private async Task ShowNotFoundMessage()
+    {
+        await DialogService.ShowMessageBox(
+            "Repository not found",
+            "Please check that repository actually exist");
+
+        StateHasChanged();
+    }
+
+    private async Task ShowErrorMessage()
+    {
+        await DialogService.ShowMessageBox(
+            "Something went wrong",
+            "Please try again later, or try with another repository.");
+
+        StateHasChanged();
+    }
+
+    private async Task OnExampleSubmit(
+        string url)
+    {
+        RepositoryUrl = url;
+        await OnSubmit();
+    }
+
+    private async Task OnSubmit()
+    {
+        RepositoryUrl = RepositoryUrl.Trim();
+        RepositoryUrl = RepositoryUrl.TrimEnd('/');
+        if (!Uri.TryCreate(RepositoryUrl, UriKind.Absolute, out var uri))
+        {
+            await ShowInvalidInputMessage();
+            return;
+        }
+
+        if (!RepositoryUrl.StartsWith("https://github.com/"))
+        {
+            await ShowInvalidInputMessage();
+            return;
+        }
+
+        var paths = uri.AbsolutePath.Split("/");
+        if (paths.Length != 3)
+        {
+            await ShowInvalidInputMessage();
+            return;
+        }
+
+        LockUI = true;
+
+        var analysis = await AnalysisService.GetAnalysis(RepositoryUrl);
+        switch (analysis.Status)
+        {
+            case RepoAnalysis.AnalysisStatus.NotFound:
+                LockUI = false;
+                StateHasChanged();
+                await ShowNotFoundMessage();
+                return;
+            case RepoAnalysis.AnalysisStatus.Error:
+                LockUI = false;
+                StateHasChanged();
+                await ShowErrorMessage();
+                return;
+        }
+        Analysis = analysis;
+        LockUI = false;
+
+        await Task.CompletedTask;
+    }
+
+}

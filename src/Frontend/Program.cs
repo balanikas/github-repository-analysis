@@ -9,13 +9,20 @@ builder.Logging.SetMinimumLevel(LogLevel.Debug);
 
 StaticWebAssetsLoader.UseStaticWebAssets(builder.Environment, builder.Configuration);
 
+builder.Host.ConfigureAppConfiguration(((_, configurationBuilder) =>
+{
+    configurationBuilder.AddAmazonSecretsManager("us-west-2", "github-pat");
+}));
+
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
-builder.Services.AddSingleton<AnalysisService>();
-builder.Services.AddHttpClient<GitHubApi>();
 builder.Services.AddMudServices();
+
+builder.Services.AddAppServices();
+builder.Services.AddHttpClient<GitHubApi>();
 builder.Services.Configure<GitHubOptions>(
     builder.Configuration.GetSection(GitHubOptions.GitHub));
+builder.Services.Configure<GitHubOptions>(builder.Configuration);
 
 var app = builder.Build();
 

@@ -2,6 +2,7 @@ using System.Net;
 using GraphQL;
 using GraphQL.Client.Http;
 using GraphQL.Client.Serializer.SystemTextJson;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace RepositoryAnalysis;
@@ -14,8 +15,10 @@ public class GitHubApi
 
     public GitHubApi(
         IOptions<GitHubOptions> githubOptions,
-        HttpClient httpClient)
+        HttpClient httpClient,
+        ILogger<GitHubApi> logger)
     {
+        logger.LogInformation("pat is " + githubOptions.Value.Token);
         httpClient.DefaultRequestHeaders.Add("Authorization", "Bearer " + githubOptions.Value.Token);
         _graphQlClient = new GraphQLHttpClient(new GraphQLHttpClientOptions
             {

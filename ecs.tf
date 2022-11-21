@@ -1,6 +1,6 @@
 
 resource "aws_ecs_cluster" "gra-ecs-cluster" {
-  name = "ecs-cluster-for-gra"
+  name = "gra-cluster"
 }
 
 resource "aws_ecs_task_definition" "gra-ecs-task-definition" {
@@ -40,7 +40,7 @@ EOF
 }
 
 resource "aws_ecs_service" "gra-ecs-service" {
-  name            = "gra-app"
+  name            = "gra-service"
   cluster         = aws_ecs_cluster.gra-ecs-cluster.id
   task_definition = aws_ecs_task_definition.gra-ecs-task-definition.arn
   launch_type     = "FARGATE"

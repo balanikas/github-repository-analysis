@@ -40,7 +40,10 @@
 
     <MudTabPanel Text="Overview">
         <MudContainer >
-            <Overview Data="Analysis.OverView"></Overview>
+            @if (Analysis.OverView is not null)
+            {
+                <Overview Data="Analysis.OverView"></Overview>
+            }
         </MudContainer>
 
     </MudTabPanel>
@@ -55,9 +58,11 @@
         <AnalysisResults Items="Analysis.Community"></AnalysisResults>
     </MudTabPanel>
     <MudTabPanel Text="Security">
-        <AnalysisResults Items="Analysis.Security"></AnalysisResults>
+        <MudText Align="Align.Center" Typo="Typo.h4" >coming soon</MudText>
+        @* <AnalysisResults Items="Analysis.Security"></AnalysisResults> *@
     </MudTabPanel>
-    <MudTabPanel Text="Language Specific">
+    <MudTabPanel Text=@("Language Specific - " + Analysis.OverView?.PrimaryLanguage)>
+        
         <AnalysisResults Items="Analysis.LanguageSpecific"></AnalysisResults>
     </MudTabPanel>
 
@@ -146,6 +151,8 @@
         Analysis = analysis;
         LockUI = false;
 
+        await AnalysisService.LoadReposByTopic();
+        RepositoryUrl = AnalysisService.GetRandomRepoUrl();
         await Task.CompletedTask;
     }
 

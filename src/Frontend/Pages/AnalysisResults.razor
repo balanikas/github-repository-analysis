@@ -55,20 +55,33 @@
         {
             <MudTr>
                 <td colspan="4">
+
+
                     <MudCard Elevation="0">
                         <MudCardHeader>
                             <CardHeaderContent>
                                 <MudText Typo="Typo.body1">@((MarkupString)context.Explanation.Text)</MudText>
+                                
+                                @if (context.Explanation.Details is not null)
+                                {
+                                    <br/>
+                                    <MudText Style="background-color: lightgrey"  Color="Color.Surface" Typo="Typo.body2">@((MarkupString)context.Explanation.Details)</MudText>
+                                }
                                 <br/>
                                 @if (context.Explanation.AboutUrl is not null)
                                 {
-                                    <MudText Typo="Typo.body1">For more information, see</MudText>
-                                    <MudLink Target="_blank" Href="@context.Explanation.AboutUrl">@context.Explanation.AboutHeader</MudLink>
+                                    <MudPaper Class="d-flex align-content-start flex-wrap flex-grow-1 gap-2" Elevation="0">
+                                        <MudText Typo="Typo.body1">For more information, see</MudText>
+                                        <MudLink Target="_blank" Href="@context.Explanation.AboutUrl">@context.Explanation.AboutHeader</MudLink>
+                                    </MudPaper>
                                 }
+
                                 @if (context.Explanation.GuidanceUrl is not null)
                                 {
-                                    <MudText Typo="Typo.body1">For guidance, see</MudText>
-                                    <MudLink Target="_blank" Href="@context.Explanation.GuidanceUrl">@context.Explanation.GuidanceHeader</MudLink>
+                                    <MudPaper Class="d-flex align-content-start flex-wrap flex-grow-1 gap-2" Elevation="0">
+                                        <MudText Typo="Typo.body1">For guidance, see</MudText>
+                                        <MudLink Target="_blank" Href="@context.Explanation.GuidanceUrl">@context.Explanation.GuidanceHeader</MudLink>
+                                    </MudPaper>
                                 }
 
                             </CardHeaderContent>

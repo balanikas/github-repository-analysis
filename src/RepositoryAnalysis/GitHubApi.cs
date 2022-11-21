@@ -28,6 +28,33 @@ public class GitHubApi
             httpClient);
     }
 
+    public async Task<IReadOnlyList<string>> ListReposByTopic(
+        string topic)
+    {
+        var request = new GraphQLRequest
+        {
+            Query = @"
+{
+  topic(name: ""flask"") {
+    name
+    repositories(first: 30) {
+      edges {
+        node {
+          url
+        }
+      }
+    }
+  }
+}
+
+        "
+        };
+
+        var response = await _graphQlClient.SendQueryAsync<ListRepos.Data>(request);
+        if (response.AsGraphQLHttpResponse().StatusCode != HttpStatusCode.OK) throw new Exception();
+        return response.Data.topic.repositories.edges.Select(x => x.node.url).ToArray();
+    }
+
     public async Task<Repo> GetRepoData(
         string owner,
         string name)
@@ -206,6 +233,41 @@ public class GitHubApi
         ";
 
         return shallowTreeQuery;
+    }
+
+    public class ListRepos
+    {
+        // Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse);
+        public class Data
+        {
+            public Topic topic { get; set; }
+        }
+
+        public class Edge
+        {
+            public Node node { get; set; }
+        }
+
+        public class Node
+        {
+            public string url { get; set; }
+        }
+
+        public class Repositories
+        {
+            public List<Edge> edges { get; set; }
+        }
+
+        public class Root
+        {
+            public Data data { get; set; }
+        }
+
+        public class Topic
+        {
+            public string name { get; set; }
+            public Repositories repositories { get; set; }
+        }
     }
 
     //todo fix nullable across solution

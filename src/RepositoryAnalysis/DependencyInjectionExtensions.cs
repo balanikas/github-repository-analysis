@@ -5,11 +5,12 @@ namespace RepositoryAnalysis;
 
 public static class DependencyInjectionExtensions
 {
-    public static void AddAmazonSecretsManager(this IConfigurationBuilder configurationBuilder, 
+    public static void AddAmazonSecretsManager(
+        this IConfigurationBuilder configurationBuilder,
         string region,
         string secretName)
     {
-        var configurationSource = 
+        var configurationSource =
             new AmazonSecretsManagerConfigurationSource(region, secretName);
 
         configurationBuilder.Add(configurationSource);

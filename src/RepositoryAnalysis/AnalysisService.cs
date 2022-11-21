@@ -13,7 +13,7 @@ public class AnalysisService
 {
     private readonly GitHubApi _gitHubApi;
     private readonly ILogger<AnalysisService> _logger;
-
+    
     public AnalysisService(
         ILogger<AnalysisService> logger,
         GitHubApi gitHubApi)
@@ -21,6 +21,8 @@ public class AnalysisService
         _logger = logger;
         _gitHubApi = gitHubApi;
     }
+
+
 
     public async Task<RepoAnalysis> GetAnalysis(
         string url)
@@ -99,5 +101,34 @@ public class AnalysisService
         var repo = paths.Last();
 
         return (owner, repo);
+    }
+    
+    
+    
+    
+    private static IReadOnlyList<string>? _urls = null;
+
+    public async Task DebugAnalysis()
+    {
+        var urls = await _gitHubApi.ListReposByTopic("dotnet");
+        foreach (var url in urls)
+        {
+            var a = await GetAnalysis(url);
+            Console.WriteLine($"checking {url} ----------------------------------");
+            Console.WriteLine("COMMUNITY");
+            foreach (var rule in a.Community) Console.WriteLine(rule with { Explanation = null, Note = null });
+            Console.WriteLine();
+        }
+    }
+
+    public string GetRandomRepoUrl()
+    {
+        var index = new Random().Next(0, _urls.Count - 1);
+        return _urls[index];
+    }
+    
+    public async Task LoadReposByTopic()
+    {
+        _urls ??= await _gitHubApi.ListReposByTopic("dotnet");
     }
 }

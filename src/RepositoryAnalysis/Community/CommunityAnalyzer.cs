@@ -22,7 +22,6 @@ public class CommunityAnalyzer
             GetIssuesRule(),
             GetPullRequestsRule(),
             GetDiscussionsRule(),
-            GetProjectsRule(),
             GetSupportRule(),
             GetCitationRule()
         };
@@ -46,22 +45,7 @@ public class CommunityAnalyzer
             x => citationFileNames.Contains(x.Path, StringComparer.OrdinalIgnoreCase));
         var (diagnosis, note) = GetDiagnosis(entry);
 
-        return new Rule
-        {
-            Name = "Citation file",
-            Note = note,
-            Diagnosis = diagnosis,
-            Explanation = new Explanation
-            {
-                Text = @"
-You can add a CITATION file to your repository to help users correctly cite your software.",
-                AboutUrl =
-                    "https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-citation-files",
-                AboutHeader = "about citation files",
-                GuidanceUrl = "https://docs.github",
-                GuidanceHeader = "how to add a citation file"
-            }
-        };
+        return Rule.CitationFile(diagnosis, note);
 
         (Diagnosis, string) GetDiagnosis(
             GitHubApi.Entry? e)
@@ -75,28 +59,12 @@ You can add a CITATION file to your repository to help users correctly cite your
     private Rule GetSupportRule()
     {
         var entry = Shared.GetBlobRecursive(_context.RootEntries,
-            x => x.Path.Equals("support", StringComparison.OrdinalIgnoreCase) ||
-                 x.Path.Equals("docs/support", StringComparison.OrdinalIgnoreCase) ||
-                 x.Path.Equals(".github/support", StringComparison.OrdinalIgnoreCase));
+            x => x.PathEquals("support") ||
+                 x.PathEquals("docs/support") ||
+                 x.PathEquals(".github/support"));
         var (diagnosis, note) = GetDiagnosis(entry);
 
-        return new Rule
-        {
-            Name = "Support file",
-            Note = note,
-            Diagnosis = diagnosis,
-            Explanation = new Explanation
-            {
-                Text = @"
-You can create a SUPPORT file to let people know about ways to get help with your project.
-To direct people to specific support resources, you can add a SUPPORT file to your repository's root, docs, or .github folder. 
-When someone creates an issue in your repository, they will see a link to your project's SUPPORT file.",
-                AboutUrl = "https://docs.github.com/en/communities/setting-up-your-project-for-healthy-contributions/adding-support-resources-to-your-project",
-                AboutHeader = "about support files",
-                GuidanceUrl = "https://docs.github",
-                GuidanceHeader = "how to add a support file"
-            }
-        };
+        return Rule.SupportFile(diagnosis, note);
 
         (Diagnosis, string) GetDiagnosis(
             GitHubApi.Entry? e)
@@ -114,65 +82,17 @@ When someone creates an issue in your repository, they will see a link to your p
     private Rule GetPullRequestsRule()
     {
         var (diagnosis, note) = GetDiagnosis();
-
-        return new Rule
-        {
-            Name = "Pull requests",
-            Note = note,
-            Diagnosis = diagnosis,
-            Explanation = new Explanation
-            {
-                Text = @"
-Pull requests let you tell others about changes you've pushed to a branch in a repository on GitHub. 
-Once a pull request is opened, you can discuss and review the potential changes with collaborators and add follow-up commits before your changes are merged into the base branch.",
-                AboutUrl =
-                    "https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests",
-                AboutHeader = "about pull requests",
-                GuidanceUrl = "https://docs.github",
-                GuidanceHeader = "how to add a pull request template"
-            }
-        };
-
+        return Rule.PullRequests(diagnosis, note);
+        
         (Diagnosis, string) GetDiagnosis()
         {
             return _context.Repo.PullRequestTemplates.Any()
                 ? (Diagnosis.Info,
-                    $"found {_context.Repo.PullRequests.TotalCount} pull requests and {_context.Repo.PullRequests.TotalCount} pull request templates")
+                    $"found {_context.Repo.PullRequests.TotalCount} pull requests and {_context.Repo.PullRequestTemplates.Count} pull request templates")
                 : (Diagnosis.Warning, "missing pull request templates");
         }
     }
 
-    private Rule GetProjectsRule()
-    {
-        var (diagnosis, note) = GetDiagnosis();
-
-
-        return new Rule
-        {
-            Name = "Projects",
-            Note = note,
-            Diagnosis = diagnosis,
-            Explanation = new Explanation
-            {
-                Text = @"
-A project is an adaptable spreadsheet that integrates with your issues and pull requests on GitHub to help you plan and track your work effectively. 
-You can create and customize multiple views by filtering, sorting, grouping your issues and pull requests, adding custom fields to track metadata specific 
-to your team, and visualize work with configurable charts. Rather than enforcing a specific methodology, 
-a project provides flexible features you can customize to your team’s needs and processes.",
-                AboutUrl = "https://docs.github.com/en/issues/planning-and-tracking-with-projects/learning-about-projects/about-projects",
-                AboutHeader = "about projects",
-                GuidanceUrl = "https://docs.github",
-                GuidanceHeader = "how to work with projects"
-            }
-        };
-
-        (Diagnosis, string) GetDiagnosis()
-        {
-            return _context.Repo.HasProjectsEnabled
-                ? (Diagnosis.Info, "feature is enabled")
-                : (Diagnosis.Info, "feature is disabled");
-        }
-    }
 
     private Rule GetIssuesRule()
     {
@@ -185,22 +105,7 @@ a project provides flexible features you can customize to your team’s needs an
             templates = "Templates found: <br/>" + string.Join("<br/>", links);
         }
 
-        return new Rule
-        {
-            Name = "Issues",
-            Note = note,
-            Diagnosis = diagnosis,
-            Explanation = new Explanation
-            {
-                Text = @"
-Issues let you track your work on GitHub, where development happens.
-You may wish to turn issues off for your repository if you do not accept contributions or bug reports.",
-                AboutUrl = "https://docs.github.com/en/issues/tracking-your-work-with-issues/about-issues",
-                AboutHeader = "about issues",
-                GuidanceUrl = "https://docs.github",
-                GuidanceHeader = "how to work with issues"
-            }
-        };
+        return Rule.Issues(diagnosis, note, templates);
 
         (Diagnosis, string) GetDiagnosis()
         {
@@ -215,21 +120,7 @@ You may wish to turn issues off for your repository if you do not accept contrib
     private Rule GetDiscussionsRule()
     {
         var (diagnosis, note) = GetDiagnosis();
-        return new Rule
-        {
-            Name = "Discussions",
-            Note = note,
-            Diagnosis = diagnosis,
-            Explanation = new Explanation
-            {
-                Text = @"
-Use discussions to ask and answer questions, share information, make announcements, and conduct or participate in a conversation about a project on GitHub.
-With GitHub Discussions, the community for your project can create and participate in conversations within the project's repository or organization. 
-Discussions empower a project's maintainers, contributors, and visitors to gather and accomplish the following goals in a central location, without third-party tools.",
-                AboutUrl = "https://docs.github.com/en/discussions/collaborating-with-your-community-using-discussions/about-discussions",
-                AboutHeader = "about discussions"
-            }
-        };
+        return Rule.Discussions(diagnosis, note);
 
         (Diagnosis, string) GetDiagnosis()
         {
@@ -245,22 +136,7 @@ Discussions empower a project's maintainers, contributors, and visitors to gathe
             Path.GetFileName(x.Path).Equals("codeowners", StringComparison.OrdinalIgnoreCase));
 
         var (diagnosis, note) = GetDiagnosis(entry);
-        return new Rule
-        {
-            Name = "Code owners",
-            Note = note,
-            Diagnosis = diagnosis,
-            ResourceName = entry?.Path,
-            ResourceUrl = Shared.GetEntryUrl(_context, entry),
-            Explanation = new Explanation
-            {
-                Text = @"
-You can use a CODEOWNERS file to define individuals or teams that are responsible for code in a repository.",
-                AboutUrl =
-                    "https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners",
-                AboutHeader = "about code owners"
-            }
-        };
+        return Rule.CodeOwners(diagnosis, note) with { ResourceName = entry?.Path, ResourceUrl = Shared.GetEntryUrl(_context, entry) };
 
         (Diagnosis, string) GetDiagnosis(
             GitHubApi.Entry? e)
@@ -278,23 +154,7 @@ You can use a CODEOWNERS file to define individuals or teams that are responsibl
         var entry = _context.Repo.CodeOfConduct;
 
         var (diagnosis, note) = GetDiagnosis(entry);
-        return new Rule
-        {
-            Name = "Code of conduct",
-            Note = note,
-            Diagnosis = diagnosis,
-            ResourceName = entry?.Name,
-            ResourceUrl = entry?.Url,
-            Explanation = new Explanation
-            {
-                Text = @"
-Adopt a code of conduct to define community standards, signal a welcoming and inclusive project, and outline procedures for handling abuse.
-A code of conduct defines standards for how to engage in a community. It signals an inclusive environment that respects all contributions. 
-It also outlines procedures for addressing problems between members of your project's community. ",
-                AboutUrl = "https://docs.github.com/en/communities/setting-up-your-project-for-healthy-contributions/adding-a-code-of-conduct-to-your-project",
-                AboutHeader = "about code of conduct"
-            }
-        };
+        return Rule.CodeOfConduct(diagnosis, note) with { ResourceName = entry?.Name, ResourceUrl = entry?.Url };
 
         (Diagnosis, string) GetDiagnosis(
             GitHubApi.CodeOfConduct? e)
@@ -308,28 +168,17 @@ It also outlines procedures for addressing problems between members of your proj
     private Rule GetContributingRule()
     {
         var entry = Shared.GetBlob(_context.RootEntries,
-            x => x.Path.Equals("contributing", StringComparison.OrdinalIgnoreCase) ||
-                 x.Path.Equals("docs/contributing", StringComparison.OrdinalIgnoreCase) ||
-                 x.Path.Equals(".github/contributing", StringComparison.OrdinalIgnoreCase));
+            x => x.PathEquals(
+                "contributing.md",
+                "docs/contributing.md",
+                ".github/contributing.md",
+                "contributing.rst",
+                "docs/contributing.rst",
+                ".github/contributing.rst"
+                ) );
 
         var (diagnosis, note) = GetDiagnosis(entry);
-        return new Rule
-        {
-            Name = "Contributing",
-            Note = note,
-            Diagnosis = diagnosis,
-            ResourceName = entry?.Path,
-            ResourceUrl = Shared.GetEntryUrl(_context, entry),
-            Explanation = new Explanation
-            {
-                Text = @"
-To help your project contributors do good work, you can add a file with contribution guidelines to your project repository's root, docs, or .github folder. 
-When someone opens a pull request or creates an issue, they will see a link to that file. The link to the contributing guidelines also appears on your repository's contribute page.",
-                AboutUrl =
-                    "https://docs.github.com/en/communities/setting-up-your-project-for-healthy-contributions/setting-guidelines-for-repository-contributors",
-                AboutHeader = "about contributing guidelines"
-            }
-        };
+        return Rule.Contributing(diagnosis, note) with { ResourceName = entry?.Path, ResourceUrl = Shared.GetEntryUrl(_context, entry) };
 
         (Diagnosis, string) GetDiagnosis(
             GitHubApi.Entry? e)
@@ -343,4 +192,5 @@ When someone opens a pull request or creates an issue, they will see a link to t
                 : (Diagnosis.Warning, "missing contributing file");
         }
     }
+
 }

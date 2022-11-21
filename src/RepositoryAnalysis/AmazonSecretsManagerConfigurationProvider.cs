@@ -1,3 +1,4 @@
+using System.Text;
 using System.Text.Json;
 using Amazon;
 using Amazon.SecretsManager;
@@ -10,8 +11,10 @@ public class AmazonSecretsManagerConfigurationProvider : ConfigurationProvider
 {
     private readonly string _region;
     private readonly string _secretName;
-    
-    public AmazonSecretsManagerConfigurationProvider(string region, string secretName) 
+
+    public AmazonSecretsManagerConfigurationProvider(
+        string region,
+        string secretName)
     {
         _region = region;
         _secretName = secretName;
@@ -32,7 +35,7 @@ public class AmazonSecretsManagerConfigurationProvider : ConfigurationProvider
             VersionStage = "AWSCURRENT" // VersionStage defaults to AWSCURRENT if unspecified.
         };
 
-        using (var client = 
+        using (var client =
                new AmazonSecretsManagerClient(RegionEndpoint.GetBySystemName(_region)))
         {
             var response = client.GetSecretValueAsync(request).Result;
@@ -46,8 +49,8 @@ public class AmazonSecretsManagerConfigurationProvider : ConfigurationProvider
             {
                 var memoryStream = response.SecretBinary;
                 var reader = new StreamReader(memoryStream);
-                secretString = 
-                    System.Text.Encoding.UTF8
+                secretString =
+                    Encoding.UTF8
                         .GetString(Convert.FromBase64String(reader.ReadToEnd()));
             }
 

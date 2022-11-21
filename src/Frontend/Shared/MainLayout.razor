@@ -19,28 +19,31 @@
                 <MessageContent>
 
                     <MudText>
-                        I have an app where I need to make millions of requests as fast as possible each request using a different proxy and agent. Reading about HttpClient, its intended use is to create one instance for multiple requests, but I don’t see where/how a different proxy can be used for each request. Are there examples available on how to do this?
-                        <MudChip Size="Size.Small" Label="true" Color="Color.Info">Can be improved</MudChip>
-                        Or is there a better way to do this that’s thread safe?
+                        This service is primarily targeted to small or medium sized repos,
+                        that are owned by a single person or a small group of contributors.
+                        It can be very useful to those getting started with open source projects, but also
+                        for more experienced developers who want to do a health check of their own repos.
 
-                        Thank you.
-                        I have an app where I need to make millions of requests as fast as possible each request using a different proxy and agent. Reading about HttpClient, its intended use is to create one instance for multiple requests, but I don’t see where/how a different proxy can be used for each request. Are there examples available on how to do this?
+                        The analysis is presented as a set of detections, where each detection is either
+                        <MudPaper Class="d-flex align-content-start flex-wrap flex-grow-1 gap-2" Elevation="0">
+                            <MudChip Size="Size.Small" Color="Color.Default" Label="true">Okay</MudChip>
+                            <MudText Typo="Typo.body1">- looks good and no action needed</MudText>
+                        </MudPaper>
+                        <MudPaper Class="d-flex align-content-start flex-wrap flex-grow-1 gap-2" Elevation="0">
+                            <MudChip Size="Size.Small" Label="true" Color="Color.Info">Can be improved</MudChip>
+                            <MudText Typo="Typo.body1">- an action can be taken to improve the repo</MudText>
+                        </MudPaper>
+                        <MudPaper Class="d-flex align-content-start flex-wrap flex-grow-1 gap-2" Elevation="0">
+                            <MudChip Size="Size.Small" Label="true" Color="Color.Warning">Warning</MudChip>
+                            <MudText Typo="Typo.body1">- strongly recommended to address this</MudText>
+                        </MudPaper>
 
-                        Or is there a better way to do this that’s thread safe?
-
-                        Thank you.
-
-                        I have an app where I need to make millions of requests as fast as possible each request using a different proxy and agent. Reading about HttpClient, its intended use is to create one instance for multiple requests, but I don’t see where/how a different proxy can be used for each request. Are there examples available on how to do this?
-
-                        Or is there a better way to do this that’s thread safe?
-
-                        Thank you.
 
                     </MudText>
 
                 </MessageContent>
                 <YesButton>
-                    <MudButton Variant="Variant.Filled">Okay</MudButton>
+                    <MudButton Variant="Variant.Filled">Ok</MudButton>
                 </YesButton>
                 <NoButton></NoButton>
             </MudMessageBox>
@@ -54,7 +57,6 @@
     private async void OnButtonClicked()
     {
         await aboutBox.Show();
-
         StateHasChanged();
     }
 

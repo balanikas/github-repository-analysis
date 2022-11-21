@@ -87,8 +87,8 @@ public static class Shared
         if (entries is null)
             return;
 
-        var foundEntry = entries.SingleOrDefault(x => x.Type.Equals("blob", StringComparison.OrdinalIgnoreCase) &&
-                                                      predicate(x));
+        var foundEntry = entries.FirstOrDefault(x => x.Type.Equals("blob", StringComparison.OrdinalIgnoreCase) &&
+                                                     predicate(x));
         if (foundEntry is not null) action(foundEntry, entries);
 
         foreach (var e in entries.Where(x => x.Type.Equals("tree", StringComparison.OrdinalIgnoreCase))) AnalyzeRecursive(e.Object?.Entries, predicate, action);

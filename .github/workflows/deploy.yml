@@ -43,6 +43,6 @@ jobs:
       uses: aws-actions/amazon-ecs-deploy-task-definition@v1
       with:
         task-definition: task-definition.json
-        service: gra-app
+        service: gra-service
         cluster: gra-cluster
         wait-for-service-stability: true

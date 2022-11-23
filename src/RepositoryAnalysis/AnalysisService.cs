@@ -12,7 +12,6 @@ namespace RepositoryAnalysis;
 
 public class AnalysisService
 {
-    private static readonly Dictionary<string, IReadOnlyList<string>> _urls = new();
     private readonly GitHubGraphQlClient _gitHubGraphQlClient;
     private readonly GitHubRestClient _gitHubRestClient;
     private readonly ILogger<AnalysisService> _logger;
@@ -118,29 +117,13 @@ public class AnalysisService
         return (owner, repo);
     }
 
-    public async Task DebugAnalysis()
-    {
-        var urls = await _gitHubGraphQlClient.ListReposByTopic("dotnet");
-        foreach (var url in urls)
-        {
-            var a = await GetAnalysis(url);
-            Console.WriteLine($"checking {url} ----------------------------------");
-            Console.WriteLine("COMMUNITY");
-            foreach (var rule in a.Community) Console.WriteLine(rule with { Explanation = null, Note = null });
-            Console.WriteLine();
-        }
-    }
-
-    public string GetRandomRepoUrl(
+    public async Task DoBulkTest(
         string topic)
     {
-        var index = new Random().Next(0, _urls[topic].Count - 1);
-        return _urls[topic][index];
-    }
-
-    public async Task LoadReposByTopic(
-        string topic)
-    {
-        if (!_urls.ContainsKey(topic)) _urls[topic] = await _gitHubGraphQlClient.ListReposByTopic(topic);
+        var test = new BulkAnalysisTest();
+        await test.Run(
+            topic,
+            x => _gitHubGraphQlClient.ListReposByTopic(x), 
+            GetAnalysis);
     }
 }

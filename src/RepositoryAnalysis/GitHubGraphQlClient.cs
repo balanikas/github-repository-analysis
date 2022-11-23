@@ -10,15 +10,16 @@ namespace RepositoryAnalysis;
 //todo configure request throttling
 public class GitHubGraphQlClient
 {
-    private readonly ILogger<GitHubGraphQlClient> _logger;
     private const string BaseUrl = "https://api.github.com/graphql";
     private readonly GraphQLHttpClient _graphQlClient;
+    private readonly ILogger<GitHubGraphQlClient> _logger;
 
     public GitHubGraphQlClient(
         IOptions<GitHubOptions> githubOptions,
         HttpClient httpClient,
         ILogger<GitHubGraphQlClient> logger)
     {
+        Console.WriteLine(githubOptions.Value.Token);
         _logger = logger;
         httpClient.DefaultRequestHeaders.Add("Authorization", "Bearer " + githubOptions.Value.Token);
         _graphQlClient = new GraphQLHttpClient(new GraphQLHttpClientOptions
@@ -29,16 +30,16 @@ public class GitHubGraphQlClient
             httpClient);
     }
 
-    public async Task<IReadOnlyList<string>> ListReposByTopic(
+    public async Task<ListRepos.Topic> ListReposByTopic(
         string topic)
     {
-        var request = new GraphQLRequest
-        {
-            Query = $@"
+        var query = $@"
 {{
   topic(name: ""{topic}"") {{
-    name
-    repositories(first: 100) {{
+    relatedTopics(first: 10) {{
+      name
+    }}
+    repositories(first: 5) {{
       edges {{
         node {{
           url
@@ -48,25 +49,20 @@ public class GitHubGraphQlClient
   }}
 }}
 
-        "
-        };
-
-        var response = await _graphQlClient.SendQueryAsync<ListRepos.Data>(request);
-        if (response.AsGraphQLHttpResponse().StatusCode != HttpStatusCode.OK)
-        {
-            _logger.LogError("listing repos failed for {Topic}", topic);
-        }
-
-        return response.Data.topic.repositories.edges.Select(x => x.node.url).ToArray();
+"
+            ;
+        await Task.Delay(1000);
+        var response = await Post<ListRepos.Data>(query);
+        return response.topic;
     }
+    
+  
 
     public async Task<Repo> GetRepoData(
         string owner,
         string name)
     {
-        var request = new GraphQLRequest
-        {
-            Query = $@"
+        var query = $@"
 {{
   repository(name: ""{name}"", owner: ""{owner}"") {{
 
@@ -132,17 +128,10 @@ public class GitHubGraphQlClient
       totalCount
     }}
   }}
-}}
-        "
-        };
+}}";
 
-        var response = await _graphQlClient.SendQueryAsync<Data>(request);
-        if (response.AsGraphQLHttpResponse().StatusCode != HttpStatusCode.OK)
-        {
-            _logger.LogError("get repo data failed for {Owner}{Name}", owner, name);
-        }
-
-        return response.Data.Repository;
+        var response = await Post<Data>(query);
+        return response.Repository;
     }
 
     public async Task<Repo> GetRepoTree(
@@ -153,17 +142,39 @@ public class GitHubGraphQlClient
         int diskusage)
     {
         var query = GetTreeQuery(owner, name, branch, treePath, diskusage);
+        var response = await Post<Data>(query);
+        return response.Repository;
+    }
+
+    private async Task<T> Post<T>(
+        string query)
+    {
         var request = new GraphQLRequest
         {
             Query = query
         };
 
-        var response = await _graphQlClient.SendQueryAsync<Data>(request);
-        if (response.AsGraphQLHttpResponse().StatusCode != HttpStatusCode.OK) 
+        GraphQLResponse<T> response;
+        try
         {
-            _logger.LogError("get repo tree failed for {Owner}{Name}", owner, name);
+            response = await _graphQlClient.SendQueryAsync<T>(request);
         }
-        return response.Data.Repository;
+        catch (GraphQLHttpRequestException e)
+        {
+            if (e.StatusCode == HttpStatusCode.BadGateway) throw new Exception($"{e.StatusCode} for query \n {query}");
+
+            throw;
+        }
+
+        var httpResponse = response.AsGraphQLHttpResponse();
+        if (httpResponse.StatusCode != HttpStatusCode.OK)
+            _logger.LogError("request failed for query {Query} with status code {StatusCode}", query, httpResponse.StatusCode);
+
+        if (response.Data is null)
+        {
+            
+        }
+        return response.Data;
     }
 
 
@@ -182,24 +193,6 @@ public class GitHubGraphQlClient
                           path
                           size
                           type
-                          object {
-                            ... on Tree {
-                                entries {
-                                  path
-                                  size
-                                  type
-                                  object {
-                                        ... on Tree {
-                                            entries {
-                                              path
-                                              size
-                                              type
-                                              }
-                                            }
-                                          }
-                                  }
-                                }
-                              }
                           }
                         }
                       }
@@ -270,6 +263,11 @@ public class GitHubGraphQlClient
         {
             public List<Edge> edges { get; set; }
         }
+        
+        public class RelatedTopic
+        {
+            public string name { get; set; }
+        }
 
         public class Root
         {
@@ -280,6 +278,7 @@ public class GitHubGraphQlClient
         {
             public string name { get; set; }
             public Repositories repositories { get; set; }
+            public List<RelatedTopic> relatedTopics { get; set; }
         }
     }
 

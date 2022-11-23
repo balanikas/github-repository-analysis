@@ -1,6 +1,8 @@
 using System.Text;
 using System.Text.Json;
 using Amazon;
+using Amazon.Runtime;
+using Amazon.Runtime.CredentialManagement;
 using Amazon.SecretsManager;
 using Amazon.SecretsManager.Model;
 using Microsoft.Extensions.Configuration;
@@ -22,9 +24,16 @@ public class AmazonSecretsManagerConfigurationProvider : ConfigurationProvider
 
     public override void Load()
     {
-        var secret = GetSecret();
-
-        Data = JsonSerializer.Deserialize<Dictionary<string, string>>(secret);
+        var chain = new CredentialProfileStoreChain();
+        if (chain.ListProfiles().Any())
+        {
+            var secret = GetSecret();
+            Data = JsonSerializer.Deserialize<Dictionary<string, string>>(secret);
+        }
+        else
+        {
+            Console.WriteLine("no profiles, using env vars instead");
+        }
     }
 
     private string GetSecret()
@@ -34,6 +43,7 @@ public class AmazonSecretsManagerConfigurationProvider : ConfigurationProvider
             SecretId = _secretName,
             VersionStage = "AWSCURRENT" // VersionStage defaults to AWSCURRENT if unspecified.
         };
+
 
         using (var client =
                new AmazonSecretsManagerClient(RegionEndpoint.GetBySystemName(_region)))

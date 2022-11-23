@@ -85,7 +85,7 @@ public class DocumentationAnalyzer
 
     private Rule GetReadmeRule()
     {
-        var entry = Shared.GetSingleBlob(_context.RootEntries, x => x.PathEquals("readme", "readme.md", "readme.txt", "readme.rst"));
+        var entry = Shared.GetFirstBlob(_context.RootEntries, x => x.PathEquals("readme", "readme.md", "readme.txt", "readme.rst"));
         var (diagnosis, note) = GetDiagnosis(entry);
 
         return Rule.Readme(diagnosis, note) with { ResourceName = entry?.Path, ResourceUrl = Shared.GetEntryUrl(_context, entry) };

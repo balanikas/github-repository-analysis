@@ -14,6 +14,9 @@ builder.Host.ConfigureAppConfiguration(((_, configurationBuilder) =>
     configurationBuilder.AddAmazonSecretsManager("us-west-2", "github-pat");
 }));
 
+
+builder.Services.AddOptions<GitHubOptions>(GitHubOptions.GitHub);
+
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddMudServices();

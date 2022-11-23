@@ -10,6 +10,7 @@ public static class DependencyInjectionExtensions
         string region,
         string secretName)
     {
+        
         var configurationSource =
             new AmazonSecretsManagerConfigurationSource(region, secretName);
 

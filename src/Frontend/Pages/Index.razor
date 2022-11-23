@@ -159,15 +159,14 @@
         Analysis = analysis;
         LockUI = false;
 
-        
         await Task.CompletedTask;
     }
 
     private async Task OnSubmitDebug()
     {
-        await AnalysisService.LoadReposByTopic(Topic);
-        RepositoryUrl = AnalysisService.GetRandomRepoUrl(Topic);
-        await OnSubmit();
+        await AnalysisService.DoBulkTest(Topic);
+
+
     }
 
     public string Topic { get; set; } = "";

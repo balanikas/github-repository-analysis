@@ -40,13 +40,14 @@ public class DocumentationAnalyzer
 
     private Rule GetChangeLogRule()
     {
-        var entry = Shared.GetBlob(_context.RootEntries, 
-            x => x.PathEndsWith("changelog.md", "change_log.md", "releasenotes.md", "release_notes.txt", "changelog.txt", "change_log.txt", "releasenotes.txt", "release_notes.txt"));
+        var entry = Shared.GetSingleBlob(_context.RootEntries,
+            x => x.PathEndsWith("changelog.md", "change_log.md", "releasenotes.md", "release_notes.txt", "changelog.txt", "change_log.txt", "releasenotes.txt",
+                "release_notes.txt"));
         var (diagnosis, note) = GetDiagnosis(entry);
         return Rule.ChangeLog(diagnosis, note) with { ResourceName = entry?.Path, ResourceUrl = Shared.GetEntryUrl(_context, entry) };
 
         (Diagnosis, string) GetDiagnosis(
-            GitHubApi.Entry? e)
+            GitHubGraphQlClient.Entry? e)
         {
             return e is not null
                 ? (Diagnosis.Info, "found")
@@ -84,13 +85,13 @@ public class DocumentationAnalyzer
 
     private Rule GetReadmeRule()
     {
-        var entry = Shared.GetBlob(_context.RootEntries, x => x.PathEquals("readme", "readme.md", "readme.txt", "readme.rst"));
+        var entry = Shared.GetSingleBlob(_context.RootEntries, x => x.PathEquals("readme", "readme.md", "readme.txt", "readme.rst"));
         var (diagnosis, note) = GetDiagnosis(entry);
 
         return Rule.Readme(diagnosis, note) with { ResourceName = entry?.Path, ResourceUrl = Shared.GetEntryUrl(_context, entry) };
 
         (Diagnosis, string) GetDiagnosis(
-            GitHubApi.Entry? e)
+            GitHubGraphQlClient.Entry? e)
         {
             return e is not null
                 ? e.Size switch

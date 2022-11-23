@@ -1,6 +1,6 @@
 using RepositoryAnalysis.Model;
 
-namespace RepositoryAnalysis;
+namespace RepositoryAnalysis.Overview;
 
 public class OverViewAnalyzer
 {
@@ -21,7 +21,7 @@ public class OverViewAnalyzer
             License = _context.Repo.LicenseInfo?.Name,
             LicenseUrl = _context.Repo.LicenseInfo?.Url,
             ImageUrl = _context.Repo.OpenGraphImageUrl,
-            PrimaryLanguage = _context.Repo.PrimaryLanguage.Name,
+            PrimaryLanguage = _context.Repo.PrimaryLanguage?.Name,
             HomePageUrl = _context.Repo.HomepageUrl,
             DiskUsage = _context.Repo.DiskUsage,
             LastUpdated = Shared.TimeAgo(_context.Repo.UpdatedAt)

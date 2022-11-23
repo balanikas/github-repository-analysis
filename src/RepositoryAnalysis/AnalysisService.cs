@@ -4,6 +4,7 @@ using RepositoryAnalysis.Community;
 using RepositoryAnalysis.Documentation;
 using RepositoryAnalysis.LanguageSpecific;
 using RepositoryAnalysis.Model;
+using RepositoryAnalysis.Overview;
 using RepositoryAnalysis.Quality;
 using RepositoryAnalysis.Security;
 
@@ -11,18 +12,20 @@ namespace RepositoryAnalysis;
 
 public class AnalysisService
 {
-    private readonly GitHubApi _gitHubApi;
+    private static readonly Dictionary<string, IReadOnlyList<string>> _urls = new();
+    private readonly GitHubGraphQlClient _gitHubGraphQlClient;
+    private readonly GitHubRestClient _gitHubRestClient;
     private readonly ILogger<AnalysisService> _logger;
-    
+
     public AnalysisService(
         ILogger<AnalysisService> logger,
-        GitHubApi gitHubApi)
+        GitHubGraphQlClient gitHubGraphQlClient,
+        GitHubRestClient gitHubRestClient)
     {
         _logger = logger;
-        _gitHubApi = gitHubApi;
+        _gitHubGraphQlClient = gitHubGraphQlClient;
+        _gitHubRestClient = gitHubRestClient;
     }
-
-
 
     public async Task<RepoAnalysis> GetAnalysis(
         string url)
@@ -30,12 +33,23 @@ public class AnalysisService
         if (!await UrlExists(url)) return RepoAnalysis.NotFound;
 
         var (owner, name) = ExtractUrlParts(url);
+
         var context = new AnalysisContext(owner, name);
-        await context.Build(_gitHubApi);
+        try
+        {
+            await context.Build(_gitHubGraphQlClient);
+
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Error during analysis of {Url}", url);
+            return RepoAnalysis.Error;
+        }
+
 
         var overViewAnalyzer = new OverViewAnalyzer(context);
         var documentationAnalyzer = new DocumentationAnalyzer(context);
-        var qualityAnalyzer = new QualityAnalyzer(context);
+        var qualityAnalyzer = new QualityAnalyzer(context, _gitHubRestClient);
         var communityAnalyzer = new CommunityAnalyzer(context);
         var securityAnalyzer = new SecurityAnalyzer(context);
         var langSpecificAnalyzer = new LanguageSpecificAnalyzer(context);
@@ -50,10 +64,11 @@ public class AnalysisService
         try
         {
             await Task.WhenAll(documentationTask, overViewTask, qualityTask, communityTask, securityTask, langSpecificTask);
+            _logger.LogInformation("Successfully analyzed {Url}", url);
         }
         catch (Exception e)
         {
-            _logger.LogError(e, $"Error during analysis of {url}", url);
+            _logger.LogError(e, "Error during analysis of {Url}", url);
             return RepoAnalysis.Error;
         }
 
@@ -86,7 +101,7 @@ public class AnalysisService
     {
         if (!Uri.TryCreate(url, UriKind.Absolute, out var uri))
         {
-            _logger.LogError($"invalid {url}", url);
+            _logger.LogError("invalid {Url}", url);
             throw new ArgumentException($"invalid url {url}");
         }
 
@@ -102,15 +117,10 @@ public class AnalysisService
 
         return (owner, repo);
     }
-    
-    
-    
-    
-    private static IReadOnlyList<string>? _urls = null;
 
     public async Task DebugAnalysis()
     {
-        var urls = await _gitHubApi.ListReposByTopic("dotnet");
+        var urls = await _gitHubGraphQlClient.ListReposByTopic("dotnet");
         foreach (var url in urls)
         {
             var a = await GetAnalysis(url);
@@ -121,14 +131,16 @@ public class AnalysisService
         }
     }
 
-    public string GetRandomRepoUrl()
+    public string GetRandomRepoUrl(
+        string topic)
     {
-        var index = new Random().Next(0, _urls.Count - 1);
-        return _urls[index];
+        var index = new Random().Next(0, _urls[topic].Count - 1);
+        return _urls[topic][index];
     }
-    
-    public async Task LoadReposByTopic()
+
+    public async Task LoadReposByTopic(
+        string topic)
     {
-        _urls ??= await _gitHubApi.ListReposByTopic("dotnet");
+        if (!_urls.ContainsKey(topic)) _urls[topic] = await _gitHubGraphQlClient.ListReposByTopic(topic);
     }
 }

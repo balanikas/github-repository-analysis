@@ -19,7 +19,7 @@ builder.Services.AddServerSideBlazor();
 builder.Services.AddMudServices();
 
 builder.Services.AddAppServices();
-builder.Services.AddHttpClient<GitHubApi>();
+builder.Services.AddHttpClient<GitHubGraphQlClient>();
 builder.Services.Configure<GitHubOptions>(
     builder.Configuration.GetSection(GitHubOptions.GitHub));
 builder.Services.Configure<GitHubOptions>(builder.Configuration);

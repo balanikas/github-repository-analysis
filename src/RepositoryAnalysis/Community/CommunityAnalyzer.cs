@@ -41,14 +41,14 @@ public class CommunityAnalyzer
             "CITATIONS.md",
             "CITATION.cff"
         };
-        var entry = Shared.GetBlob(_context.RootEntries,
+        var entry = Shared.GetSingleBlob(_context.RootEntries,
             x => citationFileNames.Contains(x.Path, StringComparer.OrdinalIgnoreCase));
         var (diagnosis, note) = GetDiagnosis(entry);
 
         return Rule.CitationFile(diagnosis, note);
 
         (Diagnosis, string) GetDiagnosis(
-            GitHubApi.Entry? e)
+            GitHubGraphQlClient.Entry? e)
         {
             return e is not null
                 ? (Diagnosis.Info, "found")
@@ -67,7 +67,7 @@ public class CommunityAnalyzer
         return Rule.SupportFile(diagnosis, note);
 
         (Diagnosis, string) GetDiagnosis(
-            GitHubApi.Entry? e)
+            GitHubGraphQlClient.Entry? e)
         {
             return e is not null
                 ? e.Size switch
@@ -83,7 +83,7 @@ public class CommunityAnalyzer
     {
         var (diagnosis, note) = GetDiagnosis();
         return Rule.PullRequests(diagnosis, note);
-        
+
         (Diagnosis, string) GetDiagnosis()
         {
             return _context.Repo.PullRequestTemplates.Any()
@@ -139,7 +139,7 @@ public class CommunityAnalyzer
         return Rule.CodeOwners(diagnosis, note) with { ResourceName = entry?.Path, ResourceUrl = Shared.GetEntryUrl(_context, entry) };
 
         (Diagnosis, string) GetDiagnosis(
-            GitHubApi.Entry? e)
+            GitHubGraphQlClient.Entry? e)
         {
             return e is not null
                 ? _context.Repo.Codeowners.Errors.Any()
@@ -157,7 +157,7 @@ public class CommunityAnalyzer
         return Rule.CodeOfConduct(diagnosis, note) with { ResourceName = entry?.Name, ResourceUrl = entry?.Url };
 
         (Diagnosis, string) GetDiagnosis(
-            GitHubApi.CodeOfConduct? e)
+            GitHubGraphQlClient.CodeOfConduct? e)
         {
             return e is not null
                 ? (Diagnosis.Info, "found")
@@ -167,7 +167,7 @@ public class CommunityAnalyzer
 
     private Rule GetContributingRule()
     {
-        var entry = Shared.GetBlob(_context.RootEntries,
+        var entry = Shared.GetSingleBlob(_context.RootEntries,
             x => x.PathEquals(
                 "contributing.md",
                 "docs/contributing.md",
@@ -175,13 +175,13 @@ public class CommunityAnalyzer
                 "contributing.rst",
                 "docs/contributing.rst",
                 ".github/contributing.rst"
-                ) );
+            ));
 
         var (diagnosis, note) = GetDiagnosis(entry);
         return Rule.Contributing(diagnosis, note) with { ResourceName = entry?.Path, ResourceUrl = Shared.GetEntryUrl(_context, entry) };
 
         (Diagnosis, string) GetDiagnosis(
-            GitHubApi.Entry? e)
+            GitHubGraphQlClient.Entry? e)
         {
             return e is not null
                 ? e.Size switch
@@ -192,5 +192,4 @@ public class CommunityAnalyzer
                 : (Diagnosis.Warning, "missing contributing file");
         }
     }
-
 }

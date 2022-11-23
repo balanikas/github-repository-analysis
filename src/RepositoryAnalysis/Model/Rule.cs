@@ -16,7 +16,7 @@ public record Rule
         string note,
         string? details)
     {
-        return new()
+        return new Rule
         {
             Diagnosis = diagnosis,
             Note = note,
@@ -39,7 +39,7 @@ It is good practice to follow standard solution structure conventions. ",
         string note,
         string? details = null)
     {
-        return new()
+        return new Rule
         {
             Diagnosis = diagnosis,
             Note = note,
@@ -64,7 +64,7 @@ You can add a CITATION file to your repository to help users correctly cite your
         string note,
         string? details = null)
     {
-        return new()
+        return new Rule
         {
             Diagnosis = diagnosis,
             Note = note,
@@ -91,7 +91,7 @@ When someone creates an issue in your repository, they will see a link to your p
         string note,
         string? details = null)
     {
-        return new()
+        return new Rule
         {
             Name = "Pull requests",
             Note = note,
@@ -116,7 +116,7 @@ Once a pull request is opened, you can discuss and review the potential changes 
         string note,
         string? details)
     {
-        return new()
+        return new Rule
         {
             Name = "Issues",
             Note = note,
@@ -139,7 +139,7 @@ You may wish to turn issues off for your repository if you do not accept contrib
         string note,
         string? details = null)
     {
-        return new()
+        return new Rule
         {
             Name = "Discussions",
             Note = note,
@@ -162,7 +162,7 @@ Discussions empower a project's maintainers, contributors, and visitors to gathe
         string note,
         string? details = null)
     {
-        return new()
+        return new Rule
         {
             Name = "Code owners",
             Note = note,
@@ -184,7 +184,7 @@ You can use a CODEOWNERS file to define individuals or teams that are responsibl
         string note,
         string? details = null)
     {
-        return new()
+        return new Rule
         {
             Name = "Code of conduct",
             Note = note,
@@ -207,7 +207,7 @@ It also outlines procedures for addressing problems between members of your proj
         string note,
         string? details = null)
     {
-        return new()
+        return new Rule
         {
             Name = "Contributing",
             Note = note,
@@ -229,7 +229,7 @@ When someone opens a pull request or creates an issue, they will see a link to t
         string note,
         string? details = null)
     {
-        return new()
+        return new Rule
         {
             Name = "Topics",
             Note = note,
@@ -254,7 +254,7 @@ To help other people find and contribute to your project, you can add topics to 
         string? details = null)
     {
         //todo: look in github releases too
-        return new()
+        return new Rule
         {
             Name = "Change log",
             Note = note,
@@ -268,7 +268,7 @@ It should be easy to understand both by the users using your project and the dev
 Adding a CHANGELOG.md file in the repo root is a good start.
 <br/>
 Note: this currently only look for related files in the repo root, and does not look in 
-{Shared.CreateLink("https://help.github.com/articles/creating-releases/","Github Releases")}"
+{Shared.CreateLink("https://help.github.com/articles/creating-releases/", "Github Releases")}"
             }
         };
     }
@@ -278,7 +278,7 @@ Note: this currently only look for related files in the repo root, and does not 
         string note,
         string? details = null)
     {
-        return new()
+        return new Rule
         {
             Name = "Homepage",
             Note = note,
@@ -300,7 +300,7 @@ It can be edited in the About section.",
         string note,
         string? details = null)
     {
-        return new()
+        return new Rule
         {
             Name = "Description/About",
             Note = note,
@@ -322,7 +322,7 @@ It can be edited in the About section.",
         string note,
         string? details = null)
     {
-        return new()
+        return new Rule
         {
             Name = "Readme",
             Note = note,
@@ -344,7 +344,7 @@ A repository should contain a readme file, to tell other people why your project
         string note,
         string? details = null)
     {
-        return new()
+        return new Rule
         {
             Name = "Ruleset",
             Note = note,
@@ -366,7 +366,7 @@ like EditorConfig and dotnet analyzers.",
         string note,
         string? details = null)
     {
-        return new()
+        return new Rule
         {
             Name = "Tests",
             Note = note,
@@ -388,7 +388,7 @@ Tests increase the quality of software.
         string note,
         string? details = null)
     {
-        return new()
+        return new Rule
         {
             Name = "License",
             Note = note,
@@ -414,7 +414,7 @@ For your repository to truly be open source, you'll need to license it so that o
         string note,
         string? details = null)
     {
-        return new()
+        return new Rule
         {
             Name = "Git ignore",
             Note = note,
@@ -425,7 +425,7 @@ For your repository to truly be open source, you'll need to license it so that o
                 Text = @"
 You can create a .gitignore file in your repository's root directory to tell Git which files and directories to ignore when you make a commit. 
 To share the ignore rules with other users who clone the repository, commit the .gitignore file in to your repository.
-Based on the repository language, consider getting one from [link to the appropriate gitignore file]", //todo get link to gitignore file
+",
                 AboutUrl = "https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files",
                 AboutHeader = "about git ignore"
             }
@@ -437,7 +437,7 @@ Based on the repository language, consider getting one from [link to the appropr
         string note,
         string? details = null)
     {
-        return new()
+        return new Rule
         {
             Name = "Large files",
             Note = note,
@@ -459,7 +459,7 @@ Large files contained in a repository might be a sign of unoptimized repository.
         string note,
         string? details = null)
     {
-        return new()
+        return new Rule
         {
             Name = "Editorconfig",
             Note = note,
@@ -473,6 +473,30 @@ The EditorConfig project consists of a file format for defining coding styles an
 EditorConfig files are easily readable and they work nicely with version control systems.",
                 AboutUrl = "https://editorconfig.org/",
                 AboutHeader = "about editor config"
+            }
+        };
+    }
+
+    public static Rule DockerFile(
+        Diagnosis diagnosis,
+        string note,
+        string? details = null)
+    {
+        return new Rule
+        {
+            Name = "Dockerfile",
+            Note = note,
+            Diagnosis = diagnosis,
+            Explanation = new Explanation
+            {
+                Details = details,
+                Text = @"
+Before the docker CLI sends the context to the docker daemon, it looks for a file named .dockerignore in the root directory 
+of the context. If this file exists, the CLI modifies the context to exclude files and directories that match patterns in it. 
+This helps to avoid unnecessarily sending large or sensitive files and directories to the daemon and potentially adding them 
+to images using ADD or COPY.",
+                AboutUrl = "https://docs.docker.com/develop/develop-images/dockerfile_best-practices/",
+                AboutHeader = "about Dockerfile"
             }
         };
     }

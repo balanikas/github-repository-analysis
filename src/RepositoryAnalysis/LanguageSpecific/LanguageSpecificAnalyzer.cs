@@ -28,7 +28,13 @@ public class LanguageSpecificAnalyzer
 
     public async Task<IReadOnlyList<Rule>> Analyze()
     {
-        var langKey = _context.Repo.PrimaryLanguage.Name.ToLower();
+        var langKey = _context.Repo.PrimaryLanguage?.Name.ToLower();
+        if (langKey is null)
+        {
+            Console.WriteLine("no primary language detected");
+            return Array.Empty<Rule>();
+        }
+
         if (!_languageRulesMap.ContainsKey(langKey)) return await Task.FromResult(Array.Empty<Rule>());
 
         var rules = _languageRulesMap[langKey]();
@@ -52,10 +58,10 @@ public class LanguageSpecificAnalyzer
                     warnings.Add($"detected project files next to the solution file {Shared.CreateLink(Shared.GetEntryUrl(_context, entry)!, entry.Path)}");
             });
 
-        var csFile = Shared.GetBlob(_context.RootEntries, x => x.HasExtension(".cs"));
+        var csFile = Shared.GetFirstBlob(_context.RootEntries, x => x.HasExtension(".cs"));
         if (csFile is not null) warnings.Add("found code file in root folder. Consider adding a /src folder to contain code files");
 
-        var csProjFile = Shared.GetBlob(_context.RootEntries, x => x.HasExtension(".csproj"));
+        var csProjFile = Shared.GetFirstBlob(_context.RootEntries, x => x.HasExtension(".csproj"));
         if (csProjFile is not null) warnings.Add("found project file in root folder. Consider adding a /src folder to contain project files");
 
         if (_context.RootEntries.Count < 5) warnings.Add("Root folder looks incomplete. Essential files can be added.");
@@ -68,7 +74,7 @@ Found {warnings.Count} issues.
 ");
 
         (Diagnosis, string) GetDiagnosis(
-            List<string> e)
+            IReadOnlyList<string> e)
         {
             return e.Any()
                 ? (Diagnosis.Warning, $"found {e.Count()} potential solution structure issues")
@@ -90,7 +96,7 @@ Found these rulesets:
 
 
         (Diagnosis, string) GetDiagnosis(
-            IEnumerable<GitHubApi.Entry> e)
+            IEnumerable<GitHubGraphQlClient.Entry> e)
         {
             return e.Any()
                 ? (Diagnosis.Warning, $"found {e.Count()} .ruleset files")
@@ -108,10 +114,10 @@ Detected {testProjects.Length} test projects.
 Detected {testFiles.Length} test files.
 ";
         return Rule.DotnetTests(diagnosis, note, details);
-        
+
         (Diagnosis, string) GetDiagnosis(
-            IEnumerable<GitHubApi.Entry> projects,
-            IEnumerable<GitHubApi.Entry> files)
+            IEnumerable<GitHubGraphQlClient.Entry> projects,
+            IEnumerable<GitHubGraphQlClient.Entry> files)
         {
             return !projects.Any() || !files.Any()
                 ? (Diagnosis.Warning, "found issues")
@@ -119,13 +125,13 @@ Detected {testFiles.Length} test files.
         }
 
         bool IsTestProject(
-            GitHubApi.Entry x)
+            GitHubGraphQlClient.Entry x)
         {
             return x.PathEndsWith(".csproj") && x.ParentPathEndsWith("test", "tests", "spec", "specs");
         }
 
         bool IsTestFile(
-            GitHubApi.Entry x)
+            GitHubGraphQlClient.Entry x)
         {
             return x.PathEndsWith(".cs") switch
             {

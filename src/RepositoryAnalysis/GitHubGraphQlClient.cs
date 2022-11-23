@@ -8,21 +8,22 @@ using Microsoft.Extensions.Options;
 namespace RepositoryAnalysis;
 
 //todo configure request throttling
-public class GitHubApi
+public class GitHubGraphQlClient
 {
-    private const string HttpsApiGithubComGraphql = "https://api.github.com/graphql";
+    private readonly ILogger<GitHubGraphQlClient> _logger;
+    private const string BaseUrl = "https://api.github.com/graphql";
     private readonly GraphQLHttpClient _graphQlClient;
 
-    public GitHubApi(
+    public GitHubGraphQlClient(
         IOptions<GitHubOptions> githubOptions,
         HttpClient httpClient,
-        ILogger<GitHubApi> logger)
+        ILogger<GitHubGraphQlClient> logger)
     {
-        logger.LogInformation("pat is " + githubOptions.Value.Token);
+        _logger = logger;
         httpClient.DefaultRequestHeaders.Add("Authorization", "Bearer " + githubOptions.Value.Token);
         _graphQlClient = new GraphQLHttpClient(new GraphQLHttpClientOptions
             {
-                EndPoint = new Uri(HttpsApiGithubComGraphql)
+                EndPoint = new Uri(BaseUrl)
             },
             new SystemTextJsonSerializer(),
             httpClient);
@@ -33,25 +34,29 @@ public class GitHubApi
     {
         var request = new GraphQLRequest
         {
-            Query = @"
-{
-  topic(name: ""flask"") {
+            Query = $@"
+{{
+  topic(name: ""{topic}"") {{
     name
-    repositories(first: 30) {
-      edges {
-        node {
+    repositories(first: 100) {{
+      edges {{
+        node {{
           url
-        }
-      }
-    }
-  }
-}
+        }}
+      }}
+    }}
+  }}
+}}
 
         "
         };
 
         var response = await _graphQlClient.SendQueryAsync<ListRepos.Data>(request);
-        if (response.AsGraphQLHttpResponse().StatusCode != HttpStatusCode.OK) throw new Exception();
+        if (response.AsGraphQLHttpResponse().StatusCode != HttpStatusCode.OK)
+        {
+            _logger.LogError("listing repos failed for {Topic}", topic);
+        }
+
         return response.Data.topic.repositories.edges.Select(x => x.node.url).ToArray();
     }
 
@@ -64,6 +69,7 @@ public class GitHubApi
             Query = $@"
 {{
   repository(name: ""{name}"", owner: ""{owner}"") {{
+
     diskUsage
     updatedAt
     repositoryTopics {{
@@ -91,7 +97,6 @@ public class GitHubApi
       }}
     }}
     description
-    deleteBranchOnMerge
     hasDiscussionsEnabled
     hasIssuesEnabled
     homepageUrl
@@ -102,9 +107,6 @@ public class GitHubApi
     issueTemplates {{
       name
       filename
-    }}
-    labels(first: 10) {{
-      totalCount
     }}
     licenseInfo {{
       name
@@ -135,11 +137,15 @@ public class GitHubApi
         };
 
         var response = await _graphQlClient.SendQueryAsync<Data>(request);
-        if (response.AsGraphQLHttpResponse().StatusCode != HttpStatusCode.OK) throw new Exception();
+        if (response.AsGraphQLHttpResponse().StatusCode != HttpStatusCode.OK)
+        {
+            _logger.LogError("get repo data failed for {Owner}{Name}", owner, name);
+        }
+
         return response.Data.Repository;
     }
 
-    public async Task<IReadOnlyList<Entry>> GetRepoTree(
+    public async Task<Repo> GetRepoTree(
         string owner,
         string name,
         string branch,
@@ -153,8 +159,11 @@ public class GitHubApi
         };
 
         var response = await _graphQlClient.SendQueryAsync<Data>(request);
-        if (response.AsGraphQLHttpResponse().StatusCode != HttpStatusCode.OK) throw new Exception();
-        return response.Data.Repository.Object.Entries;
+        if (response.AsGraphQLHttpResponse().StatusCode != HttpStatusCode.OK) 
+        {
+            _logger.LogError("get repo tree failed for {Owner}{Name}", owner, name);
+        }
+        return response.Data.Repository;
     }
 
 
@@ -200,6 +209,11 @@ public class GitHubApi
         var shallowTreeQuery = $@"
 {{
   repository(name: ""{name}"", owner: ""{owner}"") {{
+     gitIgnore: object(expression: ""{branch}:.gitignore"") {{
+      ... on Blob {{
+        text
+      }}
+    }}
     object(expression: ""{branch}:{treePath}"") {{
       ... on Tree {{
         entries {{
@@ -237,7 +251,6 @@ public class GitHubApi
 
     public class ListRepos
     {
-        // Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse);
         public class Data
         {
             public Topic topic { get; set; }
@@ -371,7 +384,7 @@ public class GitHubApi
         public Labels Labels { get; set; }
         public LicenseInfo? LicenseInfo { get; set; }
         public string OpenGraphImageUrl { get; set; }
-        public PrimaryLanguage PrimaryLanguage { get; set; }
+        public PrimaryLanguage? PrimaryLanguage { get; set; }
         public List<PullRequestTemplate> PullRequestTemplates { get; set; }
         public string SecurityPolicyUrl { get; set; }
         public string Url { get; set; }
@@ -381,6 +394,12 @@ public class GitHubApi
         public Objects Object { get; set; }
         public int DiskUsage { get; set; }
         public bool HasProjectsEnabled { get; set; }
+        public GitIgnore? GitIgnore { get; set; }
+    }
+
+    public class GitIgnore
+    {
+        public string Text { get; set; }
     }
 
     public class RepositoryTopics

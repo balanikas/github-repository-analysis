@@ -19,6 +19,7 @@ public static class DependencyInjectionExtensions
     public static void AddAppServices(
         this IServiceCollection services)
     {
-        services.AddSingleton<AnalysisService>();
+        services.AddTransient<AnalysisService>();
+        services.AddTransient<GitHubRestClient>();
     }
 }

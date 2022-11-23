@@ -4,14 +4,14 @@ public static class Shared
 {
     public static string? GetEntryUrl(
         AnalysisContext context,
-        GitHubApi.Entry? entry)
+        GitHubGraphQlClient.Entry? entry)
     {
         return entry is not null
             ? Path.Combine(context.Repo.Url, entry.Type, context.Repo.DefaultBranchRef.Name, entry.Path)
             : null;
     }
 
-    public static string? CreateIssueTemplateLink(
+    public static string CreateIssueTemplateLink(
         AnalysisContext context,
         string path,
         string name)
@@ -20,25 +20,34 @@ public static class Shared
         return $@"<strong><a target=""_blank"" href=""{url}"">{name}</a></strong>";
     }
 
-    public static string? CreateLink(
+    public static string CreateLink(
         string url,
         string name)
     {
         return $@"<u><strong><a target=""_blank"" href=""{url}"">{name}</a></strong></u>";
     }
 
-    public static GitHubApi.Entry? GetBlob(
-        IReadOnlyList<GitHubApi.Entry>? entries,
-        Func<GitHubApi.Entry, bool> predicate)
+    public static GitHubGraphQlClient.Entry? GetSingleBlob(
+        IReadOnlyList<GitHubGraphQlClient.Entry>? entries,
+        Func<GitHubGraphQlClient.Entry, bool> predicate)
     {
         return entries?.SingleOrDefault(x =>
             x.Type.Equals("blob", StringComparison.OrdinalIgnoreCase) &&
             predicate(x));
     }
 
-    public static GitHubApi.Entry? GetBlobRecursive(
-        IReadOnlyList<GitHubApi.Entry>? entries,
-        Func<GitHubApi.Entry, bool> predicate)
+    public static GitHubGraphQlClient.Entry? GetFirstBlob(
+        IReadOnlyList<GitHubGraphQlClient.Entry>? entries,
+        Func<GitHubGraphQlClient.Entry, bool> predicate)
+    {
+        return entries?.FirstOrDefault(x =>
+            x.Type.Equals("blob", StringComparison.OrdinalIgnoreCase) &&
+            predicate(x));
+    }
+
+    public static GitHubGraphQlClient.Entry? GetBlobRecursive(
+        IReadOnlyList<GitHubGraphQlClient.Entry>? entries,
+        Func<GitHubGraphQlClient.Entry, bool> predicate)
     {
         if (entries is null)
             return null;
@@ -49,21 +58,18 @@ public static class Shared
 
         if (entry is not null) return entry;
 
-        foreach (var e in entries.Where(x => x.Type.Equals("tree", StringComparison.OrdinalIgnoreCase)))
-        {
-            var found = GetBlobRecursive(e.Object?.Entries, predicate);
-            if (found is not null) return found;
-        }
-
-        return null;
+        return entries
+            .Where(x => x.Type.Equals("tree", StringComparison.OrdinalIgnoreCase))
+            .Select(e => GetBlobRecursive(e.Object?.Entries, predicate))
+            .FirstOrDefault(found => found is not null);
     }
 
-    public static IEnumerable<GitHubApi.Entry> GetBlobsRecursive(
-        IReadOnlyList<GitHubApi.Entry>? entries,
-        Func<GitHubApi.Entry, bool> predicate)
+    public static IEnumerable<GitHubGraphQlClient.Entry> GetBlobsRecursive(
+        IReadOnlyList<GitHubGraphQlClient.Entry>? entries,
+        Func<GitHubGraphQlClient.Entry, bool> predicate)
     {
         if (entries is null)
-            return new List<GitHubApi.Entry>();
+            return new List<GitHubGraphQlClient.Entry>();
 
         var foundEntries = entries.Where(x =>
             x.Type.Equals("blob", StringComparison.OrdinalIgnoreCase) &&
@@ -80,18 +86,21 @@ public static class Shared
     }
 
     public static void AnalyzeRecursive(
-        IReadOnlyList<GitHubApi.Entry>? entries,
-        Func<GitHubApi.Entry, bool> predicate,
-        Action<GitHubApi.Entry, IReadOnlyList<GitHubApi.Entry>> action)
+        IReadOnlyList<GitHubGraphQlClient.Entry>? entries,
+        Func<GitHubGraphQlClient.Entry, bool> predicate,
+        Action<GitHubGraphQlClient.Entry, IReadOnlyList<GitHubGraphQlClient.Entry>> action)
     {
         if (entries is null)
             return;
+        foreach (var entry in entries)
+            if (entry.Type.Equals("blob", StringComparison.OrdinalIgnoreCase) && predicate(entry))
+                action(entry, entries);
+        // var foundEntry = entries.FirstOrDefault(x => x.Type.Equals("blob", StringComparison.OrdinalIgnoreCase) &&
+        //                                              predicate(x));
+        // if (foundEntry is not null) action(foundEntry, entries);
 
-        var foundEntry = entries.FirstOrDefault(x => x.Type.Equals("blob", StringComparison.OrdinalIgnoreCase) &&
-                                                     predicate(x));
-        if (foundEntry is not null) action(foundEntry, entries);
-
-        foreach (var e in entries.Where(x => x.Type.Equals("tree", StringComparison.OrdinalIgnoreCase))) AnalyzeRecursive(e.Object?.Entries, predicate, action);
+        foreach (var e in entries.Where(x => x.Type.Equals("tree", StringComparison.OrdinalIgnoreCase)))
+            AnalyzeRecursive(e.Object?.Entries, predicate, action);
     }
 
 

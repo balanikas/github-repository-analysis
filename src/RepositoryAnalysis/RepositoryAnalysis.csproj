@@ -16,6 +16,7 @@
         <PackageReference Include="Microsoft.Extensions.Options" Version="6.0.0"/>
         <PackageReference Include="Octokit" Version="4.0.1"/>
         <PackageReference Include="Markdig" Version="0.30.4"/>
+        <PackageReference Include="MAB.DotIgnore" Version="3.0.2"/>
     </ItemGroup>
 
 

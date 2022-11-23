@@ -14,15 +14,18 @@ public class AnalysisContext
     }
 
 
-    public IReadOnlyList<GitHubApi.Entry> RootEntries { get; private set; }
+    public IReadOnlyList<GitHubGraphQlClient.Entry> RootEntries { get; private set; }
 
-    public GitHubApi.Repo Repo { get; private set; }
+    public GitHubGraphQlClient.Repo Repo { get; private set; }
+    public GitHubGraphQlClient.Repo RepoTree { get; private set; }
 
 
     public async Task Build(
-        GitHubApi api)
+        GitHubGraphQlClient graphQlClient)
     {
-        Repo = await api.GetRepoData(_owner, _name);
-        RootEntries = await api.GetRepoTree(_owner, _name, Repo.DefaultBranchRef.Name, string.Empty, Repo.DiskUsage);
+        Repo = await graphQlClient.GetRepoData(_owner, _name);
+        var repoTree = await graphQlClient.GetRepoTree(_owner, _name, Repo.DefaultBranchRef.Name, string.Empty, Repo.DiskUsage);
+        RootEntries = repoTree.Object.Entries;
+        RepoTree = repoTree;
     }
 }

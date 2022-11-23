@@ -17,16 +17,16 @@
                           HelperText="Enter a github repository url and scan for any issues"
                           @bind-Value="RepositoryUrl" Label="https://github.com/owner/repo" Variant="Variant.Outlined">
             </MudTextField>
-            <MudTextField Disabled="@LockUI" 
-                          InputType="InputType.Text"
-                          Adornment="Adornment.End" 
-                          AdornmentIcon="@Icons.Filled.Sailing"
-                          AdornmentColor="Color.Primary"
-                          OnAdornmentClick="OnSubmitDebug"
-                          InputMode="InputMode.url"
-                          @bind-Value="Topic"
-                          Variant="Variant.Outlined">
-            </MudTextField>
+            @* <MudTextField Disabled="@LockUI"  *@
+            @*               InputType="InputType.Text" *@
+            @*               Adornment="Adornment.End"  *@
+            @*               AdornmentIcon="@Icons.Filled.Sailing" *@
+            @*               AdornmentColor="Color.Primary" *@
+            @*               OnAdornmentClick="OnSubmitDebug" *@
+            @*               InputMode="InputMode.url" *@
+            @*               @bind-Value="Topic" *@
+            @*               Variant="Variant.Outlined"> *@
+            @* </MudTextField> *@
         </MudItem>
 
         <MudProgressLinear Class=@(LockUI ? "" : "invisible") Color="Color.Primary" Size="Size.Large" Indeterminate="true"/>

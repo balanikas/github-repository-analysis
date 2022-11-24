@@ -41,7 +41,7 @@ public class CommunityAnalyzer
             "CITATIONS.md",
             "CITATION.cff"
         };
-        var entry = Shared.GetSingleBlob(_context.RootEntries,
+        var entry = Shared.GetFirstBlob(_context.RootEntries,
             x => citationFileNames.Contains(x.Path, StringComparer.OrdinalIgnoreCase));
         var (diagnosis, note) = GetDiagnosis(entry);
 

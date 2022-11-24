@@ -17,9 +17,9 @@
                           HelperText="Enter a github repository url and scan for any issues"
                           @bind-Value="RepositoryUrl" Label="https://github.com/owner/repo" Variant="Variant.Outlined">
             </MudTextField>
-            @* <MudTextField Disabled="@LockUI"  *@
+            @* <MudTextField Disabled="@LockUI" *@
             @*               InputType="InputType.Text" *@
-            @*               Adornment="Adornment.End"  *@
+            @*               Adornment="Adornment.End" *@
             @*               AdornmentIcon="@Icons.Filled.Sailing" *@
             @*               AdornmentColor="Color.Primary" *@
             @*               OnAdornmentClick="OnSubmitDebug" *@
@@ -34,7 +34,6 @@
 
         <MudText Align="Align.Center">Try these examples: </MudText>
         <MudButton Color="Color.Info" Size="Size.Small" OnClick='() => OnExampleSubmit("https://github.com/dotnet/runtime")' Variant="Variant.Text">https://github.com/dotnet/runtime</MudButton>
-        <MudButton Color="Color.Info" Size="Size.Small" OnClick='() => OnExampleSubmit("https://github.com/balanikas/github-repository-analysis")' Variant="Variant.Text">https://github.com/balanikas/github-repository-analysis</MudButton>
         <MudButton Color="Color.Info" Size="Size.Small" OnClick='() => OnExampleSubmit("https://github.com/Fody/NullGuard")' Variant="Variant.Text">https://github.com/Fody/NullGuard</MudButton>
         <MudButton Color="Color.Info" Size="Size.Small" OnClick='() => OnExampleSubmit("https://github.com/dotnet/roslyn")' Variant="Variant.Text">https://github.com/dotnet/roslyn</MudButton>
         <MudButton Color="Color.Info" Size="Size.Small" OnClick='() => OnExampleSubmit("https://github.com/shouldly/shouldly")' Variant="Variant.Text">https://github.com/shouldly/shouldly</MudButton>

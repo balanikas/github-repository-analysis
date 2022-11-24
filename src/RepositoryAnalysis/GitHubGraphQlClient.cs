@@ -19,7 +19,6 @@ public class GitHubGraphQlClient
         HttpClient httpClient,
         ILogger<GitHubGraphQlClient> logger)
     {
-        Console.WriteLine(githubOptions.Value.Token);
         _logger = logger;
         httpClient.DefaultRequestHeaders.Add("Authorization", "Bearer " + githubOptions.Value.Token);
         _graphQlClient = new GraphQLHttpClient(new GraphQLHttpClientOptions
@@ -49,7 +48,26 @@ public class GitHubGraphQlClient
   }}
 }}
 
-"
+";
+            
+            //get bad repos
+//             query = $@"
+// {{
+//   topic(name: ""{topic}"") {{
+//     relatedTopics(first: 10) {{
+//       name
+//     }}
+//     repositories(first: 5, orderBy: {{field: STARGAZERS, direction: ASC}}) {{
+//       edges {{
+//         node {{
+//           url
+//           stargazerCount
+//         }}
+//       }}
+//     }}
+//   }}
+// }}
+// ";
             ;
         await Task.Delay(1000);
         var response = await Post<ListRepos.Data>(query);
@@ -170,10 +188,6 @@ public class GitHubGraphQlClient
         if (httpResponse.StatusCode != HttpStatusCode.OK)
             _logger.LogError("request failed for query {Query} with status code {StatusCode}", query, httpResponse.StatusCode);
 
-        if (response.Data is null)
-        {
-            
-        }
         return response.Data;
     }
 

@@ -62,6 +62,8 @@ public class AnalysisService
 
         try
         {
+            _logger.LogInformation("Starting analysis of {Url}", url);
+
             await Task.WhenAll(documentationTask, overViewTask, qualityTask, communityTask, securityTask, langSpecificTask);
             _logger.LogInformation("Successfully analyzed {Url}", url);
         }

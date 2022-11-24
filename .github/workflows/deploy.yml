@@ -38,11 +38,11 @@ jobs:
         
         docker build src/ -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-
-    - name: Deploy to Amazon ECS
-      uses: aws-actions/amazon-ecs-deploy-task-definition@v1
-      with:
-        task-definition: task-definition.json
-        service: gra-service
-        cluster: gra-cluster
-        wait-for-service-stability: true
+#
+#    - name: Deploy to Amazon ECS
+#      uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+#      with:
+#        task-definition: task-definition.json
+#        service: gra-service
+#        cluster: gra-cluster
+#        wait-for-service-stability: true

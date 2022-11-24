@@ -49,7 +49,7 @@ public class BulkAnalysisTest
         Func<string, Task<GitHubGraphQlClient.ListRepos.Topic>> func)
     {
         if (_urls.Count > 10) return;
-
+        await Task.Delay(1000);
         GitHubGraphQlClient.ListRepos.Topic response;
         try
         {

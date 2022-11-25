@@ -81,7 +81,9 @@
     public string RepositoryUrl { get; set; } = "";
     public RepoAnalysis Analysis { get; set; } = RepoAnalysis.Empty;
     public bool LockUI { get; set; }
-
+    [Parameter]
+    [SupplyParameterFromQuery(Name = "url")]
+    public string? Url { get; set; }
     private async Task ShowInvalidInputMessage()
     {
         await DialogService.ShowMessageBox(
@@ -89,6 +91,18 @@
             "Needs to be in this form: https://github.com/owner/repo");
 
         StateHasChanged();
+    }
+
+
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (Url is not null)
+        {
+            RepositoryUrl = Url;
+            await OnSubmit();
+        }
+        await base.OnParametersSetAsync();
     }
 
     private async Task ShowNotFoundMessage()

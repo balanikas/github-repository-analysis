@@ -16,6 +16,7 @@ public class CommunityAnalyzer
     {
         var rules = new List<Rule>
         {
+            GetLicenseRule(),
             GetContributingRule(),
             GetCodeOfConductRule(),
             GetCodeOwnersRule(),
@@ -29,6 +30,22 @@ public class CommunityAnalyzer
         return await Task.FromResult(rules);
     }
 
+    private Rule GetLicenseRule()
+    {
+        var license = _context.Repo.LicenseInfo;
+        var (diagnosis, note) = GetDiagnosis(license);
+
+        (Diagnosis, string) GetDiagnosis(
+            GitHubGraphQlClient.LicenseInfo? e)
+        {
+            return e is not null
+                ? (Diagnosis.Info, "found")
+                : (Diagnosis.Error, "missing");
+        }
+
+        return Rule.License(diagnosis, note) with { ResourceName = license?.Name, ResourceUrl = license?.Url };
+    }
+    
     private Rule GetCitationRule()
     {
         var citationFileNames = new[]
@@ -113,7 +130,7 @@ public class CommunityAnalyzer
                 ? _context.Repo.IssueTemplates.Any()
                     ? (Diagnosis.Info, $"found {_context.Repo.Issues.TotalCount} issues and {_context.Repo.IssueTemplates.Count} issue templates")
                     : (Diagnosis.Warning, "issues are enabled but missing issue templates")
-                : (Diagnosis.Warning, "feature is disabled");
+                : (Diagnosis.Info, "feature is disabled");
         }
     }
 
@@ -126,7 +143,7 @@ public class CommunityAnalyzer
         {
             return _context.Repo.HasDiscussionsEnabled
                 ? (Diagnosis.Info, "feature is enabled")
-                : (Diagnosis.Warning, "feature is disabled");
+                : (Diagnosis.Info, "feature is disabled");
         }
     }
 

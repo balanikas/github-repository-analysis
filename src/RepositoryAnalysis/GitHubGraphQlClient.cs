@@ -216,11 +216,6 @@ public class GitHubGraphQlClient
         var shallowTreeQuery = $@"
 {{
   repository(name: ""{name}"", owner: ""{owner}"") {{
-     gitIgnore: object(expression: ""{branch}:.gitignore"") {{
-      ... on Blob {{
-        text
-      }}
-    }}
     object(expression: ""{branch}:{treePath}"") {{
       ... on Tree {{
         entries {{

@@ -57,13 +57,13 @@
     <MudTabPanel Text="Documentation">
         <AnalysisResults Items="Analysis.Documentation"></AnalysisResults>
     </MudTabPanel>
-
-    <MudTabPanel Text="Quality">
-        <AnalysisResults Items="Analysis.Quality"></AnalysisResults>
-    </MudTabPanel>
     <MudTabPanel Text="Community">
         <AnalysisResults Items="Analysis.Community"></AnalysisResults>
     </MudTabPanel>
+    <MudTabPanel Text="Quality">
+        <AnalysisResults Items="Analysis.Quality"></AnalysisResults>
+    </MudTabPanel>
+
     <MudTabPanel Text="Security">
         <MudText Align="Align.Center" Typo="Typo.h4" >coming soon</MudText>
         @* <AnalysisResults Items="Analysis.Security"></AnalysisResults> *@
@@ -78,7 +78,7 @@
 
 @code {
 
-    public string RepositoryUrl { get; set; } = "https://github.com/balanikas/FluentAssertions.Http";
+    public string RepositoryUrl { get; set; } = "";
     public RepoAnalysis Analysis { get; set; } = RepoAnalysis.Empty;
     public bool LockUI { get; set; }
 

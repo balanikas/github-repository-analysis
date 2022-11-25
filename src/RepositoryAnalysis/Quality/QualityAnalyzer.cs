@@ -19,7 +19,6 @@ public class QualityAnalyzer
     {
         var rules = new List<Rule>
         {
-            GetLicenseRule(),
             await GetGitIgnoreRule(),
             GetDockerIgnoreRule(),
             GetEditorConfigRule(),
@@ -44,28 +43,14 @@ public class QualityAnalyzer
         {
             return file is not null && ignore is not null
                 ? (Diagnosis.Info, "found docker file and docker ignore")
-                : ignore is null
+                : file is not null && ignore is null
                     ? (Diagnosis.Warning, "found docker file but no docker ignore")
-                    : (Diagnosis.Warning, "found docker ignore but no docker file");
+                    : (Diagnosis.Info, "not found");
         }
     }
 
 
-    private Rule GetLicenseRule()
-    {
-        var license = _context.Repo.LicenseInfo;
-        var (diagnosis, note) = GetDiagnosis(license);
 
-        (Diagnosis, string) GetDiagnosis(
-            GitHubGraphQlClient.LicenseInfo? e)
-        {
-            return e is not null
-                ? (Diagnosis.Info, "found")
-                : (Diagnosis.Error, "missing");
-        }
-
-        return Rule.License(diagnosis, note) with { ResourceName = license?.Name, ResourceUrl = license?.Url };
-    }
 
     private async Task<Rule> GetGitIgnoreRule()
     {

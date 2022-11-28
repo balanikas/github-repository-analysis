@@ -9,12 +9,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="MudBlazor" Version="6.0.13"/>
-        <PackageReference Include="AWS.Logger.AspNetCore" Version="3.3.0"/>
+        <PackageReference Include="MudBlazor" Version="6.0.13" />
+        <PackageReference Include="AWS.Logger.AspNetCore" Version="3.3.0" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\RepositoryAnalysis\RepositoryAnalysis.csproj"/>
+        <ProjectReference Include="..\RepositoryAnalysis\RepositoryAnalysis.csproj" />
     </ItemGroup>
 
 </Project>

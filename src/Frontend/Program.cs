@@ -15,14 +15,11 @@ builder.Host.ConfigureAppConfiguration(((_, configurationBuilder) =>
 }));
 
 
-builder.Services.AddOptions<GitHubOptions>(GitHubOptions.GitHub);
 
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddMudServices();
-
 builder.Services.AddAppServices();
-builder.Services.AddHttpClient<GitHubGraphQlClient>();
 builder.Services.Configure<GitHubOptions>(
     builder.Configuration.GetSection(GitHubOptions.GitHub));
 builder.Services.Configure<GitHubOptions>(builder.Configuration);

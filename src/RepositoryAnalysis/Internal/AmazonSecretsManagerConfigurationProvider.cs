@@ -1,13 +1,12 @@
 using System.Text;
 using System.Text.Json;
 using Amazon;
-using Amazon.Runtime;
 using Amazon.Runtime.CredentialManagement;
 using Amazon.SecretsManager;
 using Amazon.SecretsManager.Model;
 using Microsoft.Extensions.Configuration;
 
-namespace RepositoryAnalysis;
+namespace RepositoryAnalysis.Internal;
 
 public class AmazonSecretsManagerConfigurationProvider : ConfigurationProvider
 {

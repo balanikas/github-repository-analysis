@@ -1,3 +1,5 @@
+using RepositoryAnalysis.Internal;
+
 namespace RepositoryAnalysis.Model;
 
 public record Rule
@@ -214,6 +216,7 @@ It also outlines procedures for addressing problems between members of your proj
             Diagnosis = diagnosis,
             Explanation = new Explanation
             {
+                Details = details,
                 Text = @"
 To help your project contributors do good work, you can add a file with contribution guidelines to your project repository's root, docs, or .github folder. 
 When someone opens a pull request or creates an issue, they will see a link to that file. The link to the contributing guidelines also appears on your repository's contribute page.",

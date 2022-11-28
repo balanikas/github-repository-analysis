@@ -1,4 +1,4 @@
-namespace RepositoryAnalysis;
+namespace RepositoryAnalysis.Internal;
 
 public static class EntryExtensions
 {

@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using RepositoryAnalysis.Internal;
 
 namespace RepositoryAnalysis;
 
@@ -10,7 +11,6 @@ public static class DependencyInjectionExtensions
         string region,
         string secretName)
     {
-        
         var configurationSource =
             new AmazonSecretsManagerConfigurationSource(region, secretName);
 
@@ -20,7 +20,18 @@ public static class DependencyInjectionExtensions
     public static void AddAppServices(
         this IServiceCollection services)
     {
+        services.AddOptions<GitHubOptions>(GitHubOptions.GitHub);
+        services.AddHttpClient<GitHubGraphQlClient>();
+        services.AddHttpClient<RepositoryVerifier>();
         services.AddTransient<AnalysisService>();
         services.AddTransient<GitHubRestClient>();
+        services.AddTransient<AnalysisCache>();
+        services.AddTransient<AnalysisContext>();
+        services.AddTransient<OverViewAnalyzer>();
+        services.AddTransient<DocumentationAnalyzer>();
+        services.AddTransient<QualityAnalyzer>();
+        services.AddTransient<SecurityAnalyzer>();
+        services.AddTransient<CommunityAnalyzer>();
+        services.AddTransient<LanguageSpecificAnalyzer>();
     }
 }

@@ -1,6 +1,6 @@
 using RepositoryAnalysis.Model;
 
-namespace RepositoryAnalysis;
+namespace RepositoryAnalysis.Internal;
 
 public class BulkAnalysisTest
 {
@@ -23,10 +23,7 @@ public class BulkAnalysisTest
 
     private string? GetRandomRepoUrl()
     {
-        if (_urls.Count == 0)
-        {
-            return null;
-        }
+        if (_urls.Count == 0) return null;
 
         var keys = _urls.Keys.ToList();
         var keyIndex = new Random().Next(0, keys.Count - 1);
@@ -36,10 +33,7 @@ public class BulkAnalysisTest
         var repoIndex = new Random().Next(0, repos.Count - 1);
         var randomRepo = repos[repoIndex];
         repos.RemoveAt(repoIndex);
-        if (repos.Count == 0)
-        {
-            _urls.Remove(randomTopic);
-        }
+        if (repos.Count == 0) _urls.Remove(randomTopic);
 
         return randomRepo;
     }

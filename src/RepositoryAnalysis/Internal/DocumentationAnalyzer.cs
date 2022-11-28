@@ -1,50 +1,45 @@
 using RepositoryAnalysis.Model;
 
-namespace RepositoryAnalysis.Documentation;
+namespace RepositoryAnalysis.Internal;
 
-public class DocumentationAnalyzer
+public class DocumentationAnalyzer : IAnalyzer
 {
-    private readonly AnalysisContext _context;
-
-    public DocumentationAnalyzer(
+    public async Task<IReadOnlyList<Rule>> Analyze(
         AnalysisContext context)
-    {
-        _context = context;
-    }
-
-    public async Task<IReadOnlyList<Rule>> Analyze()
     {
         var rules = new List<Rule>
         {
-            GetReadmeRule(),
-            GetDescriptionRule(),
-            GetHomePageUrlRule(),
-            GetChangeLogRule(),
-            GetTopicsRule()
+            GetReadmeRule(context),
+            GetDescriptionRule(context),
+            GetHomePageUrlRule(context),
+            GetChangeLogRule(context),
+            GetTopicsRule(context)
         };
         return await Task.FromResult(rules);
     }
 
-    private Rule GetTopicsRule()
+    private Rule GetTopicsRule(
+        AnalysisContext context)
     {
         var (diagnosis, note) = GetDiagnosis();
         return Rule.Topics(diagnosis, note);
 
         (Diagnosis, string) GetDiagnosis()
         {
-            return _context.Repo.RepositoryTopics.TotalCount > 0
-                ? (Diagnosis.Info, $"found {_context.Repo.RepositoryTopics.TotalCount} topics")
+            return context.Repo.RepositoryTopics.TotalCount > 0
+                ? (Diagnosis.Info, $"found {context.Repo.RepositoryTopics.TotalCount} topics")
                 : (Diagnosis.Warning, "no topics found");
         }
     }
 
-    private Rule GetChangeLogRule()
+    private Rule GetChangeLogRule(
+        AnalysisContext context)
     {
-        var entry = Shared.GetSingleBlob(_context.RootEntries,
+        var entry = Shared.GetSingleBlob(context.RootEntries,
             x => x.PathEndsWith("changelog.md", "change_log.md", "releasenotes.md", "release_notes.txt", "changelog.txt", "change_log.txt", "releasenotes.txt",
                 "release_notes.txt"));
         var (diagnosis, note) = GetDiagnosis(entry);
-        return Rule.ChangeLog(diagnosis, note) with { ResourceName = entry?.Path, ResourceUrl = Shared.GetEntryUrl(_context, entry) };
+        return Rule.ChangeLog(diagnosis, note) with { ResourceName = entry?.Path, ResourceUrl = Shared.GetEntryUrl(context, entry) };
 
         (Diagnosis, string) GetDiagnosis(
             GitHubGraphQlClient.Entry? e)
@@ -55,21 +50,23 @@ public class DocumentationAnalyzer
         }
     }
 
-    private Rule GetHomePageUrlRule()
+    private Rule GetHomePageUrlRule(
+        AnalysisContext context)
     {
         var (diagnosis, note) = GetDiagnosis();
         //todo: check head request if url exists
-        return Rule.HomePage(diagnosis, note) with { ResourceName = _context.Repo.HomepageUrl, ResourceUrl = _context.Repo.HomepageUrl };
+        return Rule.HomePage(diagnosis, note) with { ResourceName = context.Repo.HomepageUrl, ResourceUrl = context.Repo.HomepageUrl };
 
         (Diagnosis, string) GetDiagnosis()
         {
-            return !string.IsNullOrEmpty(_context.Repo.HomepageUrl)
+            return !string.IsNullOrEmpty(context.Repo.HomepageUrl)
                 ? (Diagnosis.Info, "found homepage")
                 : (Diagnosis.Warning, "missing");
         }
     }
 
-    private Rule GetDescriptionRule()
+    private Rule GetDescriptionRule(
+        AnalysisContext context)
     {
         var (diagnosis, note) = GetDiagnosis();
 
@@ -77,18 +74,19 @@ public class DocumentationAnalyzer
 
         (Diagnosis, string) GetDiagnosis()
         {
-            return _context.Repo.Description is not null
+            return context.Repo.Description is not null
                 ? (Diagnosis.Info, "found")
                 : (Diagnosis.Warning, "missing");
         }
     }
 
-    private Rule GetReadmeRule()
+    private Rule GetReadmeRule(
+        AnalysisContext context)
     {
-        var entry = Shared.GetFirstBlob(_context.RootEntries, x => x.PathEquals("readme", "readme.md", "readme.txt", "readme.rst"));
+        var entry = Shared.GetFirstBlob(context.RootEntries, x => x.PathEquals("readme", "readme.md", "readme.txt", "readme.rst"));
         var (diagnosis, note) = GetDiagnosis(entry);
 
-        return Rule.Readme(diagnosis, note) with { ResourceName = entry?.Path, ResourceUrl = Shared.GetEntryUrl(_context, entry) };
+        return Rule.Readme(diagnosis, note) with { ResourceName = entry?.Path, ResourceUrl = Shared.GetEntryUrl(context, entry) };
 
         (Diagnosis, string) GetDiagnosis(
             GitHubGraphQlClient.Entry? e)

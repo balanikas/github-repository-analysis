@@ -20,4 +20,5 @@ public record RepoAnalysis
     public IReadOnlyList<Rule> Security { get; init; } = Array.Empty<Rule>();
     public IReadOnlyList<Rule> LanguageSpecific { get; init; } = Array.Empty<Rule>();
     public AnalysisStatus Status { get; init; } = AnalysisStatus.Ok;
+    public DateTime UpdatedAt { get; init; }
 }

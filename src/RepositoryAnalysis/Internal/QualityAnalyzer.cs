@@ -1,41 +1,34 @@
 using RepositoryAnalysis.Model;
 
-namespace RepositoryAnalysis.Quality;
+namespace RepositoryAnalysis.Internal;
 
-public class QualityAnalyzer
+public class QualityAnalyzer : IAnalyzer
 {
-    private readonly AnalysisContext _context;
-    private readonly GitHubRestClient _gitHubRestClient;
-
-    public QualityAnalyzer(
-        AnalysisContext context,
-        GitHubRestClient gitHubRestClient)
-    {
-        _context = context;
-        _gitHubRestClient = gitHubRestClient;
-    }
-
-    public async Task<IReadOnlyList<Rule>> Analyze()
+    public async Task<IReadOnlyList<Rule>> Analyze(
+        AnalysisContext context)
     {
         var rules = new List<Rule>
         {
-            await GetGitIgnoreRule(),
-            GetDockerIgnoreRule(),
-            GetEditorConfigRule(),
-            GetLargeFilesRule()
+            await GetGitIgnoreRule(context),
+            GetDockerIgnoreRule(context),
+            GetEditorConfigRule(context),
+            GetLargeFilesRule(context)
         };
 
         return await Task.FromResult(rules);
     }
 
-    private Rule GetDockerIgnoreRule()
+    private Rule GetDockerIgnoreRule(
+        AnalysisContext context)
     {
-        var dockerFile = Shared.GetBlobRecursive(_context.RootEntries, x => x.PathEquals("Dockerfile"));
-        var dockerIgnore = Shared.GetBlobRecursive(_context.RootEntries, x => x.PathEquals("Dockerfile"));
-        
+        var dockerFile = Shared.GetBlobRecursive(context.RootEntries, x => x.PathEquals("Dockerfile"));
+        var dockerIgnore = Shared.GetBlobRecursive(context.RootEntries, x => x.PathEquals("Dockerfile"));
+
         var (diagnosis, note) = GetDiagnosis(dockerFile, dockerIgnore);
-        return Rule.DockerFile(diagnosis, note) with 
-            { ResourceName = dockerFile?.Path, ResourceUrl = Shared.GetEntryUrl(_context, dockerFile) };
+        return Rule.DockerFile(diagnosis, note) with
+        {
+            ResourceName = dockerFile?.Path, ResourceUrl = Shared.GetEntryUrl(context, dockerFile)
+        };
 
         (Diagnosis, string) GetDiagnosis(
             GitHubGraphQlClient.Entry? file,
@@ -50,25 +43,24 @@ public class QualityAnalyzer
     }
 
 
-
-
-    private async Task<Rule> GetGitIgnoreRule()
+    private async Task<Rule> GetGitIgnoreRule(
+        AnalysisContext context)
     {
-        var entry = Shared.GetSingleBlob(_context.RootEntries, x => x.PathEquals(".gitignore"));
+        var entry = Shared.GetSingleBlob(context.RootEntries, x => x.PathEquals(".gitignore"));
         var (diagnosis, note, details) = await GetDiagnosis(entry);
         return Rule.GitIgnore(diagnosis, note, details) with
         {
-            ResourceName = entry?.Path, ResourceUrl = Shared.GetEntryUrl(_context, entry)
+            ResourceName = entry?.Path, ResourceUrl = Shared.GetEntryUrl(context, entry)
         };
 
         async Task<(Diagnosis, string, string)> GetDiagnosis(
             GitHubGraphQlClient.Entry? e)
         {
-            if (_context.Repo.PrimaryLanguage is null) return (Diagnosis.Warning, "no primary language found", "");
+            if (context.Repo.PrimaryLanguage is null) return (Diagnosis.Warning, "no primary language found", "");
 
-            var (templateName, ignoreList) = await _gitHubRestClient.GetGitIgnoreRules(_context.Repo.PrimaryLanguage.Name);
+            var (templateName, ignoreList) = await context.RestClient.GetGitIgnoreRules(context.Repo.PrimaryLanguage.Name);
             var ignoredFiles = new List<string>();
-            Shared.AnalyzeRecursive(_context.RootEntries,
+            Shared.AnalyzeRecursive(context.RootEntries,
                 x => x.IsTree() ? ignoreList.IsIgnored(x.Path, true) : ignoreList.IsIgnored(x.Path, false),
                 (
                     x,
@@ -93,9 +85,10 @@ Showing first 100 files:
         }
     }
 
-    private Rule GetLargeFilesRule()
+    private Rule GetLargeFilesRule(
+        AnalysisContext context)
     {
-        var entries = Shared.GetBlobsRecursive(_context.RootEntries, x => x.Size > 10_000_000);
+        var entries = Shared.GetBlobsRecursive(context.RootEntries, x => x.Size > 10_000_000);
         var showExamples = "";
         if (entries.Any())
             showExamples = @$"
@@ -116,12 +109,15 @@ Some examples:
     }
 
 
-    private Rule GetEditorConfigRule()
+    private Rule GetEditorConfigRule(
+        AnalysisContext context)
     {
-        var entry = Shared.GetBlobRecursive(_context.RootEntries, x => x.PathEquals(".editorconfig"));
+        var entry = Shared.GetBlobRecursive(context.RootEntries, x => x.PathEquals(".editorconfig"));
         var (diagnosis, note) = GetDiagnosis(entry);
-        return Rule.EditorConfig(diagnosis, note) with 
-            { ResourceName = entry?.Path, ResourceUrl = Shared.GetEntryUrl(_context, entry) };
+        return Rule.EditorConfig(diagnosis, note) with
+        {
+            ResourceName = entry?.Path, ResourceUrl = Shared.GetEntryUrl(context, entry)
+        };
 
         (Diagnosis, string) GetDiagnosis(
             GitHubGraphQlClient.Entry? e)

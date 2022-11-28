@@ -1,6 +1,6 @@
 using Microsoft.Extensions.Configuration;
 
-namespace RepositoryAnalysis;
+namespace RepositoryAnalysis.Internal;
 
 public class AmazonSecretsManagerConfigurationSource : IConfigurationSource
 {

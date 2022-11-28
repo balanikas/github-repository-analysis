@@ -5,7 +5,7 @@ using GraphQL.Client.Serializer.SystemTextJson;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace RepositoryAnalysis;
+namespace RepositoryAnalysis.Internal;
 
 //todo configure request throttling
 public class GitHubGraphQlClient
@@ -49,8 +49,8 @@ public class GitHubGraphQlClient
 }}
 
 ";
-            
-            //get bad repos
+
+        //get bad repos
 //             query = $@"
 // {{
 //   topic(name: ""{topic}"") {{
@@ -68,13 +68,28 @@ public class GitHubGraphQlClient
 //   }}
 // }}
 // ";
-            ;
+
         await Task.Delay(1000);
         var response = await Post<ListRepos.Data>(query);
         return response.topic;
     }
-    
-  
+
+
+    public async Task<Repo> GetUpdatedAt(
+        string owner,
+        string name)
+    {
+        var query = $@"
+{{
+  repository(name: ""{name}"", owner: ""{owner}"") {{
+    updatedAt
+  }}
+}}";
+
+        var response = await Post<Data>(query);
+        return response.Repository;
+    }
+
 
     public async Task<Repo> GetRepoData(
         string owner,
@@ -272,7 +287,7 @@ public class GitHubGraphQlClient
         {
             public List<Edge> edges { get; set; }
         }
-        
+
         public class RelatedTopic
         {
             public string name { get; set; }
@@ -320,7 +335,7 @@ public class GitHubGraphQlClient
         public string Type { get; set; }
         public int Size { get; set; }
 
-        public Objects Object { get; set; }
+        public Objects? Object { get; init; }
     }
 
     public class Error

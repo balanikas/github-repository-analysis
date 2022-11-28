@@ -1,43 +1,62 @@
-using System.Net;
 using Microsoft.Extensions.Logging;
-using RepositoryAnalysis.Community;
-using RepositoryAnalysis.Documentation;
-using RepositoryAnalysis.LanguageSpecific;
+using RepositoryAnalysis.Internal;
 using RepositoryAnalysis.Model;
-using RepositoryAnalysis.Overview;
-using RepositoryAnalysis.Quality;
-using RepositoryAnalysis.Security;
 
 namespace RepositoryAnalysis;
 
 public class AnalysisService
 {
+    private readonly AnalysisCache _cache;
+    private readonly CommunityAnalyzer _communityAnalyzer;
+    private readonly AnalysisContext _context;
+    private readonly DocumentationAnalyzer _documentationAnalyzer;
     private readonly GitHubGraphQlClient _gitHubGraphQlClient;
-    private readonly GitHubRestClient _gitHubRestClient;
+    private readonly LanguageSpecificAnalyzer _languageSpecificAnalyzer;
     private readonly ILogger<AnalysisService> _logger;
+    private readonly OverViewAnalyzer _overViewAnalyzer;
+    private readonly QualityAnalyzer _qualityAnalyzer;
+    private readonly RepositoryVerifier _repositoryVerifier;
+    private readonly SecurityAnalyzer _securityAnalyzer;
 
     public AnalysisService(
         ILogger<AnalysisService> logger,
         GitHubGraphQlClient gitHubGraphQlClient,
-        GitHubRestClient gitHubRestClient)
+        AnalysisCache cache,
+        RepositoryVerifier repositoryVerifier,
+        AnalysisContext context,
+        OverViewAnalyzer overViewAnalyzer,
+        DocumentationAnalyzer documentationAnalyzer,
+        LanguageSpecificAnalyzer languageSpecificAnalyzer,
+        QualityAnalyzer qualityAnalyzer,
+        CommunityAnalyzer communityAnalyzer,
+        SecurityAnalyzer securityAnalyzer)
     {
         _logger = logger;
         _gitHubGraphQlClient = gitHubGraphQlClient;
-        _gitHubRestClient = gitHubRestClient;
+        _cache = cache;
+        _repositoryVerifier = repositoryVerifier;
+        _context = context;
+        _overViewAnalyzer = overViewAnalyzer;
+        _documentationAnalyzer = documentationAnalyzer;
+        _languageSpecificAnalyzer = languageSpecificAnalyzer;
+        _qualityAnalyzer = qualityAnalyzer;
+        _communityAnalyzer = communityAnalyzer;
+        _securityAnalyzer = securityAnalyzer;
     }
 
     public async Task<RepoAnalysis> GetAnalysis(
         string url)
     {
-        if (!await UrlExists(url)) return RepoAnalysis.NotFound;
+        if (!await _repositoryVerifier.RepositoryExists(url)) return RepoAnalysis.NotFound;
 
         var (owner, name) = ExtractUrlParts(url);
 
-        var context = new AnalysisContext(owner, name);
+        var cachedAnalysis = await _cache.Get(owner, name);
+        if (cachedAnalysis is not null) return cachedAnalysis;
+
         try
         {
-            await context.Build(_gitHubGraphQlClient);
-
+            await _context.Build(owner, name);
         }
         catch (Exception e)
         {
@@ -45,26 +64,17 @@ public class AnalysisService
             return RepoAnalysis.Error;
         }
 
-
-        var overViewAnalyzer = new OverViewAnalyzer(context);
-        var documentationAnalyzer = new DocumentationAnalyzer(context);
-        var qualityAnalyzer = new QualityAnalyzer(context, _gitHubRestClient);
-        var communityAnalyzer = new CommunityAnalyzer(context);
-        var securityAnalyzer = new SecurityAnalyzer(context);
-        var langSpecificAnalyzer = new LanguageSpecificAnalyzer(context);
-
-        var overViewTask = overViewAnalyzer.Analyze();
-        var documentationTask = documentationAnalyzer.Analyze();
-        var qualityTask = qualityAnalyzer.Analyze();
-        var communityTask = communityAnalyzer.Analyze();
-        var securityTask = securityAnalyzer.Analyze();
-        var langSpecificTask = langSpecificAnalyzer.Analyze();
+        var overView = _overViewAnalyzer.Analyze(_context);
+        var documentationTask = _documentationAnalyzer.Analyze(_context);
+        var qualityTask = _qualityAnalyzer.Analyze(_context);
+        var communityTask = _communityAnalyzer.Analyze(_context);
+        var securityTask = _securityAnalyzer.Analyze(_context);
+        var langSpecificTask = _languageSpecificAnalyzer.Analyze(_context);
 
         try
         {
             _logger.LogInformation("Starting analysis of {Url}", url);
-
-            await Task.WhenAll(documentationTask, overViewTask, qualityTask, communityTask, securityTask, langSpecificTask);
+            await Task.WhenAll(documentationTask, qualityTask, communityTask, securityTask, langSpecificTask);
             _logger.LogInformation("Successfully analyzed {Url}", url);
         }
         catch (Exception e)
@@ -73,28 +83,18 @@ public class AnalysisService
             return RepoAnalysis.Error;
         }
 
-        return new RepoAnalysis
+        var analysis = new RepoAnalysis
         {
-            OverView = overViewTask.Result,
+            OverView = overView,
             Documentation = documentationTask.Result,
             Quality = qualityTask.Result,
             Community = communityTask.Result,
             Security = securityTask.Result,
-            LanguageSpecific = langSpecificTask.Result
+            LanguageSpecific = langSpecificTask.Result,
+            UpdatedAt = _context.Repo.UpdatedAt
         };
-    }
 
-    private async Task<bool> UrlExists(
-        string url)
-    {
-        var client = new HttpClient();
-        var response = await client.SendAsync(new HttpRequestMessage(HttpMethod.Head, url));
-        return response.StatusCode switch
-        {
-            HttpStatusCode.OK => true,
-            HttpStatusCode.NotFound => false,
-            _ => throw new Exception("something went wrong")
-        };
+        return _cache.Add(owner, name, analysis);
     }
 
     private (string, string) ExtractUrlParts(
@@ -109,7 +109,7 @@ public class AnalysisService
         var paths = uri.AbsolutePath.Split("/");
         if (paths.Length != 3)
         {
-            _logger.LogError($"invalid {url}", url);
+            _logger.LogError("invalid {Url}", url);
             throw new ArgumentException($"invalid url format for {url}");
         }
 
@@ -125,7 +125,7 @@ public class AnalysisService
         var test = new BulkAnalysisTest();
         await test.Run(
             topic,
-            x => _gitHubGraphQlClient.ListReposByTopic(x), 
+            x => _gitHubGraphQlClient.ListReposByTopic(x),
             GetAnalysis);
     }
 }

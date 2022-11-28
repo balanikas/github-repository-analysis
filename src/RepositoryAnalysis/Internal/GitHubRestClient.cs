@@ -3,7 +3,7 @@ using MAB.DotIgnore;
 using Microsoft.Extensions.Options;
 using Octokit;
 
-namespace RepositoryAnalysis;
+namespace RepositoryAnalysis.Internal;
 
 public class GitHubRestClient
 {

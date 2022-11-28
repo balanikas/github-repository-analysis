@@ -1,38 +1,32 @@
 using RepositoryAnalysis.Model;
 
-namespace RepositoryAnalysis.Community;
+namespace RepositoryAnalysis.Internal;
 
-public class CommunityAnalyzer
+public class CommunityAnalyzer : IAnalyzer
 {
-    private readonly AnalysisContext _context;
-
-    public CommunityAnalyzer(
+    public async Task<IReadOnlyList<Rule>> Analyze(
         AnalysisContext context)
-    {
-        _context = context;
-    }
-
-    public async Task<IReadOnlyList<Rule>> Analyze()
     {
         var rules = new List<Rule>
         {
-            GetLicenseRule(),
-            GetContributingRule(),
-            GetCodeOfConductRule(),
-            GetCodeOwnersRule(),
-            GetIssuesRule(),
-            GetPullRequestsRule(),
-            GetDiscussionsRule(),
-            GetSupportRule(),
-            GetCitationRule()
+            GetLicenseRule(context),
+            GetContributingRule(context),
+            GetCodeOfConductRule(context),
+            GetCodeOwnersRule(context),
+            GetIssuesRule(context),
+            GetPullRequestsRule(context),
+            GetDiscussionsRule(context),
+            GetSupportRule(context),
+            GetCitationRule(context)
         };
 
         return await Task.FromResult(rules);
     }
 
-    private Rule GetLicenseRule()
+    private Rule GetLicenseRule(
+        AnalysisContext context)
     {
-        var license = _context.Repo.LicenseInfo;
+        var license = context.Repo.LicenseInfo;
         var (diagnosis, note) = GetDiagnosis(license);
 
         (Diagnosis, string) GetDiagnosis(
@@ -45,8 +39,9 @@ public class CommunityAnalyzer
 
         return Rule.License(diagnosis, note) with { ResourceName = license?.Name, ResourceUrl = license?.Url };
     }
-    
-    private Rule GetCitationRule()
+
+    private Rule GetCitationRule(
+        AnalysisContext context)
     {
         var citationFileNames = new[]
         {
@@ -58,7 +53,7 @@ public class CommunityAnalyzer
             "CITATIONS.md",
             "CITATION.cff"
         };
-        var entry = Shared.GetFirstBlob(_context.RootEntries,
+        var entry = Shared.GetFirstBlob(context.RootEntries,
             x => citationFileNames.Contains(x.Path, StringComparer.OrdinalIgnoreCase));
         var (diagnosis, note) = GetDiagnosis(entry);
 
@@ -73,9 +68,10 @@ public class CommunityAnalyzer
         }
     }
 
-    private Rule GetSupportRule()
+    private Rule GetSupportRule(
+        AnalysisContext context)
     {
-        var entry = Shared.GetBlobRecursive(_context.RootEntries,
+        var entry = Shared.GetBlobRecursive(context.RootEntries,
             x => x.PathEquals("support") ||
                  x.PathEquals("docs/support") ||
                  x.PathEquals(".github/support"));
@@ -96,29 +92,31 @@ public class CommunityAnalyzer
         }
     }
 
-    private Rule GetPullRequestsRule()
+    private Rule GetPullRequestsRule(
+        AnalysisContext context)
     {
         var (diagnosis, note) = GetDiagnosis();
         return Rule.PullRequests(diagnosis, note);
 
         (Diagnosis, string) GetDiagnosis()
         {
-            return _context.Repo.PullRequestTemplates.Any()
+            return context.Repo.PullRequestTemplates.Any()
                 ? (Diagnosis.Info,
-                    $"found {_context.Repo.PullRequests.TotalCount} pull requests and {_context.Repo.PullRequestTemplates.Count} pull request templates")
+                    $"found {context.Repo.PullRequests.TotalCount} pull requests and {context.Repo.PullRequestTemplates.Count} pull request templates")
                 : (Diagnosis.Warning, "missing pull request templates");
         }
     }
 
 
-    private Rule GetIssuesRule()
+    private Rule GetIssuesRule(
+        AnalysisContext context)
     {
         var (diagnosis, note) = GetDiagnosis();
 
         var templates = "";
-        if (_context.Repo.IssueTemplates.Any())
+        if (context.Repo.IssueTemplates.Any())
         {
-            var links = _context.Repo.IssueTemplates.Select(x => Shared.CreateIssueTemplateLink(_context, x.Filename, x.Name));
+            var links = context.Repo.IssueTemplates.Select(x => Shared.CreateIssueTemplateLink(context, x.Filename, x.Name));
             templates = "Templates found: <br/>" + string.Join("<br/>", links);
         }
 
@@ -126,49 +124,52 @@ public class CommunityAnalyzer
 
         (Diagnosis, string) GetDiagnosis()
         {
-            return _context.Repo.HasIssuesEnabled
-                ? _context.Repo.IssueTemplates.Any()
-                    ? (Diagnosis.Info, $"found {_context.Repo.Issues.TotalCount} issues and {_context.Repo.IssueTemplates.Count} issue templates")
+            return context.Repo.HasIssuesEnabled
+                ? context.Repo.IssueTemplates.Any()
+                    ? (Diagnosis.Info, $"found {context.Repo.Issues.TotalCount} issues and {context.Repo.IssueTemplates.Count} issue templates")
                     : (Diagnosis.Warning, "issues are enabled but missing issue templates")
                 : (Diagnosis.Info, "feature is disabled");
         }
     }
 
-    private Rule GetDiscussionsRule()
+    private Rule GetDiscussionsRule(
+        AnalysisContext context)
     {
         var (diagnosis, note) = GetDiagnosis();
         return Rule.Discussions(diagnosis, note);
 
         (Diagnosis, string) GetDiagnosis()
         {
-            return _context.Repo.HasDiscussionsEnabled
+            return context.Repo.HasDiscussionsEnabled
                 ? (Diagnosis.Info, "feature is enabled")
                 : (Diagnosis.Info, "feature is disabled");
         }
     }
 
-    private Rule GetCodeOwnersRule()
+    private Rule GetCodeOwnersRule(
+        AnalysisContext context)
     {
-        var entry = Shared.GetBlobRecursive(_context.RootEntries, x =>
+        var entry = Shared.GetBlobRecursive(context.RootEntries, x =>
             Path.GetFileName(x.Path).Equals("codeowners", StringComparison.OrdinalIgnoreCase));
 
         var (diagnosis, note) = GetDiagnosis(entry);
-        return Rule.CodeOwners(diagnosis, note) with { ResourceName = entry?.Path, ResourceUrl = Shared.GetEntryUrl(_context, entry) };
+        return Rule.CodeOwners(diagnosis, note) with { ResourceName = entry?.Path, ResourceUrl = Shared.GetEntryUrl(context, entry) };
 
         (Diagnosis, string) GetDiagnosis(
             GitHubGraphQlClient.Entry? e)
         {
             return e is not null
-                ? _context.Repo.Codeowners.Errors.Any()
-                    ? (Diagnosis.Warning, $"{_context.Repo.Codeowners.Errors.Count} errors in {e.Path}")
+                ? context.Repo.Codeowners.Errors.Any()
+                    ? (Diagnosis.Warning, $"{context.Repo.Codeowners.Errors.Count} errors in {e.Path}")
                     : (Diagnosis.Info, "")
                 : (Diagnosis.Warning, "missing code owners file");
         }
     }
 
-    private Rule GetCodeOfConductRule()
+    private Rule GetCodeOfConductRule(
+        AnalysisContext context)
     {
-        var entry = _context.Repo.CodeOfConduct;
+        var entry = context.Repo.CodeOfConduct;
 
         var (diagnosis, note) = GetDiagnosis(entry);
         return Rule.CodeOfConduct(diagnosis, note) with { ResourceName = entry?.Name, ResourceUrl = entry?.Url };
@@ -182,9 +183,10 @@ public class CommunityAnalyzer
         }
     }
 
-    private Rule GetContributingRule()
+    private Rule GetContributingRule(
+        AnalysisContext context)
     {
-        var entry = Shared.GetSingleBlob(_context.RootEntries,
+        var entry = Shared.GetSingleBlob(context.RootEntries,
             x => x.PathEquals(
                 "contributing.md",
                 "docs/contributing.md",
@@ -195,7 +197,7 @@ public class CommunityAnalyzer
             ));
 
         var (diagnosis, note) = GetDiagnosis(entry);
-        return Rule.Contributing(diagnosis, note) with { ResourceName = entry?.Path, ResourceUrl = Shared.GetEntryUrl(_context, entry) };
+        return Rule.Contributing(diagnosis, note) with { ResourceName = entry?.Path, ResourceUrl = Shared.GetEntryUrl(context, entry) };
 
         (Diagnosis, string) GetDiagnosis(
             GitHubGraphQlClient.Entry? e)

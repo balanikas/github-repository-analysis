@@ -50,25 +50,6 @@ public class GitHubGraphQlClient
 
 ";
 
-        //get bad repos
-//             query = $@"
-// {{
-//   topic(name: ""{topic}"") {{
-//     relatedTopics(first: 10) {{
-//       name
-//     }}
-//     repositories(first: 5, orderBy: {{field: STARGAZERS, direction: ASC}}) {{
-//       edges {{
-//         node {{
-//           url
-//           stargazerCount
-//         }}
-//       }}
-//     }}
-//   }}
-// }}
-// ";
-
         await Task.Delay(1000);
         var response = await Post<ListRepos.Data>(query);
         return response.topic;
@@ -194,6 +175,7 @@ public class GitHubGraphQlClient
         }
         catch (GraphQLHttpRequestException e)
         {
+            _logger.LogError(e,"Error posting query {Query}", query);
             if (e.StatusCode == HttpStatusCode.BadGateway) throw new Exception($"{e.StatusCode} for query \n {query}");
 
             throw;
@@ -270,174 +252,174 @@ public class GitHubGraphQlClient
     {
         public class Data
         {
-            public Topic topic { get; set; }
+            public Topic topic { get; init; }
         }
 
         public class Edge
         {
-            public Node node { get; set; }
+            public Node node { get; init; }
         }
 
         public class Node
         {
-            public string url { get; set; }
+            public string url { get; init; }
         }
 
         public class Repositories
         {
-            public List<Edge> edges { get; set; }
+            public List<Edge> edges { get; init; }
         }
 
         public class RelatedTopic
         {
-            public string name { get; set; }
+            public string name { get; init; }
         }
 
         public class Root
         {
-            public Data data { get; set; }
+            public Data data { get; init; }
         }
 
         public class Topic
         {
-            public string name { get; set; }
-            public Repositories repositories { get; set; }
-            public List<RelatedTopic> relatedTopics { get; set; }
+            public string name { get; init; }
+            public Repositories repositories { get; init; }
+            public List<RelatedTopic> relatedTopics { get; init; }
         }
     }
 
     //todo fix nullable across solution
     public class CodeOfConduct
     {
-        public string Url { get; set; }
-        public string Name { get; set; }
+        public string Url { get; init; }
+        public string Name { get; init; }
     }
 
     public class Codeowners
     {
-        public List<Error> Errors { get; set; }
+        public List<Error> Errors { get; init; }
     }
 
     public class Data
     {
-        public Repo Repository { get; set; }
+        public Repo Repository { get; init; }
     }
 
     public class DefaultBranchRef
     {
-        public string Name { get; set; }
-        public object BranchProtectionRule { get; set; }
+        public string Name { get; init; }
+        public object BranchProtectionRule { get; init; }
     }
 
     public class Entry
     {
-        public string Path { get; set; }
-        public string Type { get; set; }
-        public int Size { get; set; }
+        public string Path { get; init; }
+        public string Type { get; init; }
+        public int Size { get; init; }
 
         public Objects? Object { get; init; }
     }
 
     public class Error
     {
-        public string Kind { get; set; }
+        public string Kind { get; init; }
     }
 
     public class Issues
     {
-        public int TotalCount { get; set; }
+        public int TotalCount { get; init; }
     }
 
     public class IssueTemplate
     {
-        public string Name { get; set; }
-        public string Filename { get; set; }
+        public string Name { get; init; }
+        public string Filename { get; init; }
     }
 
     public class Labels
     {
-        public int TotalCount { get; set; }
+        public int TotalCount { get; init; }
     }
 
     public class LicenseInfo
     {
-        public string Name { get; set; }
-        public string Url { get; set; }
+        public string Name { get; init; }
+        public string Url { get; init; }
     }
 
     public class Objects
     {
-        public List<Entry> Entries { get; set; }
+        public List<Entry> Entries { get; init; }
     }
 
     public class PrimaryLanguage
     {
-        public string Name { get; set; }
-        public string Color { get; set; }
+        public string Name { get; init; }
+        public string Color { get; init; }
     }
 
     public class PullRequests
     {
-        public int TotalCount { get; set; }
+        public int TotalCount { get; init; }
     }
 
     public class PullRequestTemplate
     {
-        public string Filename { get; set; }
+        public string Filename { get; init; }
     }
 
     public class Repo
     {
-        public DateTime UpdatedAt { get; set; }
-        public RepositoryTopics RepositoryTopics { get; set; }
+        public DateTime UpdatedAt { get; init; }
+        public RepositoryTopics RepositoryTopics { get; init; }
 
-        public CodeOfConduct? CodeOfConduct { get; set; }
-        public Codeowners Codeowners { get; set; }
-        public DefaultBranchRef DefaultBranchRef { get; set; }
-        public string? Description { get; set; }
-        public bool DeleteBranchOnMerge { get; set; }
-        public bool HasDiscussionsEnabled { get; set; }
-        public bool HasIssuesEnabled { get; set; }
-        public string? HomepageUrl { get; set; }
-        public bool IsArchived { get; set; }
-        public bool IsEmpty { get; set; }
-        public bool IsLocked { get; set; }
-        public bool IsSecurityPolicyEnabled { get; set; }
-        public List<IssueTemplate> IssueTemplates { get; set; }
-        public Labels Labels { get; set; }
-        public LicenseInfo? LicenseInfo { get; set; }
-        public string OpenGraphImageUrl { get; set; }
-        public PrimaryLanguage? PrimaryLanguage { get; set; }
-        public List<PullRequestTemplate> PullRequestTemplates { get; set; }
-        public string SecurityPolicyUrl { get; set; }
+        public CodeOfConduct? CodeOfConduct { get; init; }
+        public Codeowners Codeowners { get; init; }
+        public DefaultBranchRef DefaultBranchRef { get; init; }
+        public string? Description { get; init; }
+        public bool DeleteBranchOnMerge { get; init; }
+        public bool HasDiscussionsEnabled { get; init; }
+        public bool HasIssuesEnabled { get; init; }
+        public string? HomepageUrl { get; init; }
+        public bool IsArchived { get; init; }
+        public bool IsEmpty { get; init; }
+        public bool IsLocked { get; init; }
+        public bool IsSecurityPolicyEnabled { get; init; }
+        public List<IssueTemplate> IssueTemplates { get; init; }
+        public Labels Labels { get; init; }
+        public LicenseInfo? LicenseInfo { get; init; }
+        public string OpenGraphImageUrl { get; init; }
+        public PrimaryLanguage? PrimaryLanguage { get; init; }
+        public List<PullRequestTemplate> PullRequestTemplates { get; init; }
+        public string SecurityPolicyUrl { get; init; }
         public string Url { get; set; }
-        public VulnerabilityAlerts VulnerabilityAlerts { get; set; }
-        public PullRequests PullRequests { get; set; }
-        public Issues Issues { get; set; }
-        public Objects Object { get; set; }
-        public int DiskUsage { get; set; }
-        public bool HasProjectsEnabled { get; set; }
-        public GitIgnore? GitIgnore { get; set; }
+        public VulnerabilityAlerts VulnerabilityAlerts { get; init; }
+        public PullRequests PullRequests { get; init; }
+        public Issues Issues { get; init; }
+        public Objects Object { get; init; }
+        public int DiskUsage { get; init; }
+        public bool HasProjectsEnabled { get; init; }
+        public GitIgnore? GitIgnore { get; init; }
     }
 
     public class GitIgnore
     {
-        public string Text { get; set; }
+        public string Text { get; init; }
     }
 
     public class RepositoryTopics
     {
-        public int TotalCount { get; set; }
+        public int TotalCount { get; init; }
     }
 
 
     public class Root
     {
-        public Data Data { get; set; }
+        public Data Data { get; init; }
     }
 
     public class VulnerabilityAlerts
     {
-        public int TotalCount { get; set; }
+        public int TotalCount { get; init; }
     }
 }

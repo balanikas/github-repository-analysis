@@ -31,19 +31,17 @@
 
         <MudProgressLinear Class=@(LockUI ? "" : "invisible") Color="Color.Primary" Size="Size.Large" Indeterminate="true"/>
         <br/>
-
+       
         <MudText Align="Align.Center">Try these examples: </MudText>
-        <MudButton Color="Color.Info" Size="Size.Small" OnClick='() => OnExampleSubmit("https://github.com/dotnet/runtime")' Variant="Variant.Text">https://github.com/dotnet/runtime</MudButton>
-        <MudButton Color="Color.Info" Size="Size.Small" OnClick='() => OnExampleSubmit("https://github.com/Fody/NullGuard")' Variant="Variant.Text">https://github.com/Fody/NullGuard</MudButton>
-        <MudButton Color="Color.Info" Size="Size.Small" OnClick='() => OnExampleSubmit("https://github.com/dotnet/roslyn")' Variant="Variant.Text">https://github.com/dotnet/roslyn</MudButton>
-        <MudButton Color="Color.Info" Size="Size.Small" OnClick='() => OnExampleSubmit("https://github.com/shouldly/shouldly")' Variant="Variant.Text">https://github.com/shouldly/shouldly</MudButton>
+        <MudButton Disabled="@LockUI" Color="Color.Info" Size="Size.Small" OnClick='() => OnExampleSubmit("https://github.com/dotnet/runtime")' Variant="Variant.Text">https://github.com/dotnet/runtime</MudButton>
+        <MudButton Disabled="@LockUI" Color="Color.Info" Size="Size.Small" OnClick='() => OnExampleSubmit("https://github.com/Fody/NullGuard")' Variant="Variant.Text">https://github.com/Fody/NullGuard</MudButton>
+        <MudButton Disabled="@LockUI" Color="Color.Info" Size="Size.Small" OnClick='() => OnExampleSubmit("https://github.com/dotnet/roslyn")' Variant="Variant.Text">https://github.com/dotnet/roslyn</MudButton>
+        <MudButton Disabled="@LockUI" Color="Color.Info" Size="Size.Small" OnClick='() => OnExampleSubmit("https://github.com/shouldly/shouldly")' Variant="Variant.Text">https://github.com/shouldly/shouldly</MudButton>
 
     </MudContainer>
 </MudPaper>
 
-
 <MudTabs Class="@(LockUI ? "invisible" : "visible")" Elevation="5" Rounded="true" Centered="true" Color="@Color.Default" Style="position: relative;">
-
 
     <MudTabPanel Text="Overview">
         <MudContainer >
@@ -63,16 +61,12 @@
     <MudTabPanel Text="Quality">
         <AnalysisResults Items="Analysis.Quality"></AnalysisResults>
     </MudTabPanel>
-
     <MudTabPanel Text="Security">
-        <MudText Align="Align.Center" Typo="Typo.h4" >coming soon</MudText>
-        @* <AnalysisResults Items="Analysis.Security"></AnalysisResults> *@
+        <MudText Align="Align.Center" Typo="Typo.h4">coming soon</MudText>
     </MudTabPanel>
     <MudTabPanel Text=@("Language Specific - " + Analysis.OverView?.PrimaryLanguage)>
-        
         <AnalysisResults Items="Analysis.LanguageSpecific"></AnalysisResults>
     </MudTabPanel>
-
 
 </MudTabs>
 
@@ -81,9 +75,11 @@
     public string RepositoryUrl { get; set; } = "";
     public RepoAnalysis Analysis { get; set; } = RepoAnalysis.Empty;
     public bool LockUI { get; set; }
+
     [Parameter]
     [SupplyParameterFromQuery(Name = "url")]
     public string? Url { get; set; }
+
     private async Task ShowInvalidInputMessage()
     {
         await DialogService.ShowMessageBox(
@@ -92,7 +88,6 @@
 
         StateHasChanged();
     }
-
 
 
     protected override async Task OnParametersSetAsync()
@@ -177,8 +172,6 @@
     private async Task OnSubmitDebug()
     {
         await AnalysisService.DoBulkTest(Topic);
-
-
     }
 
     public string Topic { get; set; } = "";

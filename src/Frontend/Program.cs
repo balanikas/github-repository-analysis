@@ -1,6 +1,9 @@
+using AWS.Logger.SeriLog;
 using Microsoft.AspNetCore.Hosting.StaticWebAssets;
 using MudBlazor.Services;
 using RepositoryAnalysis;
+using Serilog;
+using Serilog.Formatting.Compact;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +17,14 @@ builder.Host.ConfigureAppConfiguration(((_, configurationBuilder) =>
     configurationBuilder.AddAmazonSecretsManager("us-west-2", "github-pat");
 }));
 
+builder.Host.UseSerilog((ctx, lc) =>
+{
+    lc
+        .ReadFrom.Configuration(ctx.Configuration)
+        .WriteTo.AWSSeriLog(
+            configuration: ctx.Configuration,
+            textFormatter: new RenderedCompactJsonFormatter());
+});
 
 
 builder.Services.AddRazorPages();

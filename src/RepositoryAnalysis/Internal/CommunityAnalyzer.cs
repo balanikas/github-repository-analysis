@@ -30,12 +30,10 @@ public class CommunityAnalyzer : IAnalyzer
         var (diagnosis, note) = GetDiagnosis(license);
 
         (Diagnosis, string) GetDiagnosis(
-            GitHubGraphQlClient.LicenseInfo? e)
-        {
-            return e is not null
+            GitHubGraphQlClient.LicenseInfo? e) =>
+            e is not null
                 ? (Diagnosis.Info, "found")
                 : (Diagnosis.Error, "missing");
-        }
 
         return Rule.License(diagnosis, note) with { ResourceName = license?.Name, ResourceUrl = license?.Url };
     }
@@ -60,18 +58,16 @@ public class CommunityAnalyzer : IAnalyzer
         return Rule.CitationFile(diagnosis, note);
 
         (Diagnosis, string) GetDiagnosis(
-            GitHubGraphQlClient.Entry? e)
-        {
-            return e is not null
+            GitHubGraphQlClient.Entry? e) =>
+            e is not null
                 ? (Diagnosis.Info, "found")
                 : (Diagnosis.Warning, "missing citation file");
-        }
     }
 
     private Rule GetSupportRule(
         AnalysisContext context)
     {
-        var entry = Shared.GetBlobRecursive(context.RootEntries,
+        var entry = Shared.GetSingleBlobRecursive(context.RootEntries,
             x => x.PathEquals("support") ||
                  x.PathEquals("docs/support") ||
                  x.PathEquals(".github/support"));
@@ -98,13 +94,11 @@ public class CommunityAnalyzer : IAnalyzer
         var (diagnosis, note) = GetDiagnosis();
         return Rule.PullRequests(diagnosis, note);
 
-        (Diagnosis, string) GetDiagnosis()
-        {
-            return context.Repo.PullRequestTemplates.Any()
+        (Diagnosis, string) GetDiagnosis() =>
+            context.Repo.PullRequestTemplates.Any()
                 ? (Diagnosis.Info,
                     $"found {context.Repo.PullRequests.TotalCount} pull requests and {context.Repo.PullRequestTemplates.Count} pull request templates")
                 : (Diagnosis.Warning, "missing pull request templates");
-        }
     }
 
 
@@ -122,14 +116,12 @@ public class CommunityAnalyzer : IAnalyzer
 
         return Rule.Issues(diagnosis, note, templates);
 
-        (Diagnosis, string) GetDiagnosis()
-        {
-            return context.Repo.HasIssuesEnabled
+        (Diagnosis, string) GetDiagnosis() =>
+            context.Repo.HasIssuesEnabled
                 ? context.Repo.IssueTemplates.Any()
                     ? (Diagnosis.Info, $"found {context.Repo.Issues.TotalCount} issues and {context.Repo.IssueTemplates.Count} issue templates")
                     : (Diagnosis.Warning, "issues are enabled but missing issue templates")
                 : (Diagnosis.Info, "feature is disabled");
-        }
     }
 
     private Rule GetDiscussionsRule(
@@ -138,32 +130,28 @@ public class CommunityAnalyzer : IAnalyzer
         var (diagnosis, note) = GetDiagnosis();
         return Rule.Discussions(diagnosis, note);
 
-        (Diagnosis, string) GetDiagnosis()
-        {
-            return context.Repo.HasDiscussionsEnabled
+        (Diagnosis, string) GetDiagnosis() =>
+            context.Repo.HasDiscussionsEnabled
                 ? (Diagnosis.Info, "feature is enabled")
                 : (Diagnosis.Info, "feature is disabled");
-        }
     }
 
     private Rule GetCodeOwnersRule(
         AnalysisContext context)
     {
-        var entry = Shared.GetBlobRecursive(context.RootEntries, x =>
+        var entry = Shared.GetSingleBlobRecursive(context.RootEntries, x =>
             Path.GetFileName(x.Path).Equals("codeowners", StringComparison.OrdinalIgnoreCase));
 
         var (diagnosis, note) = GetDiagnosis(entry);
         return Rule.CodeOwners(diagnosis, note) with { ResourceName = entry?.Path, ResourceUrl = Shared.GetEntryUrl(context, entry) };
 
         (Diagnosis, string) GetDiagnosis(
-            GitHubGraphQlClient.Entry? e)
-        {
-            return e is not null
+            GitHubGraphQlClient.Entry? e) =>
+            e is not null
                 ? context.Repo.Codeowners.Errors.Any()
                     ? (Diagnosis.Warning, $"{context.Repo.Codeowners.Errors.Count} errors in {e.Path}")
                     : (Diagnosis.Info, "")
                 : (Diagnosis.Warning, "missing code owners file");
-        }
     }
 
     private Rule GetCodeOfConductRule(
@@ -175,12 +163,10 @@ public class CommunityAnalyzer : IAnalyzer
         return Rule.CodeOfConduct(diagnosis, note) with { ResourceName = entry?.Name, ResourceUrl = entry?.Url };
 
         (Diagnosis, string) GetDiagnosis(
-            GitHubGraphQlClient.CodeOfConduct? e)
-        {
-            return e is not null
+            GitHubGraphQlClient.CodeOfConduct? e) =>
+            e is not null
                 ? (Diagnosis.Info, "found")
                 : (Diagnosis.Warning, "missing");
-        }
     }
 
     private Rule GetContributingRule(

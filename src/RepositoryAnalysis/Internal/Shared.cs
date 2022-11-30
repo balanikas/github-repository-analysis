@@ -4,12 +4,10 @@ public static class Shared
 {
     public static string? GetEntryUrl(
         AnalysisContext context,
-        GitHubGraphQlClient.Entry? entry)
-    {
-        return entry is not null
+        GitHubGraphQlClient.Entry? entry) =>
+        entry is not null
             ? Path.Combine(context.Repo.Url, entry.Type, context.Repo.DefaultBranchRef.Name, entry.Path)
             : null;
-    }
 
     public static string CreateIssueTemplateLink(
         AnalysisContext context,
@@ -22,10 +20,8 @@ public static class Shared
 
     public static string CreateLink(
         string url,
-        string name)
-    {
-        return $@"<u><strong><a target=""_blank"" href=""{url}"">{name}</a></strong></u>";
-    }
+        string name) =>
+        $@"<u><strong><a target=""_blank"" href=""{url}"">{name}</a></strong></u>";
 
     public static GitHubGraphQlClient.Entry? GetSingleBlob(
         IReadOnlyList<GitHubGraphQlClient.Entry>? entries,
@@ -45,7 +41,7 @@ public static class Shared
             predicate(x));
     }
 
-    public static GitHubGraphQlClient.Entry? GetBlobRecursive(
+    public static GitHubGraphQlClient.Entry? GetSingleBlobRecursive(
         IReadOnlyList<GitHubGraphQlClient.Entry>? entries,
         Func<GitHubGraphQlClient.Entry, bool> predicate)
     {
@@ -60,7 +56,26 @@ public static class Shared
 
         return entries
             .Where(x => x.Type.Equals("tree", StringComparison.OrdinalIgnoreCase))
-            .Select(e => GetBlobRecursive(e.Object?.Entries, predicate))
+            .Select(e => GetSingleBlobRecursive(e.Object?.Entries, predicate))
+            .FirstOrDefault(found => found is not null);
+    }
+
+    public static GitHubGraphQlClient.Entry? GetFirstBlobRecursive(
+        IReadOnlyList<GitHubGraphQlClient.Entry>? entries,
+        Func<GitHubGraphQlClient.Entry, bool> predicate)
+    {
+        if (entries is null)
+            return null;
+
+        var entry = entries.FirstOrDefault(x =>
+            x.Type.Equals("blob", StringComparison.OrdinalIgnoreCase) &&
+            predicate(x));
+
+        if (entry is not null) return entry;
+
+        return entries
+            .Where(x => x.Type.Equals("tree", StringComparison.OrdinalIgnoreCase))
+            .Select(e => GetFirstBlobRecursive(e.Object?.Entries, predicate))
             .FirstOrDefault(found => found is not null);
     }
 
@@ -92,12 +107,10 @@ public static class Shared
     {
         if (entries is null)
             return;
+
         foreach (var entry in entries)
             if (entry.Type.Equals("blob", StringComparison.OrdinalIgnoreCase) && predicate(entry))
                 action(entry, entries);
-        // var foundEntry = entries.FirstOrDefault(x => x.Type.Equals("blob", StringComparison.OrdinalIgnoreCase) &&
-        //                                              predicate(x));
-        // if (foundEntry is not null) action(foundEntry, entries);
 
         foreach (var e in entries.Where(x => x.Type.Equals("tree", StringComparison.OrdinalIgnoreCase)))
             AnalyzeRecursive(e.Object?.Entries, predicate, action);

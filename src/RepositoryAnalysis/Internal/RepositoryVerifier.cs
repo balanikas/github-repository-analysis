@@ -7,10 +7,8 @@ public class RepositoryVerifier
     private readonly HttpClient _client;
 
     public RepositoryVerifier(
-        HttpClient client)
-    {
+        HttpClient client) =>
         _client = client;
-    }
 
     public async Task<bool> RepositoryExists(
         string url)

@@ -79,13 +79,13 @@ public class AnalysisService
         {
             _logger.LogInformation("Starting analysis of {Url}", url);
             await Task.WhenAll(documentationTask, qualityTask, communityTask, securityTask, langSpecificTask);
-                    
-            _logger.LogRules(documentationTask.Result,url);
-            _logger.LogRules(qualityTask.Result,url);
-            _logger.LogRules(communityTask.Result,url);
-            _logger.LogRules(securityTask.Result,url);
-            _logger.LogRules(langSpecificTask.Result,url);
-            
+
+            _logger.LogRules(documentationTask.Result, url);
+            _logger.LogRules(qualityTask.Result, url);
+            _logger.LogRules(communityTask.Result, url);
+            _logger.LogRules(securityTask.Result, url);
+            _logger.LogRules(langSpecificTask.Result, url);
+
             _logger.LogInformation("Successfully analyzed {Url}", url);
         }
         catch (Exception e)

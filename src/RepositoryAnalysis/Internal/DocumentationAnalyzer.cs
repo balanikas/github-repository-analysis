@@ -24,30 +24,26 @@ public class DocumentationAnalyzer : IAnalyzer
         var (diagnosis, note) = GetDiagnosis();
         return Rule.Topics(diagnosis, note);
 
-        (Diagnosis, string) GetDiagnosis()
-        {
-            return context.Repo.RepositoryTopics.TotalCount > 0
+        (Diagnosis, string) GetDiagnosis() =>
+            context.Repo.RepositoryTopics.TotalCount > 0
                 ? (Diagnosis.Info, $"found {context.Repo.RepositoryTopics.TotalCount} topics")
                 : (Diagnosis.Warning, "no topics found");
-        }
     }
 
     private Rule GetChangeLogRule(
         AnalysisContext context)
     {
-        var entry = Shared.GetSingleBlob(context.RootEntries,
+        var entry = Shared.GetFirstBlob(context.RootEntries,
             x => x.PathEndsWith("changelog.md", "change_log.md", "releasenotes.md", "release_notes.txt", "changelog.txt", "change_log.txt", "releasenotes.txt",
                 "release_notes.txt"));
         var (diagnosis, note) = GetDiagnosis(entry);
         return Rule.ChangeLog(diagnosis, note) with { ResourceName = entry?.Path, ResourceUrl = Shared.GetEntryUrl(context, entry) };
 
         (Diagnosis, string) GetDiagnosis(
-            GitHubGraphQlClient.Entry? e)
-        {
-            return e is not null
+            GitHubGraphQlClient.Entry? e) =>
+            e is not null
                 ? (Diagnosis.Info, "found")
                 : (Diagnosis.Warning, "missing");
-        }
     }
 
     private Rule GetHomePageUrlRule(
@@ -57,12 +53,10 @@ public class DocumentationAnalyzer : IAnalyzer
         //todo: check head request if url exists
         return Rule.HomePage(diagnosis, note) with { ResourceName = context.Repo.HomepageUrl, ResourceUrl = context.Repo.HomepageUrl };
 
-        (Diagnosis, string) GetDiagnosis()
-        {
-            return !string.IsNullOrEmpty(context.Repo.HomepageUrl)
+        (Diagnosis, string) GetDiagnosis() =>
+            !string.IsNullOrEmpty(context.Repo.HomepageUrl)
                 ? (Diagnosis.Info, "found homepage")
                 : (Diagnosis.Warning, "missing");
-        }
     }
 
     private Rule GetDescriptionRule(
@@ -72,12 +66,10 @@ public class DocumentationAnalyzer : IAnalyzer
 
         return Rule.Description(diagnosis, note);
 
-        (Diagnosis, string) GetDiagnosis()
-        {
-            return context.Repo.Description is not null
+        (Diagnosis, string) GetDiagnosis() =>
+            context.Repo.Description is not null
                 ? (Diagnosis.Info, "found")
                 : (Diagnosis.Warning, "missing");
-        }
     }
 
     private Rule GetReadmeRule(

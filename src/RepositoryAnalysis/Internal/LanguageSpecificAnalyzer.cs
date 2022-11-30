@@ -72,12 +72,10 @@ Found {warnings.Count} issues.
 ");
 
         (Diagnosis, string) GetDiagnosis(
-            IReadOnlyList<string> e)
-        {
-            return e.Any()
+            IReadOnlyList<string> e) =>
+            e.Any()
                 ? (Diagnosis.Warning, $"found {e.Count} potential solution structure issues")
                 : (Diagnosis.Info, "did not find any issues");
-        }
     }
 
 
@@ -85,22 +83,22 @@ Found {warnings.Count} issues.
         AnalysisContext context)
     {
         var entries = Shared.GetBlobsRecursive(context.RootEntries, x => x.HasExtension(".ruleset"));
-        var details = $@"
+        var details = entries.Any()
+            ? $@"
 Found these rulesets:
 <br/>
 {string.Join("<br/>", entries.Select(x => Shared.GetEntryUrl(context, x)))}
-";
+"
+            : "";
         var (diagnosis, note) = GetDiagnosis(entries);
         return Rule.Ruleset(diagnosis, note, details);
 
 
         (Diagnosis, string) GetDiagnosis(
-            IEnumerable<GitHubGraphQlClient.Entry> e)
-        {
-            return e.Any()
+            IEnumerable<GitHubGraphQlClient.Entry> e) =>
+            e.Any()
                 ? (Diagnosis.Warning, $"found {e.Count()} .ruleset files")
                 : (Diagnosis.Info, "did not find ruleset files");
-        }
     }
 
     private Rule GetDotnetTestsRule(
@@ -117,18 +115,14 @@ Detected {testFiles.Length} test files.
 
         (Diagnosis, string) GetDiagnosis(
             IEnumerable<GitHubGraphQlClient.Entry> projects,
-            IEnumerable<GitHubGraphQlClient.Entry> files)
-        {
-            return !projects.Any() || !files.Any()
+            IEnumerable<GitHubGraphQlClient.Entry> files) =>
+            !projects.Any() || !files.Any()
                 ? (Diagnosis.Warning, "found issues")
                 : (Diagnosis.Info, "found");
-        }
 
         bool IsTestProject(
-            GitHubGraphQlClient.Entry x)
-        {
-            return x.PathEndsWith(".csproj") && x.ParentPathEndsWith("test", "tests", "spec", "specs");
-        }
+            GitHubGraphQlClient.Entry x) =>
+            x.PathEndsWith(".csproj") && x.ParentPathEndsWith("test", "tests", "spec", "specs");
 
         bool IsTestFile(
             GitHubGraphQlClient.Entry x)

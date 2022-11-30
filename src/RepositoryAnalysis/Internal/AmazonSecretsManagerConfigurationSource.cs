@@ -16,8 +16,6 @@ public class AmazonSecretsManagerConfigurationSource : IConfigurationSource
     }
 
     public IConfigurationProvider Build(
-        IConfigurationBuilder builder)
-    {
-        return new AmazonSecretsManagerConfigurationProvider(_region, _secretName);
-    }
+        IConfigurationBuilder builder) =>
+        new AmazonSecretsManagerConfigurationProvider(_region, _secretName);
 }

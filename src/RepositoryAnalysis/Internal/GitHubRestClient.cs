@@ -36,7 +36,7 @@ public class GitHubRestClient
         }
         catch (ApiException e)
         {
-            _logger.LogError(e,"Error fetching git ignore template for language {Language}", language);
+            _logger.LogError(e, "Error fetching git ignore template for language {Language}", language);
             return (GetTemplateName(language), new IgnoreList());
         }
 

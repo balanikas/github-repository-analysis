@@ -175,7 +175,7 @@ public class GitHubGraphQlClient
         }
         catch (GraphQLHttpRequestException e)
         {
-            _logger.LogError(e,"Error posting query {Query}", query);
+            _logger.LogError(e, "Error posting query {Query}", query);
             if (e.StatusCode == HttpStatusCode.BadGateway) throw new Exception($"{e.StatusCode} for query \n {query}");
 
             throw;

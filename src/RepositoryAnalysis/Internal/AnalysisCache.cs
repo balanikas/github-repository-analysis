@@ -9,10 +9,8 @@ public class AnalysisCache
     private readonly GitHubGraphQlClient _client;
 
     public AnalysisCache(
-        GitHubGraphQlClient client)
-    {
+        GitHubGraphQlClient client) =>
         _client = client;
-    }
 
     public async Task<RepoAnalysis?> Get(
         string owner,

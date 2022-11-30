@@ -21,8 +21,8 @@ public class QualityAnalyzer : IAnalyzer
     private Rule GetDockerIgnoreRule(
         AnalysisContext context)
     {
-        var dockerFile = Shared.GetBlobRecursive(context.RootEntries, x => x.PathEquals("Dockerfile"));
-        var dockerIgnore = Shared.GetBlobRecursive(context.RootEntries, x => x.PathEquals("Dockerfile"));
+        var dockerFile = Shared.GetFirstBlobRecursive(context.RootEntries, x => x.PathEquals("Dockerfile"));
+        var dockerIgnore = Shared.GetFirstBlobRecursive(context.RootEntries, x => x.PathEquals(".dockerignore"));
 
         var (diagnosis, note) = GetDiagnosis(dockerFile, dockerIgnore);
         return Rule.DockerFile(diagnosis, note) with
@@ -32,14 +32,12 @@ public class QualityAnalyzer : IAnalyzer
 
         (Diagnosis, string) GetDiagnosis(
             GitHubGraphQlClient.Entry? file,
-            GitHubGraphQlClient.Entry? ignore)
-        {
-            return file is not null && ignore is not null
+            GitHubGraphQlClient.Entry? ignore) =>
+            file is not null && ignore is not null
                 ? (Diagnosis.Info, "found docker file and docker ignore")
                 : file is not null && ignore is null
                     ? (Diagnosis.Warning, "found docker file but no docker ignore")
                     : (Diagnosis.Info, "not found");
-        }
     }
 
 
@@ -100,19 +98,16 @@ Some examples:
         return Rule.LargeFiles(diagnosis, note, showExamples);
 
         (Diagnosis, string) GetDiagnosis(
-            IEnumerable<GitHubGraphQlClient.Entry> e)
-        {
-            return e.Any()
+            IEnumerable<GitHubGraphQlClient.Entry> e) =>
+            e.Any()
                 ? (Diagnosis.Warning, $"found {e.Count()} big files")
                 : (Diagnosis.Info, "did not find any large files");
-        }
     }
-
 
     private Rule GetEditorConfigRule(
         AnalysisContext context)
     {
-        var entry = Shared.GetBlobRecursive(context.RootEntries, x => x.PathEquals(".editorconfig"));
+        var entry = Shared.GetSingleBlobRecursive(context.RootEntries, x => x.PathEquals(".editorconfig"));
         var (diagnosis, note) = GetDiagnosis(entry);
         return Rule.EditorConfig(diagnosis, note) with
         {
@@ -120,11 +115,9 @@ Some examples:
         };
 
         (Diagnosis, string) GetDiagnosis(
-            GitHubGraphQlClient.Entry? e)
-        {
-            return e is not null
+            GitHubGraphQlClient.Entry? e) =>
+            e is not null
                 ? (Diagnosis.Info, "found")
                 : (Diagnosis.Error, "missing");
-        }
     }
 }

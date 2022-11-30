@@ -16,9 +16,8 @@ public record Rule
     public static Rule DotnetSolutionStructure(
         Diagnosis diagnosis,
         string note,
-        string? details)
-    {
-        return new Rule
+        string? details) =>
+        new Rule
         {
             Diagnosis = diagnosis,
             Note = note,
@@ -34,14 +33,12 @@ It is good practice to follow standard solution structure conventions. ",
                 GuidanceHeader = null
             }
         };
-    }
 
     public static Rule CitationFile(
         Diagnosis diagnosis,
         string note,
-        string? details = null)
-    {
-        return new Rule
+        string? details = null) =>
+        new Rule
         {
             Diagnosis = diagnosis,
             Note = note,
@@ -59,14 +56,12 @@ You can add a CITATION file to your repository to help users correctly cite your
                 GuidanceHeader = null
             }
         };
-    }
 
     public static Rule SupportFile(
         Diagnosis diagnosis,
         string note,
-        string? details = null)
-    {
-        return new Rule
+        string? details = null) =>
+        new Rule
         {
             Diagnosis = diagnosis,
             Note = note,
@@ -86,14 +81,12 @@ When someone creates an issue in your repository, they will see a link to your p
                 GuidanceHeader = "how to add a support file"
             }
         };
-    }
 
     public static Rule PullRequests(
         Diagnosis diagnosis,
         string note,
-        string? details = null)
-    {
-        return new Rule
+        string? details = null) =>
+        new Rule
         {
             Name = "Pull requests",
             Note = note,
@@ -111,14 +104,12 @@ Once a pull request is opened, you can discuss and review the potential changes 
                 GuidanceHeader = "how to add a pull request template"
             }
         };
-    }
 
     public static Rule Issues(
         Diagnosis diagnosis,
         string note,
-        string? details)
-    {
-        return new Rule
+        string? details) =>
+        new Rule
         {
             Name = "Issues",
             Note = note,
@@ -134,14 +125,12 @@ You may wish to turn issues off for your repository if you do not accept contrib
                 AboutHeader = "about issues"
             }
         };
-    }
 
     public static Rule Discussions(
         Diagnosis diagnosis,
         string note,
-        string? details = null)
-    {
-        return new Rule
+        string? details = null) =>
+        new Rule
         {
             Name = "Discussions",
             Note = note,
@@ -157,14 +146,12 @@ Discussions empower a project's maintainers, contributors, and visitors to gathe
                 AboutHeader = "about discussions"
             }
         };
-    }
 
     public static Rule CodeOwners(
         Diagnosis diagnosis,
         string note,
-        string? details = null)
-    {
-        return new Rule
+        string? details = null) =>
+        new Rule
         {
             Name = "Code owners",
             Note = note,
@@ -179,14 +166,12 @@ You can use a CODEOWNERS file to define individuals or teams that are responsibl
                 AboutHeader = "about code owners"
             }
         };
-    }
 
     public static Rule CodeOfConduct(
         Diagnosis diagnosis,
         string note,
-        string? details = null)
-    {
-        return new Rule
+        string? details = null) =>
+        new Rule
         {
             Name = "Code of conduct",
             Note = note,
@@ -202,14 +187,12 @@ It also outlines procedures for addressing problems between members of your proj
                 AboutHeader = "about code of conduct"
             }
         };
-    }
 
     public static Rule Contributing(
         Diagnosis diagnosis,
         string note,
-        string? details = null)
-    {
-        return new Rule
+        string? details = null) =>
+        new Rule
         {
             Name = "Contributing",
             Note = note,
@@ -225,14 +208,12 @@ When someone opens a pull request or creates an issue, they will see a link to t
                 AboutHeader = "about contributing guidelines"
             }
         };
-    }
 
     public static Rule Topics(
         Diagnosis diagnosis,
         string note,
-        string? details = null)
-    {
-        return new Rule
+        string? details = null) =>
+        new Rule
         {
             Name = "Topics",
             Note = note,
@@ -249,15 +230,13 @@ To help other people find and contribute to your project, you can add topics to 
                 GuidanceHeader = "how to work with topics"
             }
         };
-    }
 
     public static Rule ChangeLog(
         Diagnosis diagnosis,
         string note,
-        string? details = null)
-    {
+        string? details = null) =>
         //todo: look in github releases too
-        return new Rule
+        new Rule
         {
             Name = "Change log",
             Note = note,
@@ -274,14 +253,12 @@ Note: this currently only look for related files in the repo root, and does not 
 {Shared.CreateLink("https://help.github.com/articles/creating-releases/", "Github Releases")}"
             }
         };
-    }
 
     public static Rule HomePage(
         Diagnosis diagnosis,
         string note,
-        string? details = null)
-    {
-        return new Rule
+        string? details = null) =>
+        new Rule
         {
             Name = "Homepage",
             Note = note,
@@ -296,14 +273,12 @@ It can be edited in the About section.",
                 GuidanceHeader = "this guide on how to create a repository"
             }
         };
-    }
 
     public static Rule Description(
         Diagnosis diagnosis,
         string note,
-        string? details = null)
-    {
-        return new Rule
+        string? details = null) =>
+        new Rule
         {
             Name = "Description/About",
             Note = note,
@@ -318,14 +293,12 @@ It can be edited in the About section.",
                 GuidanceHeader = "this guide on how to create a repository"
             }
         };
-    }
 
     public static Rule Readme(
         Diagnosis diagnosis,
         string note,
-        string? details = null)
-    {
-        return new Rule
+        string? details = null) =>
+        new Rule
         {
             Name = "Readme",
             Note = note,
@@ -339,15 +312,13 @@ A repository should contain a readme file, to tell other people why your project
                 AboutHeader = "about readmes"
             }
         };
-    }
 
 
     public static Rule Ruleset(
         Diagnosis diagnosis,
         string note,
-        string? details = null)
-    {
-        return new Rule
+        string? details = null) =>
+        new Rule
         {
             Name = "Ruleset",
             Note = note,
@@ -362,14 +333,12 @@ like EditorConfig and dotnet analyzers.",
                 AboutHeader = "about dotnet analyzers"
             }
         };
-    }
 
     public static Rule DotnetTests(
         Diagnosis diagnosis,
         string note,
-        string? details = null)
-    {
-        return new Rule
+        string? details = null) =>
+        new Rule
         {
             Name = "Tests",
             Note = note,
@@ -384,14 +353,12 @@ Tests increase the quality of software.
                 AboutHeader = "testing in dotnet"
             }
         };
-    }
 
     public static Rule License(
         Diagnosis diagnosis,
         string note,
-        string? details = null)
-    {
-        return new Rule
+        string? details = null) =>
+        new Rule
         {
             Name = "License",
             Note = note,
@@ -410,14 +377,12 @@ For your repository to truly be open source, you'll need to license it so that o
                 GuidanceHeader = "how to choose a license"
             }
         };
-    }
 
     public static Rule GitIgnore(
         Diagnosis diagnosis,
         string note,
-        string? details = null)
-    {
-        return new Rule
+        string? details = null) =>
+        new Rule
         {
             Name = "Git ignore",
             Note = note,
@@ -433,14 +398,12 @@ To share the ignore rules with other users who clone the repository, commit the 
                 AboutHeader = "about git ignore"
             }
         };
-    }
 
     public static Rule LargeFiles(
         Diagnosis diagnosis,
         string note,
-        string? details = null)
-    {
-        return new Rule
+        string? details = null) =>
+        new Rule
         {
             Name = "Large files",
             Note = note,
@@ -455,14 +418,12 @@ Large files contained in a repository might be a sign of unoptimized repository.
                 AboutHeader = "about large files"
             }
         };
-    }
 
     public static Rule EditorConfig(
         Diagnosis diagnosis,
         string note,
-        string? details = null)
-    {
-        return new Rule
+        string? details = null) =>
+        new Rule
         {
             Name = "Editorconfig",
             Note = note,
@@ -478,14 +439,12 @@ EditorConfig files are easily readable and they work nicely with version control
                 AboutHeader = "about editor config"
             }
         };
-    }
 
     public static Rule DockerFile(
         Diagnosis diagnosis,
         string note,
-        string? details = null)
-    {
-        return new Rule
+        string? details = null) =>
+        new Rule
         {
             Name = "Dockerfile",
             Note = note,
@@ -502,5 +461,4 @@ to images using ADD or COPY.",
                 AboutHeader = "about Dockerfile"
             }
         };
-    }
 }

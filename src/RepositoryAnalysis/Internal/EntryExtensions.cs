@@ -42,8 +42,6 @@ public static class EntryExtensions
     }
 
     public static bool IsTree(
-        this GitHubGraphQlClient.Entry entry)
-    {
-        return entry.Type.Equals("tree", StringComparison.OrdinalIgnoreCase);
-    }
+        this GitHubGraphQlClient.Entry entry) =>
+        entry.Type.Equals("tree", StringComparison.OrdinalIgnoreCase);
 }

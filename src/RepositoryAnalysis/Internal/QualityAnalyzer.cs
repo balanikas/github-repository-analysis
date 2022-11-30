@@ -107,7 +107,7 @@ Some examples:
     private Rule GetEditorConfigRule(
         AnalysisContext context)
     {
-        var entry = Shared.GetSingleBlobRecursive(context.RootEntries, x => x.PathEquals(".editorconfig"));
+        var entry = Shared.GetFirstBlobRecursive(context.RootEntries, x => x.PathEquals(".editorconfig"));
         var (diagnosis, note) = GetDiagnosis(entry);
         return Rule.EditorConfig(diagnosis, note) with
         {

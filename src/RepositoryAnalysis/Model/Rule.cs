@@ -17,7 +17,7 @@ public record Rule
         Diagnosis diagnosis,
         string note,
         string? details) =>
-        new Rule
+        new()
         {
             Diagnosis = diagnosis,
             Note = note,
@@ -38,7 +38,7 @@ It is good practice to follow standard solution structure conventions. ",
         Diagnosis diagnosis,
         string note,
         string? details = null) =>
-        new Rule
+        new()
         {
             Diagnosis = diagnosis,
             Note = note,
@@ -61,7 +61,7 @@ You can add a CITATION file to your repository to help users correctly cite your
         Diagnosis diagnosis,
         string note,
         string? details = null) =>
-        new Rule
+        new()
         {
             Diagnosis = diagnosis,
             Note = note,
@@ -86,7 +86,7 @@ When someone creates an issue in your repository, they will see a link to your p
         Diagnosis diagnosis,
         string note,
         string? details = null) =>
-        new Rule
+        new()
         {
             Name = "Pull requests",
             Note = note,
@@ -109,7 +109,7 @@ Once a pull request is opened, you can discuss and review the potential changes 
         Diagnosis diagnosis,
         string note,
         string? details) =>
-        new Rule
+        new()
         {
             Name = "Issues",
             Note = note,
@@ -130,7 +130,7 @@ You may wish to turn issues off for your repository if you do not accept contrib
         Diagnosis diagnosis,
         string note,
         string? details = null) =>
-        new Rule
+        new()
         {
             Name = "Discussions",
             Note = note,
@@ -151,7 +151,7 @@ Discussions empower a project's maintainers, contributors, and visitors to gathe
         Diagnosis diagnosis,
         string note,
         string? details = null) =>
-        new Rule
+        new()
         {
             Name = "Code owners",
             Note = note,
@@ -171,7 +171,7 @@ You can use a CODEOWNERS file to define individuals or teams that are responsibl
         Diagnosis diagnosis,
         string note,
         string? details = null) =>
-        new Rule
+        new()
         {
             Name = "Code of conduct",
             Note = note,
@@ -192,7 +192,7 @@ It also outlines procedures for addressing problems between members of your proj
         Diagnosis diagnosis,
         string note,
         string? details = null) =>
-        new Rule
+        new()
         {
             Name = "Contributing",
             Note = note,
@@ -213,7 +213,7 @@ When someone opens a pull request or creates an issue, they will see a link to t
         Diagnosis diagnosis,
         string note,
         string? details = null) =>
-        new Rule
+        new()
         {
             Name = "Topics",
             Note = note,
@@ -236,7 +236,7 @@ To help other people find and contribute to your project, you can add topics to 
         string note,
         string? details = null) =>
         //todo: look in github releases too
-        new Rule
+        new()
         {
             Name = "Change log",
             Note = note,
@@ -258,7 +258,7 @@ Note: this currently only look for related files in the repo root, and does not 
         Diagnosis diagnosis,
         string note,
         string? details = null) =>
-        new Rule
+        new()
         {
             Name = "Homepage",
             Note = note,
@@ -278,7 +278,7 @@ It can be edited in the About section.",
         Diagnosis diagnosis,
         string note,
         string? details = null) =>
-        new Rule
+        new()
         {
             Name = "Description/About",
             Note = note,
@@ -298,7 +298,7 @@ It can be edited in the About section.",
         Diagnosis diagnosis,
         string note,
         string? details = null) =>
-        new Rule
+        new()
         {
             Name = "Readme",
             Note = note,
@@ -318,7 +318,7 @@ A repository should contain a readme file, to tell other people why your project
         Diagnosis diagnosis,
         string note,
         string? details = null) =>
-        new Rule
+        new()
         {
             Name = "Ruleset",
             Note = note,
@@ -338,7 +338,7 @@ like EditorConfig and dotnet analyzers.",
         Diagnosis diagnosis,
         string note,
         string? details = null) =>
-        new Rule
+        new()
         {
             Name = "Tests",
             Note = note,
@@ -358,7 +358,7 @@ Tests increase the quality of software.
         Diagnosis diagnosis,
         string note,
         string? details = null) =>
-        new Rule
+        new()
         {
             Name = "License",
             Note = note,
@@ -382,7 +382,7 @@ For your repository to truly be open source, you'll need to license it so that o
         Diagnosis diagnosis,
         string note,
         string? details = null) =>
-        new Rule
+        new()
         {
             Name = "Git ignore",
             Note = note,
@@ -403,7 +403,7 @@ To share the ignore rules with other users who clone the repository, commit the 
         Diagnosis diagnosis,
         string note,
         string? details = null) =>
-        new Rule
+        new()
         {
             Name = "Large files",
             Note = note,
@@ -423,7 +423,7 @@ Large files contained in a repository might be a sign of unoptimized repository.
         Diagnosis diagnosis,
         string note,
         string? details = null) =>
-        new Rule
+        new()
         {
             Name = "Editorconfig",
             Note = note,
@@ -444,7 +444,7 @@ EditorConfig files are easily readable and they work nicely with version control
         Diagnosis diagnosis,
         string note,
         string? details = null) =>
-        new Rule
+        new()
         {
             Name = "Dockerfile",
             Note = note,

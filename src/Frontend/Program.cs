@@ -12,20 +12,23 @@ builder.Logging.SetMinimumLevel(LogLevel.Debug);
 
 StaticWebAssetsLoader.UseStaticWebAssets(builder.Environment, builder.Configuration);
 
-builder.Host.ConfigureAppConfiguration(((_, configurationBuilder) =>
+builder.Host.ConfigureAppConfiguration((
+    _,
+    configurationBuilder) =>
 {
     configurationBuilder.AddAmazonSecretsManager("us-west-2", "github-pat");
-}));
+});
 
-builder.Host.UseSerilog((ctx, lc) =>
+builder.Host.UseSerilog((
+    ctx,
+    lc) =>
 {
     lc
         .ReadFrom.Configuration(ctx.Configuration)
         .WriteTo.AWSSeriLog(
-            configuration: ctx.Configuration,
+            ctx.Configuration,
             textFormatter: new RenderedCompactJsonFormatter());
 });
-
 
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
@@ -44,6 +47,7 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();

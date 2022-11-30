@@ -43,7 +43,6 @@ public class AmazonSecretsManagerConfigurationProvider : ConfigurationProvider
             VersionStage = "AWSCURRENT" // VersionStage defaults to AWSCURRENT if unspecified.
         };
 
-
         using (var client =
                new AmazonSecretsManagerClient(RegionEndpoint.GetBySystemName(_region)))
         {

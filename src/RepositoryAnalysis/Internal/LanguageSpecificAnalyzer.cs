@@ -93,7 +93,6 @@ Found these rulesets:
         var (diagnosis, note) = GetDiagnosis(entries);
         return Rule.Ruleset(diagnosis, note, details);
 
-
         (Diagnosis, string) GetDiagnosis(
             IEnumerable<GitHubGraphQlClient.Entry> e) =>
             e.Any()

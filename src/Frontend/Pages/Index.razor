@@ -31,7 +31,7 @@
 
         <MudProgressLinear Class=@(LockUI ? "" : "invisible") Color="Color.Primary" Size="Size.Large" Indeterminate="true"/>
         <br/>
-       
+
         <MudText Align="Align.Center">Try these examples: </MudText>
         <MudButton Disabled="@LockUI" Color="Color.Info" Size="Size.Small" OnClick='() => OnExampleSubmit("https://github.com/dotnet/runtime")' Variant="Variant.Text">https://github.com/dotnet/runtime</MudButton>
         <MudButton Disabled="@LockUI" Color="Color.Info" Size="Size.Small" OnClick='() => OnExampleSubmit("https://github.com/Fody/NullGuard")' Variant="Variant.Text">https://github.com/Fody/NullGuard</MudButton>

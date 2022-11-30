@@ -90,7 +90,6 @@ public static class Shared
             x.Type.Equals("blob", StringComparison.OrdinalIgnoreCase) &&
             predicate(x)).ToList();
 
-
         foreach (var e in entries.Where(x => x.Type.Equals("tree", StringComparison.OrdinalIgnoreCase)))
         {
             var found = GetBlobsRecursive(e.Object?.Entries, predicate);

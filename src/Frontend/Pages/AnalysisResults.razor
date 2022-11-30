@@ -61,11 +61,11 @@
                         <MudCardHeader>
                             <CardHeaderContent>
                                 <MudText Typo="Typo.body1">@((MarkupString)context.Explanation.Text)</MudText>
-                                
+
                                 @if (context.Explanation.Details is not null)
                                 {
                                     <br/>
-                                    <MudText Style="background-color: lightgrey"  Color="Color.Surface" Typo="Typo.body2">@((MarkupString)context.Explanation.Details)</MudText>
+                                    <MudText Style="background-color: lightgrey" Color="Color.Surface" Typo="Typo.body2">@((MarkupString)context.Explanation.Details)</MudText>
                                 }
                                 <br/>
                                 @if (context.Explanation.AboutUrl is not null)

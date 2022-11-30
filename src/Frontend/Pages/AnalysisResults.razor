@@ -35,14 +35,19 @@
             @switch (context.Diagnosis)
             {
                 case Diagnosis.Warning:
-                    <MudChip Size="Size.Small" Label="true" Color="Color.Info">Can be improved</MudChip>
+                    <MudTooltip Text="an action can be taken to improve the repo" Arrow="true" Placement="Placement.Top">
+                        <MudChip Size="Size.Small" Label="true" Color="Color.Info">Can be improved</MudChip>
+                    </MudTooltip>
                     break;
                 case Diagnosis.Error:
-                    <MudChip Size="Size.Small" Label="true" Color="Color.Warning">Warning</MudChip>
-
+                    <MudTooltip Text="strongly recommended to address this" Arrow="true" Placement="Placement.Top">
+                        <MudChip Size="Size.Small" Label="true" Color="Color.Warning">Warning</MudChip>
+                    </MudTooltip>
                     break;
                 default:
-                    <MudChip Size="Size.Small" Label="true">Okay</MudChip>
+                    <MudTooltip Text="looks good and no action needed" Arrow="true" Placement="Placement.Top">
+                        <MudChip Size="Size.Small" Label="true">Okay</MudChip>
+                    </MudTooltip>
                     break;
             }
 

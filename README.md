@@ -1,6 +1,12 @@
 # github-repository-analysis
 Analysis of public github repositories
 
+[![build and test](https://github.com/balanikas/github-repository-analysis/actions/workflows/deploy.yml/badge.svg)](https://github.com/balanikas/github-repository-analysis/actions/workflows/deploy.yml)
+[![CodeQL](https://github.com/balanikas/github-repository-analysis/actions/workflows/codeql.yml/badge.svg)](https://github.com/balanikas/github-repository-analysis/actions/workflows/codeql.yml)
+
+![Website](https://img.shields.io/website?down_message=offline&up_message=online&url=https%3A%2F%2Frd5iaiwd3y.us-west-2.awsapprunner.com%2F)
+
+
 This service is primarily targeted to small or medium sized repos,
 that are owned by a single person or a small group of contributors.
 It can be very useful to those getting started with open source projects, but also

@@ -60,7 +60,7 @@ public class AnalysisService
         }
         catch (Exception e)
         {
-            _logger.LogError(e, "Error during analysis of {Url}", url);
+            _logger.LogError(e, "Error fetching repository data for {Url}", url);
             return RepoAnalysis.Error;
         }
 
@@ -75,6 +75,13 @@ public class AnalysisService
         {
             _logger.LogInformation("Starting analysis of {Url}", url);
             await Task.WhenAll(documentationTask, qualityTask, communityTask, securityTask, langSpecificTask);
+                    
+            _logger.LogRules(documentationTask.Result);
+            _logger.LogRules(qualityTask.Result);
+            _logger.LogRules(communityTask.Result);
+            _logger.LogRules(securityTask.Result);
+            _logger.LogRules(langSpecificTask.Result);
+
             _logger.LogInformation("Successfully analyzed {Url}", url);
         }
         catch (Exception e)

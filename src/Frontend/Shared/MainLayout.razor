@@ -1,4 +1,5 @@
-﻿@inherits LayoutComponentBase
+﻿@using System.Reflection
+@inherits LayoutComponentBase
 
 <MudThemeProvider/>
 <MudDialogProvider/>
@@ -44,7 +45,15 @@
 
 
                     </MudText>
-
+                    <br/>
+                    <br/>
+                    <MudText Typo="Typo.body2">
+                        &copy; Copyright @DateTime.Now.Year, 
+                                <a href="https://github.com/balanikas/github-repository-analysis">Kristoffer Balanikas</a>. 
+                                Powered by MudBlazor
+                                and @System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription
+                                , build version @_appVersion
+                    </MudText>
                 </MessageContent>
                 <YesButton>
                     <MudButton Variant="Variant.Filled">Ok</MudButton>
@@ -57,7 +66,16 @@
 
 @code {
     MudMessageBox aboutBox { get; set; }
+    private string _appVersion = "";
 
+    protected override void OnInitialized()
+    {
+        _appVersion = Assembly.GetEntryAssembly()
+            ?.GetCustomAttribute<AssemblyInformationalVersionAttribute>()
+            ?.InformationalVersion ?? string.Empty;
+        base.OnInitialized();
+    }
+    
     private async void OnButtonClicked()
     {
         await aboutBox.Show();

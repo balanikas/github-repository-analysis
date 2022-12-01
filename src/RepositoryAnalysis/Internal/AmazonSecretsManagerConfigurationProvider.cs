@@ -43,26 +43,23 @@ public class AmazonSecretsManagerConfigurationProvider : ConfigurationProvider
             VersionStage = "AWSCURRENT" // VersionStage defaults to AWSCURRENT if unspecified.
         };
 
-        using (var client =
-               new AmazonSecretsManagerClient(RegionEndpoint.GetBySystemName(_region)))
+        using var client = new AmazonSecretsManagerClient(RegionEndpoint.GetBySystemName(_region));
+        var response = client.GetSecretValueAsync(request).Result;
+
+        string secretString;
+        if (response.SecretString != null)
         {
-            var response = client.GetSecretValueAsync(request).Result;
-
-            string secretString;
-            if (response.SecretString != null)
-            {
-                secretString = response.SecretString;
-            }
-            else
-            {
-                var memoryStream = response.SecretBinary;
-                var reader = new StreamReader(memoryStream);
-                secretString =
-                    Encoding.UTF8
-                        .GetString(Convert.FromBase64String(reader.ReadToEnd()));
-            }
-
-            return secretString;
+            secretString = response.SecretString;
         }
+        else
+        {
+            var memoryStream = response.SecretBinary;
+            var reader = new StreamReader(memoryStream);
+            secretString =
+                Encoding.UTF8
+                    .GetString(Convert.FromBase64String(reader.ReadToEnd()));
+        }
+
+        return secretString;
     }
 }

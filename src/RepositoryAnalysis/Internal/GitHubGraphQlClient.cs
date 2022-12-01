@@ -399,23 +399,12 @@ public class GitHubGraphQlClient
         public Objects Object { get; init; }
         public int DiskUsage { get; init; }
         public bool HasProjectsEnabled { get; init; }
-        public GitIgnore? GitIgnore { get; init; }
-    }
-
-    public class GitIgnore
-    {
-        public string Text { get; init; }
+        
     }
 
     public class RepositoryTopics
     {
         public int TotalCount { get; init; }
-    }
-
-
-    public class Root
-    {
-        public Data Data { get; init; }
     }
 
     public class VulnerabilityAlerts

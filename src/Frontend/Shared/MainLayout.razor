@@ -16,7 +16,7 @@
     <MudMainContent>
         <MudContainer MaxWidth="MaxWidth.Large" Class="my-16 pt-8">
             @Body
-            <MudMessageBox @ref="aboutBox" Title="About" CancelText="">
+            <MudMessageBox @ref="AboutBox" Title="About" CancelText="">
                 <MessageContent>
 
                     <MudText>
@@ -65,7 +65,7 @@
 </MudLayout>
 
 @code {
-    MudMessageBox aboutBox { get; set; }
+    MudMessageBox AboutBox { get; set; } = new();
     private string _appVersion = "";
 
     protected override void OnInitialized()
@@ -78,7 +78,7 @@
     
     private async void OnButtonClicked()
     {
-        await aboutBox.Show();
+        await AboutBox.Show();
         StateHasChanged();
     }
 

@@ -20,4 +20,5 @@ The analysis is presented as a set of detections, where each detection is either
 This service currently has extra checks for csharp repositories, but any repository should work.
 For feedback, please create a new issue at https://github.com/balanikas/github-repository-analysis/issues
 
-site: https://rd5iaiwd3y.us-west-2.awsapprunner.com/
+
+site: https://githubrepositoryanalysis.com/

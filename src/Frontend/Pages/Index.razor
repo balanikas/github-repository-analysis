@@ -41,7 +41,7 @@
     </MudContainer>
 </MudPaper>
 
-<MudTabs Class="@(LockUI ? "invisible" : "visible")" Elevation="5" Rounded="true" Centered="true" Color="@Color.Default" Style="position: relative;">
+<MudTabs Class="@(LockUI ? "invisible" : "visible")" Elevation="5" Rounded="true" Centered="true" Color="@Color.Surface" Style="position: relative;">
 
     <MudTabPanel Text="Overview">
         <MudContainer >
@@ -52,19 +52,19 @@
         </MudContainer>
 
     </MudTabPanel>
-    <MudTabPanel Text="Documentation">
+    <MudTabPanel Text="Documentation" BadgeData="@_badges.DocumentationBadge.Count" BadgeColor="@_badges.DocumentationBadge.Color">
         <AnalysisResults Items="Analysis.Documentation"></AnalysisResults>
     </MudTabPanel>
-    <MudTabPanel Text="Community">
+    <MudTabPanel Text="Community" BadgeData="@_badges.CommunityBadge.Count" BadgeColor="@_badges.CommunityBadge.Color">
         <AnalysisResults Items="Analysis.Community"></AnalysisResults>
     </MudTabPanel>
-    <MudTabPanel Text="Quality">
+    <MudTabPanel Text="Quality" BadgeData="@_badges.QualityBadge.Count" BadgeColor="@_badges.QualityBadge.Color">
         <AnalysisResults Items="Analysis.Quality"></AnalysisResults>
     </MudTabPanel>
-    <MudTabPanel Text="Security">
+    <MudTabPanel Text="Security" BadgeData="@_badges.SecurityBadge.Count" BadgeColor="@_badges.SecurityBadge.Color">
         <MudText Align="Align.Center" Typo="Typo.h4">coming soon</MudText>
     </MudTabPanel>
-    <MudTabPanel Text=@("Language Specific - " + Analysis.OverView?.PrimaryLanguage)>
+    <MudTabPanel Text=@("Language Specific - " + Analysis.OverView?.PrimaryLanguage) BadgeData="@_badges.LanguageSpecificBadge.Count" BadgeColor="@_badges.LanguageSpecificBadge.Color">
         <AnalysisResults Items="Analysis.LanguageSpecific"></AnalysisResults>
     </MudTabPanel>
 
@@ -75,6 +75,7 @@
     public string RepositoryUrl { get; set; } = "";
     public RepoAnalysis Analysis { get; set; } = RepoAnalysis.Empty;
     public bool LockUI { get; set; }
+    private Badges _badges;
 
     [Parameter]
     [SupplyParameterFromQuery(Name = "url")]
@@ -164,6 +165,7 @@
                 return;
         }
         Analysis = analysis;
+        _badges = Badges.GetBadges(Analysis);
         LockUI = false;
 
         await Task.CompletedTask;

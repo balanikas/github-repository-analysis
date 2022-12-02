@@ -1,27 +1,50 @@
 @using RepositoryAnalysis.Model
 <MudTable Items="@Items" Hover="true" Breakpoint="Breakpoint.Sm" Elevation="5">
     <ColGroup>
-        <col style="width:200px;"/>
-        <col style="width:200px;"/>
+        <col style="width:150px;"/>
+        <col style="width:150px;"/>
+        <col style="width:150px;"/>
         <col style="width:400px;"/>
-        <col style="width:300px;"/>
-        <col/>
-        <col style="width:100px;"/>
+        
+        <col style="width:200px;"/>
 
     </ColGroup>
     <HeaderContent>
         <MudTh></MudTh>
         <MudTh>Name</MudTh>
+        <MudTh>Diagnosis</MudTh>
+        
         <MudTh>Note</MudTh>
         <MudTh>Location</MudTh>
-        <MudTh></MudTh>
 
     </HeaderContent>
-    <RowTemplate>
+    <RowTemplate >
         <MudTd>
-            <MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => ShowBtnPress(context.Id))">@(context.ShowDetails ? "Hide" : "Show") Details</MudButton>
+            <MudButton Variant="Variant.Filled" Size="Size.Small" OnClick="@(() => ShowBtnPress(context.Id))">@(context.ShowDetails ? "Hide" : "Show") Details</MudButton>
         </MudTd>
         <MudTd DataLabel="Name">@context.Name</MudTd>
+         <MudTd DataLabel="Diagnosis">
+                    @switch (context.Diagnosis)
+                    {
+                        case Diagnosis.Warning:
+                            <MudTooltip Text="an action can be taken to improve the repo" Arrow="true" Placement="Placement.Top">
+                                <MudChip   Size="Size.Small" Label="true" Color="Color.Info">Can be improved</MudChip>
+                            </MudTooltip>
+                            break;
+                        case Diagnosis.Error:
+                            <MudTooltip Text="strongly recommended to address this" Arrow="true" Placement="Placement.Top">
+                                <MudChip Size="Size.Small" Label="true" Color="Color.Warning">Warning</MudChip>
+                            </MudTooltip>
+                            break;
+                        default:
+                            <MudTooltip Text="looks good and no action needed" Arrow="true" Placement="Placement.Top">
+                                <MudChip Size="Size.Small" Label="true">Okay</MudChip>
+                            </MudTooltip>
+                            break;
+                    }
+        
+                </MudTd>
+
         <MudTd DataLabel="Note">@context.Note</MudTd>
         <MudTd DataLabel="Location">
             @if (!string.IsNullOrEmpty(context.ResourceName))
@@ -31,28 +54,7 @@
 
 
         </MudTd>
-        <MudTd DataLabel="Diagnosis">
-            @switch (context.Diagnosis)
-            {
-                case Diagnosis.Warning:
-                    <MudTooltip Text="an action can be taken to improve the repo" Arrow="true" Placement="Placement.Top">
-                        <MudChip Size="Size.Small" Label="true" Color="Color.Info">Can be improved</MudChip>
-                    </MudTooltip>
-                    break;
-                case Diagnosis.Error:
-                    <MudTooltip Text="strongly recommended to address this" Arrow="true" Placement="Placement.Top">
-                        <MudChip Size="Size.Small" Label="true" Color="Color.Warning">Warning</MudChip>
-                    </MudTooltip>
-                    break;
-                default:
-                    <MudTooltip Text="looks good and no action needed" Arrow="true" Placement="Placement.Top">
-                        <MudChip Size="Size.Small" Label="true">Okay</MudChip>
-                    </MudTooltip>
-                    break;
-            }
-
-        </MudTd>
-
+       
 
     </RowTemplate>
     <ChildRowContent>

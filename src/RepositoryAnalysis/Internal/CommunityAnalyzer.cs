@@ -92,7 +92,13 @@ public class CommunityAnalyzer : IAnalyzer
         AnalysisContext context)
     {
         var (diagnosis, note) = GetDiagnosis();
-        return Rule.PullRequests(diagnosis, note);
+        var templates = "";
+        if (context.Repo.PullRequestTemplates.Any())
+        {
+            var names = context.Repo.PullRequestTemplates.Select(x => x.Filename);
+            templates = "Templates found: <br/>" + string.Join("<br/>", names);
+        }
+        return Rule.PullRequests(diagnosis, note, templates);
 
         (Diagnosis, string) GetDiagnosis() =>
             context.Repo.PullRequestTemplates.Any()
@@ -110,8 +116,8 @@ public class CommunityAnalyzer : IAnalyzer
         var templates = "";
         if (context.Repo.IssueTemplates.Any())
         {
-            var links = context.Repo.IssueTemplates.Select(x => Shared.CreateIssueTemplateLink(context, x.Filename, x.Name));
-            templates = "Templates found: <br/>" + string.Join("<br/>", links);
+            var names = context.Repo.IssueTemplates.Select(x => x.Name);
+            templates = "Templates found: <br/>" + string.Join("<br/>", names);
         }
 
         return Rule.Issues(diagnosis, note, templates);
@@ -119,7 +125,7 @@ public class CommunityAnalyzer : IAnalyzer
         (Diagnosis, string) GetDiagnosis() =>
             context.Repo.HasIssuesEnabled
                 ? context.Repo.IssueTemplates.Any()
-                    ? (Diagnosis.Info, $"found {context.Repo.Issues.TotalCount} issues and {context.Repo.IssueTemplates.Count} issue templates")
+                    ? (Diagnosis.Info, $"issues are enabled and found {context.Repo.IssueTemplates.Count} issue templates")
                     : (Diagnosis.Warning, "issues are enabled but missing issue templates")
                 : (Diagnosis.Info, "feature is disabled");
     }

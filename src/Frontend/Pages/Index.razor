@@ -53,27 +53,34 @@
 
     </MudTabPanel>
     <MudTabPanel Text="Documentation" BadgeData="@_badges.DocumentationBadge.Count" BadgeColor="@_badges.DocumentationBadge.Color">
-        <AnalysisResults Items="Analysis.Documentation"></AnalysisResults>
+        <AnalysisResults Items="_documentationRules"></AnalysisResults>
     </MudTabPanel>
     <MudTabPanel Text="Community" BadgeData="@_badges.CommunityBadge.Count" BadgeColor="@_badges.CommunityBadge.Color">
-        <AnalysisResults Items="Analysis.Community"></AnalysisResults>
+        <AnalysisResults Items="_communityRules"></AnalysisResults>
     </MudTabPanel>
     <MudTabPanel Text="Quality" BadgeData="@_badges.QualityBadge.Count" BadgeColor="@_badges.QualityBadge.Color">
-        <AnalysisResults Items="Analysis.Quality"></AnalysisResults>
+        <AnalysisResults Items="_qualityRules"></AnalysisResults>
     </MudTabPanel>
     <MudTabPanel Text="Security" BadgeData="@_badges.SecurityBadge.Count" BadgeColor="@_badges.SecurityBadge.Color">
         <MudText Align="Align.Center" Typo="Typo.h4">coming soon</MudText>
     </MudTabPanel>
     <MudTabPanel Text=@("Language Specific - " + Analysis.OverView?.PrimaryLanguage) BadgeData="@_badges.LanguageSpecificBadge.Count" BadgeColor="@_badges.LanguageSpecificBadge.Color">
-        <AnalysisResults Items="Analysis.LanguageSpecific"></AnalysisResults>
+        <AnalysisResults Items="_langSpecificRules"></AnalysisResults>
     </MudTabPanel>
 
 </MudTabs>
 
 @code {
 
+
+    
     public string RepositoryUrl { get; set; } = "";
     public RepoAnalysis Analysis { get; set; } = RepoAnalysis.Empty;
+    private IReadOnlyList<RuleModel> _documentationRules = Array.Empty<RuleModel>();
+    private IReadOnlyList<RuleModel> _qualityRules = Array.Empty<RuleModel>();
+    private IReadOnlyList<RuleModel> _communityRules = Array.Empty<RuleModel>();
+    private IReadOnlyList<RuleModel> _securityRules = Array.Empty<RuleModel>();
+    private IReadOnlyList<RuleModel> _langSpecificRules = Array.Empty<RuleModel>();
     public bool LockUI { get; set; }
     private Badges _badges;
 
@@ -165,6 +172,11 @@
                 return;
         }
         Analysis = analysis;
+        _documentationRules = Analysis.Documentation.Select(x => new RuleModel(x)).ToArray();
+        _qualityRules = Analysis.Quality.Select(x => new RuleModel(x)).ToArray();
+        _communityRules = Analysis.Community.Select(x => new RuleModel(x)).ToArray();
+        _securityRules = Analysis.Security.Select(x => new RuleModel(x)).ToArray();
+        _langSpecificRules = Analysis.LanguageSpecific.Select(x => new RuleModel(x)).ToArray();
         _badges = Badges.GetBadges(Analysis);
         LockUI = false;
 

@@ -20,11 +20,11 @@
     </HeaderContent>
     <RowTemplate >
         <MudTd>
-            <MudButton Variant="Variant.Filled" Size="Size.Small" OnClick="@(() => ShowBtnPress(context.Id))">@(context.ShowDetails ? "Hide" : "Show") Details</MudButton>
+            <MudButton Variant="Variant.Filled" Size="Size.Small" OnClick="@(() => ShowBtnPress(context.Rule.Id))">@(context.ShowDetails ? "Hide" : "Show") Details</MudButton>
         </MudTd>
-        <MudTd DataLabel="Name">@context.Name</MudTd>
+        <MudTd DataLabel="Name">@context.Rule.Name</MudTd>
          <MudTd DataLabel="Diagnosis">
-                    @switch (context.Diagnosis)
+                    @switch (context.Rule.Diagnosis)
                     {
                         case Diagnosis.Warning:
                             <MudTooltip Text="an action can be taken to improve the repo" Arrow="true" Placement="Placement.Top">
@@ -45,11 +45,11 @@
         
                 </MudTd>
 
-        <MudTd DataLabel="Note">@context.Note</MudTd>
+        <MudTd DataLabel="Note">@context.Rule.Note</MudTd>
         <MudTd DataLabel="Location">
-            @if (!string.IsNullOrEmpty(context.ResourceName))
+            @if (!string.IsNullOrEmpty(context.Rule.ResourceName))
             {
-                <MudLink Target="_blank" Href="@context.ResourceUrl">@context.ResourceName</MudLink>
+                <MudLink Target="_blank" Href="@context.Rule.ResourceUrl">@context.Rule.ResourceName</MudLink>
             }
 
 
@@ -67,27 +67,27 @@
                     <MudCard Elevation="0">
                         <MudCardHeader>
                             <CardHeaderContent>
-                                <MudText Typo="Typo.body1">@((MarkupString)context.Explanation.Text)</MudText>
+                                <MudText Typo="Typo.body1">@((MarkupString)context.Rule.Explanation.Text)</MudText>
 
-                                @if (context.Explanation.Details is not null)
+                                @if (context.Rule.Explanation.Details is not null)
                                 {
                                     <br/>
-                                    <MudText Style="background-color: lightgrey" Color="Color.Surface" Typo="Typo.body2">@((MarkupString)context.Explanation.Details)</MudText>
+                                    <MudText Style="background-color: lightgrey" Color="Color.Surface" Typo="Typo.body2">@((MarkupString)context.Rule.Explanation.Details)</MudText>
                                 }
                                 <br/>
-                                @if (context.Explanation.AboutUrl is not null)
+                                @if (context.Rule.Explanation.AboutUrl is not null)
                                 {
                                     <MudPaper Class="d-flex align-content-start flex-wrap flex-grow-1 gap-2" Elevation="0">
                                         <MudText Typo="Typo.body1">For more information, see</MudText>
-                                        <MudLink Target="_blank" Href="@context.Explanation.AboutUrl">@context.Explanation.AboutHeader</MudLink>
+                                        <MudLink Target="_blank" Href="@context.Rule.Explanation.AboutUrl">@context.Rule.Explanation.AboutHeader</MudLink>
                                     </MudPaper>
                                 }
 
-                                @if (context.Explanation.GuidanceUrl is not null)
+                                @if (context.Rule.Explanation.GuidanceUrl is not null)
                                 {
                                     <MudPaper Class="d-flex align-content-start flex-wrap flex-grow-1 gap-2" Elevation="0">
                                         <MudText Typo="Typo.body1">For guidance, see</MudText>
-                                        <MudLink Target="_blank" Href="@context.Explanation.GuidanceUrl">@context.Explanation.GuidanceHeader</MudLink>
+                                        <MudLink Target="_blank" Href="@context.Rule.Explanation.GuidanceUrl">@context.Rule.Explanation.GuidanceHeader</MudLink>
                                     </MudPaper>
                                 }
 
@@ -103,12 +103,14 @@
 @code {
 
     [Parameter]
-    public IReadOnlyList<Rule> Items { get; set; } = new List<Rule>();
+    public IReadOnlyList<RuleModel> Items { get; set; } = new List<RuleModel>();
+
+
 
     private void ShowBtnPress(
         Guid nr)
     {
-        var s = Items.First(f => f.Id == nr);
+        var s = Items.Single(f => f.Rule.Id == nr);
         s.ShowDetails = !s.ShowDetails;
     }
 

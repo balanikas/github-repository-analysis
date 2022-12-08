@@ -54,7 +54,7 @@ public class QualityAnalyzer : IAnalyzer
         async Task<(Diagnosis, string, string)> GetDiagnosis(
             GitHubGraphQlClient.Entry? e)
         {
-            if (context.Repo.PrimaryLanguage is null) return (Diagnosis.Warning, "no primary language found", "");
+            if (context.Repo.PrimaryLanguage is null) return (Diagnosis.Info, "no primary language found, will not analyze", "");
 
             var (templateName, ignoreList) = await context.RestClient.GetGitIgnoreRules(context.Repo.PrimaryLanguage.Name);
             var ignoredFiles = new List<string>();

@@ -12,15 +12,21 @@ public class AnalysisContext
 
     public GitHubGraphQlClient GraphQlClient { get; }
     public GitHubRestClient RestClient { get; }
-    public IReadOnlyList<GitHubGraphQlClient.Entry> RootEntries { get; private set; }
     public GitHubGraphQlClient.Repo Repo { get; private set; }
+    public GitTree GitTree { get; private set; }
 
     public async Task Build(
         string owner,
         string name)
     {
-        Repo = await GraphQlClient.GetRepoData(owner, name);
-        var repoTree = await GraphQlClient.GetRepoTree(owner, name, Repo.DefaultBranchRef.Name, string.Empty, Repo.DiskUsage);
-        RootEntries = repoTree.Object.Entries;
+        Repo = await GraphQlClient.GetRepository(owner, name);
+        GitTree = await RestClient.GetGitTree(owner, name, Repo.DefaultBranchRef.Target.CommitResourcePath);
+    }
+
+    public IReadOnlyList<string> GetIssues()
+    {
+        return GitTree.Truncated
+            ? new[] { $"Repository contains {GitTree.Count} files and is too large. Some rules might not function properly" }
+            : Array.Empty<string>();
     }
 }

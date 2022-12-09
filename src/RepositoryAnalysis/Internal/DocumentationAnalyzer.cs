@@ -33,14 +33,17 @@ public class DocumentationAnalyzer : IAnalyzer
     private Rule GetChangeLogRule(
         AnalysisContext context)
     {
-        var entry = Shared.GetFirstBlob(context.RootEntries,
+        var node = context.GitTree.FirstFileOrDefault(
             x => x.PathEndsWith("changelog.md", "change_log.md", "releasenotes.md", "release_notes.txt", "changelog.txt", "change_log.txt", "releasenotes.txt",
                 "release_notes.txt"));
-        var (diagnosis, note) = GetDiagnosis(entry);
-        return Rule.ChangeLog(diagnosis, note) with { ResourceName = entry?.Path, ResourceUrl = Shared.GetEntryUrl(context, entry) };
+        var (diagnosis, note) = GetDiagnosis(node);
+        return Rule.ChangeLog(diagnosis, note) with
+        {
+            ResourceName = node?.Item.Path, ResourceUrl = node.GetUrl(context)
+        };
 
         (Diagnosis, string) GetDiagnosis(
-            GitHubGraphQlClient.Entry? e) =>
+            GitTree.Node? e) =>
             e is not null
                 ? (Diagnosis.Info, "found")
                 : (Diagnosis.Warning, "missing");
@@ -75,16 +78,16 @@ public class DocumentationAnalyzer : IAnalyzer
     private Rule GetReadmeRule(
         AnalysisContext context)
     {
-        var entry = Shared.GetFirstBlob(context.RootEntries, x => x.PathEquals("readme", "readme.md", "readme.txt", "readme.rst"));
-        var (diagnosis, note) = GetDiagnosis(entry);
+        var node = context.GitTree.FirstFileOrDefault(x => x.PathEquals("readme", "readme.md", "readme.txt", "readme.rst"));
+        var (diagnosis, note) = GetDiagnosis(node);
 
-        return Rule.Readme(diagnosis, note) with { ResourceName = entry?.Path, ResourceUrl = Shared.GetEntryUrl(context, entry) };
+        return Rule.Readme(diagnosis, note) with { ResourceName = node?.Item.Path, ResourceUrl = node.GetUrl(context) };
 
         (Diagnosis, string) GetDiagnosis(
-            GitHubGraphQlClient.Entry? e)
+            GitTree.Node? e)
         {
             return e is not null
-                ? e.Size switch
+                ? e.Item.Size switch
                 {
                     < 200 => (Diagnosis.Warning, "readme is too short"),
                     _ => (Diagnosis.Info, "found")

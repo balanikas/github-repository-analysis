@@ -51,14 +51,14 @@ public class CommunityAnalyzer : IAnalyzer
             "CITATIONS.md",
             "CITATION.cff"
         };
-        var entry = Shared.GetFirstBlob(context.RootEntries,
-            x => citationFileNames.Contains(x.Path, StringComparer.OrdinalIgnoreCase));
-        var (diagnosis, note) = GetDiagnosis(entry);
+        var node = context.GitTree.FirstFileOrDefault(
+            x => citationFileNames.Contains(x.Item.Path, StringComparer.OrdinalIgnoreCase));
+        var (diagnosis, note) = GetDiagnosis(node);
 
         return Rule.CitationFile(diagnosis, note);
 
         (Diagnosis, string) GetDiagnosis(
-            GitHubGraphQlClient.Entry? e) =>
+            GitTree.Node? e) =>
             e is not null
                 ? (Diagnosis.Info, "found")
                 : (Diagnosis.Warning, "missing citation file");
@@ -67,19 +67,19 @@ public class CommunityAnalyzer : IAnalyzer
     private Rule GetSupportRule(
         AnalysisContext context)
     {
-        var entry = Shared.GetSingleBlobRecursive(context.RootEntries,
+        var node = context.GitTree.SingleFileOrDefaultRecursive(
             x => x.PathEquals("support") ||
                  x.PathEquals("docs/support") ||
                  x.PathEquals(".github/support"));
-        var (diagnosis, note) = GetDiagnosis(entry);
+        var (diagnosis, note) = GetDiagnosis(node);
 
         return Rule.SupportFile(diagnosis, note);
 
         (Diagnosis, string) GetDiagnosis(
-            GitHubGraphQlClient.Entry? e)
+            GitTree.Node? e)
         {
             return e is not null
-                ? e.Size switch
+                ? e.Item.Size switch
                 {
                     < 100 => (Diagnosis.Warning, "content is too short"),
                     _ => (Diagnosis.Info, "found")
@@ -98,6 +98,7 @@ public class CommunityAnalyzer : IAnalyzer
             var names = context.Repo.PullRequestTemplates.Select(x => x.Filename);
             templates = "Templates found: <br/>" + string.Join("<br/>", names);
         }
+
         return Rule.PullRequests(diagnosis, note, templates);
 
         (Diagnosis, string) GetDiagnosis() =>
@@ -145,17 +146,16 @@ public class CommunityAnalyzer : IAnalyzer
     private Rule GetCodeOwnersRule(
         AnalysisContext context)
     {
-        var entry = Shared.GetSingleBlobRecursive(context.RootEntries, x =>
-            Path.GetFileName(x.Path).Equals("codeowners", StringComparison.OrdinalIgnoreCase));
+        var node = context.GitTree.SingleFileOrDefaultRecursive(x => x.HasFileName("codeowners"));
 
-        var (diagnosis, note) = GetDiagnosis(entry);
-        return Rule.CodeOwners(diagnosis, note) with { ResourceName = entry?.Path, ResourceUrl = Shared.GetEntryUrl(context, entry) };
+        var (diagnosis, note) = GetDiagnosis(node);
+        return Rule.CodeOwners(diagnosis, note) with { ResourceName = node?.Item.Path, ResourceUrl = node.GetUrl(context) };
 
         (Diagnosis, string) GetDiagnosis(
-            GitHubGraphQlClient.Entry? e) =>
+            GitTree.Node? e) =>
             e is not null
                 ? context.Repo.Codeowners.Errors.Any()
-                    ? (Diagnosis.Warning, $"{context.Repo.Codeowners.Errors.Count} errors in {e.Path}")
+                    ? (Diagnosis.Warning, $"{context.Repo.Codeowners.Errors.Count} errors in {e.Item.Path}")
                     : (Diagnosis.Info, "")
                 : (Diagnosis.Warning, "missing code owners file");
     }
@@ -178,7 +178,7 @@ public class CommunityAnalyzer : IAnalyzer
     private Rule GetContributingRule(
         AnalysisContext context)
     {
-        var entry = Shared.GetSingleBlob(context.RootEntries,
+        var node = context.GitTree.SingleFileOrDefault(
             x => x.PathEquals(
                 "contributing.md",
                 "docs/contributing.md",
@@ -188,14 +188,14 @@ public class CommunityAnalyzer : IAnalyzer
                 ".github/contributing.rst"
             ));
 
-        var (diagnosis, note) = GetDiagnosis(entry);
-        return Rule.Contributing(diagnosis, note) with { ResourceName = entry?.Path, ResourceUrl = Shared.GetEntryUrl(context, entry) };
+        var (diagnosis, note) = GetDiagnosis(node);
+        return Rule.Contributing(diagnosis, note) with { ResourceName = node?.Item.Path, ResourceUrl = node.GetUrl(context) };
 
         (Diagnosis, string) GetDiagnosis(
-            GitHubGraphQlClient.Entry? e)
+            GitTree.Node? e)
         {
             return e is not null
-                ? e.Size switch
+                ? e.Item.Size switch
                 {
                     < 100 => (Diagnosis.Warning, "content is too short"),
                     _ => (Diagnosis.Info, "found")

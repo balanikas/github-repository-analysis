@@ -36,7 +36,7 @@
         <MudButton Disabled="@LockUI" Color="Color.Info" Size="Size.Small" OnClick='() => OnExampleSubmit("https://github.com/dotnet/runtime")' Variant="Variant.Text">https://github.com/dotnet/runtime</MudButton>
         <MudButton Disabled="@LockUI" Color="Color.Info" Size="Size.Small" OnClick='() => OnExampleSubmit("https://github.com/Fody/NullGuard")' Variant="Variant.Text">https://github.com/Fody/NullGuard</MudButton>
         <MudButton Disabled="@LockUI" Color="Color.Info" Size="Size.Small" OnClick='() => OnExampleSubmit("https://github.com/dotnet/roslyn")' Variant="Variant.Text">https://github.com/dotnet/roslyn</MudButton>
-        <MudButton Disabled="@LockUI" Color="Color.Info" Size="Size.Small" OnClick='() => OnExampleSubmit("https://github.com/shouldly/shouldly")' Variant="Variant.Text">https://github.com/shouldly/shouldly</MudButton>
+        <MudButton Disabled="@LockUI" Color="Color.Info" Size="Size.Small" OnClick='() => OnExampleSubmit("https://github.com/Azure/azure-sdk-for-net")' Variant="Variant.Text">https://github.com/Azure/azure-sdk-for-net</MudButton>
 
     </MudContainer>
 </MudPaper>
@@ -73,7 +73,6 @@
 @code {
 
 
-    
     public string RepositoryUrl { get; set; } = "";
     public RepoAnalysis Analysis { get; set; } = RepoAnalysis.Empty;
     private IReadOnlyList<RuleModel> _documentationRules = Array.Empty<RuleModel>();
@@ -125,6 +124,16 @@
         StateHasChanged();
     }
 
+    private async Task ShowIssues(
+        IReadOnlyList<string> issues)
+    {
+        await DialogService.ShowMessageBox(
+            "Potential issues found",
+            string.Join(Environment.NewLine, issues));
+
+        StateHasChanged();
+    }
+
     private async Task OnExampleSubmit(
         string url)
     {
@@ -171,6 +180,14 @@
                 await ShowErrorMessage();
                 return;
         }
+
+        if (analysis.Issues.Any())
+        {
+            LockUI = false;
+            StateHasChanged();
+            await ShowIssues(analysis.Issues);
+        }
+
         Analysis = analysis;
         _documentationRules = Analysis.Documentation.Select(x => new RuleModel(x)).ToArray();
         _qualityRules = Analysis.Quality.Select(x => new RuleModel(x)).ToArray();

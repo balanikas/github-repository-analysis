@@ -10,14 +10,13 @@ public static class ILoggerExtensions
         IEnumerable<Rule> rules,
         string url)
     {
-        var logs = rules.Select(rule => new RuleLog { Name =rule.Name, Diagnosis = rule.Diagnosis} );
+        var logs = rules.Select(rule => new RuleLog { Name = rule.Name, Diagnosis = rule.Diagnosis });
         logger.LogInformation("Analysis of rules {Rules} for {Url}", logs, url);
-
     }
 
     private record RuleLog
     {
-        public string Name;
         public Diagnosis Diagnosis;
+        public string Name;
     }
 }

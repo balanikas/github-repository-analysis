@@ -72,7 +72,7 @@ public class GitHubGraphQlClient
     }
 
 
-    public async Task<Repo> GetRepoData(
+    public async Task<Repo> GetRepository(
         string owner,
         string name)
     {
@@ -96,6 +96,9 @@ public class GitHubGraphQlClient
     }}
     defaultBranchRef {{
       name
+       target {{
+        commitResourcePath
+      }}
       branchProtectionRule {{
         allowsForcePushes
         dismissesStaleReviews
@@ -148,18 +151,6 @@ public class GitHubGraphQlClient
         return response.Repository;
     }
 
-    public async Task<Repo> GetRepoTree(
-        string owner,
-        string name,
-        string branch,
-        string treePath,
-        int diskusage)
-    {
-        var query = GetTreeQuery(owner, name, branch, treePath, diskusage);
-        var response = await Post<Data>(query);
-        return response.Repository;
-    }
-
     private async Task<T> Post<T>(
         string query)
     {
@@ -187,67 +178,7 @@ public class GitHubGraphQlClient
 
         return response.Data;
     }
-
-
-    private string GetTreeQuery(
-        string owner,
-        string name,
-        string branch,
-        string treePath,
-        int diskUsage)
-    {
-        var deepTreeQueryPart = diskUsage <= 100000
-            ? @"
-                    object {
-                    ... on Tree {
-                        entries {
-                          path
-                          size
-                          type
-                          }
-                        }
-                      }
-"
-            : "";
-
-        var shallowTreeQuery = $@"
-{{
-  repository(name: ""{name}"", owner: ""{owner}"") {{
-    object(expression: ""{branch}:{treePath}"") {{
-      ... on Tree {{
-        entries {{
-          path
-          size
-          type
-          object {{
-            ... on Tree {{
-                entries {{
-                  path
-                  size
-                  type
-                    object {{
-                    ... on Tree {{
-                        entries {{
-                          path
-                          size
-                          type
-                          {deepTreeQueryPart}
-                      }}
-                    }}
-                  }}
-              }}
-            }}
-          }}
-        }}
-      }}
-    }}
-  }}
-}}
-        ";
-
-        return shallowTreeQuery;
-    }
-
+    
     public class ListRepos
     {
         public class Data
@@ -274,12 +205,7 @@ public class GitHubGraphQlClient
         {
             public string name { get; init; }
         }
-
-        public class Root
-        {
-            public Data data { get; init; }
-        }
-
+        
         public class Topic
         {
             public string name { get; init; }
@@ -308,16 +234,12 @@ public class GitHubGraphQlClient
     public class DefaultBranchRef
     {
         public string Name { get; init; }
-        public object BranchProtectionRule { get; init; }
+        public Target Target { get; init; }
     }
 
-    public class Entry
+    public class Target
     {
-        public string Path { get; init; }
-        public string Type { get; init; }
-        public int Size { get; init; }
-
-        public Objects? Object { get; init; }
+        public string CommitResourcePath { get; init; }
     }
 
     public class Error
@@ -346,12 +268,7 @@ public class GitHubGraphQlClient
         public string Name { get; init; }
         public string Url { get; init; }
     }
-
-    public class Objects
-    {
-        public List<Entry> Entries { get; init; }
-    }
-
+    
     public class PrimaryLanguage
     {
         public string Name { get; init; }
@@ -396,10 +313,8 @@ public class GitHubGraphQlClient
         public VulnerabilityAlerts VulnerabilityAlerts { get; init; }
         public PullRequests PullRequests { get; init; }
         public Issues Issues { get; init; }
-        public Objects Object { get; init; }
         public int DiskUsage { get; init; }
         public bool HasProjectsEnabled { get; init; }
-        
     }
 
     public class RepositoryTopics

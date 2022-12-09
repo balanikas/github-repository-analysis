@@ -3,7 +3,7 @@ using RepositoryAnalysis.Internal;
 
 namespace RepositoryAnalysis.Model;
 
-public  record Rule()
+public record Rule
 {
     public Guid Id { get; } = Guid.NewGuid();
     public required string Name { get; init; }
@@ -13,17 +13,17 @@ public  record Rule()
     public required Explanation Explanation { get; init; }
     public Diagnosis Diagnosis { get; private init; } = Diagnosis.Info;
 
+
+    public virtual bool Equals(
+        Rule? other) =>
+        other is not null && Id == other.Id;
+
     protected virtual bool PrintMembers(
         StringBuilder builder)
     {
         builder.Append($"Id = {Id}");
         return true;
     }
-         
-
-    public virtual bool Equals(
-        Rule? other) =>
-        other is not null && Id == other.Id;
 
     public override int GetHashCode() => Id.GetHashCode();
 

@@ -32,7 +32,7 @@ public record struct Badges
                 Count = errors.ToString(),
                 Color = Color.Warning
             };
-        
+
         var warnings = rules.Count(x => x.Diagnosis == Diagnosis.Warning);
         if (warnings > 0)
             return new Badge
@@ -40,7 +40,7 @@ public record struct Badges
                 Count = warnings.ToString(),
                 Color = Color.Info
             };
-        
+
         return new Badge
         {
             Count = "",

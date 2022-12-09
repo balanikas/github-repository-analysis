@@ -21,18 +21,18 @@ public class QualityAnalyzer : IAnalyzer
     private Rule GetDockerIgnoreRule(
         AnalysisContext context)
     {
-        var dockerFile = Shared.GetFirstBlobRecursive(context.RootEntries, x => x.PathEquals("Dockerfile"));
-        var dockerIgnore = Shared.GetFirstBlobRecursive(context.RootEntries, x => x.PathEquals(".dockerignore"));
+        var dockerFile = context.GitTree.FirstFileOrDefault(x => x.PathEquals("Dockerfile"));
+        var dockerIgnore = context.GitTree.FirstFileOrDefault(x => x.PathEquals(".dockerignore"));
 
         var (diagnosis, note) = GetDiagnosis(dockerFile, dockerIgnore);
         return Rule.DockerFile(diagnosis, note) with
         {
-            ResourceName = dockerFile?.Path, ResourceUrl = Shared.GetEntryUrl(context, dockerFile)
+            ResourceName = dockerFile?.Item.Path, ResourceUrl = dockerFile.GetUrl(context)
         };
 
         (Diagnosis, string) GetDiagnosis(
-            GitHubGraphQlClient.Entry? file,
-            GitHubGraphQlClient.Entry? ignore) =>
+            GitTree.Node? file,
+            GitTree.Node? ignore) =>
             file is not null && ignore is not null
                 ? (Diagnosis.Info, "found docker file and docker ignore")
                 : file is not null && ignore is null
@@ -44,25 +44,25 @@ public class QualityAnalyzer : IAnalyzer
     private async Task<Rule> GetGitIgnoreRule(
         AnalysisContext context)
     {
-        var entry = Shared.GetSingleBlob(context.RootEntries, x => x.PathEquals(".gitignore"));
-        var (diagnosis, note, details) = await GetDiagnosis(entry);
+        var node = context.GitTree.SingleFileOrDefault(x => x.PathEquals(".gitignore"));
+        var (diagnosis, note, details) = await GetDiagnosis(node);
         return Rule.GitIgnore(diagnosis, note, details) with
         {
-            ResourceName = entry?.Path, ResourceUrl = Shared.GetEntryUrl(context, entry)
+            ResourceName = node?.Item.Path, ResourceUrl = node.GetUrl(context)
         };
 
         async Task<(Diagnosis, string, string)> GetDiagnosis(
-            GitHubGraphQlClient.Entry? e)
+            GitTree.Node? e)
         {
             if (context.Repo.PrimaryLanguage is null) return (Diagnosis.Info, "no primary language found, will not analyze", "");
 
             var (templateName, ignoreList) = await context.RestClient.GetGitIgnoreRules(context.Repo.PrimaryLanguage.Name);
             var ignoredFiles = new List<string>();
-            Shared.AnalyzeRecursive(context.RootEntries,
-                x => x.IsTree() ? ignoreList.IsIgnored(x.Path, true) : ignoreList.IsIgnored(x.Path, false),
+            context.GitTree.AnalyzeRecursive(
+                x => x.IsTree() ? ignoreList.IsIgnored(x.Item.Path, true) : ignoreList.IsIgnored(x.Item.Path, false),
                 (
                     x,
-                    _) => ignoredFiles.Add(x.Path));
+                    _) => ignoredFiles.Add(x.Item.Path));
 
             var dets = ignoredFiles.Any()
                 ? $@"
@@ -86,19 +86,19 @@ Showing first 100 files:
     private Rule GetLargeFilesRule(
         AnalysisContext context)
     {
-        var entries = Shared.GetBlobsRecursive(context.RootEntries, x => x.Size > 10_000_000);
+        var nodes = context.GitTree.FilesRecursive(x => x.Item.Size > 10_000_000);
         var showExamples = "";
-        if (entries.Any())
+        if (nodes.Any())
             showExamples = @$"
 Some examples: 
 <br/>
-{string.Join("<br/>", entries.Take(3).Select(x => new { x.Path, Size = x.Size / 1000000 + " Mb" }))}";
+{string.Join("<br/>", nodes.Take(3).Select(x => new { x.Item.Path, Size = x.Item.Size / 1000000 + " Mb" }))}";
 
-        var (diagnosis, note) = GetDiagnosis(entries);
+        var (diagnosis, note) = GetDiagnosis(nodes);
         return Rule.LargeFiles(diagnosis, note, showExamples);
 
         (Diagnosis, string) GetDiagnosis(
-            IEnumerable<GitHubGraphQlClient.Entry> e) =>
+            IEnumerable<GitTree.Node> e) =>
             e.Any()
                 ? (Diagnosis.Warning, $"found {e.Count()} big files")
                 : (Diagnosis.Info, "did not find any large files");
@@ -107,15 +107,15 @@ Some examples:
     private Rule GetEditorConfigRule(
         AnalysisContext context)
     {
-        var entry = Shared.GetFirstBlobRecursive(context.RootEntries, x => x.PathEquals(".editorconfig"));
-        var (diagnosis, note) = GetDiagnosis(entry);
+        var node = context.GitTree.FirstFileOrDefaultRecursive(x => x.PathEquals(".editorconfig"));
+        var (diagnosis, note) = GetDiagnosis(node);
         return Rule.EditorConfig(diagnosis, note) with
         {
-            ResourceName = entry?.Path, ResourceUrl = Shared.GetEntryUrl(context, entry)
+            ResourceName = node?.Item.Path, ResourceUrl = node.GetUrl(context)
         };
 
         (Diagnosis, string) GetDiagnosis(
-            GitHubGraphQlClient.Entry? e) =>
+            GitTree.Node? e) =>
             e is not null
                 ? (Diagnosis.Info, "found")
                 : (Diagnosis.Error, "missing");

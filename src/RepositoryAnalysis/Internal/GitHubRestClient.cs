@@ -54,4 +54,15 @@ public class GitHubRestClient
             _ => language
         };
     }
+
+    public async Task<GitTree> GetGitTree(
+        string owner,
+        string name,
+        string commitResourcePath)
+    {
+        var sha = Path.GetFileName(commitResourcePath);
+        var response = await _client.Git.Tree.GetRecursive(owner, name, sha);
+        var contents = new GitTree(response);
+        return contents;
+    }
 }

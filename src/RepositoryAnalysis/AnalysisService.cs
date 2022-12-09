@@ -86,7 +86,6 @@ public class AnalysisService
                 .Concat(securityTask.Result)
                 .Concat(langSpecificTask.Result);
             _logger.LogRules(allRules, url);
-           
         }
         catch (Exception e)
         {
@@ -102,7 +101,8 @@ public class AnalysisService
             Community = communityTask.Result,
             Security = securityTask.Result,
             LanguageSpecific = langSpecificTask.Result,
-            UpdatedAt = _context.Repo.UpdatedAt
+            UpdatedAt = _context.Repo.UpdatedAt,
+            Issues = _context.GetIssues()
         };
 
         return _cache.Add(owner, name, analysis);

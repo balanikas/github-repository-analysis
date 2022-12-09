@@ -13,7 +13,7 @@
         <MudTh></MudTh>
         <MudTh>Name</MudTh>
         <MudTh>Diagnosis</MudTh>
-        
+
         <MudTh>Note</MudTh>
         <MudTh>Location</MudTh>
 
@@ -23,27 +23,27 @@
             <MudButton Variant="Variant.Filled" Size="Size.Small" OnClick="@(() => ShowBtnPress(context.Rule.Id))">@(context.ShowDetails ? "Hide" : "Show") Details</MudButton>
         </MudTd>
         <MudTd DataLabel="Name">@context.Rule.Name</MudTd>
-         <MudTd DataLabel="Diagnosis">
-                    @switch (context.Rule.Diagnosis)
-                    {
-                        case Diagnosis.Warning:
-                            <MudTooltip Text="an action can be taken to improve the repo" Arrow="true" Placement="Placement.Top">
-                                <MudChip   Size="Size.Small" Label="true" Color="Color.Info">Can be improved</MudChip>
-                            </MudTooltip>
-                            break;
-                        case Diagnosis.Error:
-                            <MudTooltip Text="strongly recommended to address this" Arrow="true" Placement="Placement.Top">
-                                <MudChip Size="Size.Small" Label="true" Color="Color.Warning">Warning</MudChip>
-                            </MudTooltip>
-                            break;
-                        default:
-                            <MudTooltip Text="looks good and no action needed" Arrow="true" Placement="Placement.Top">
-                                <MudChip Size="Size.Small" Label="true">Okay</MudChip>
-                            </MudTooltip>
-                            break;
-                    }
-        
-                </MudTd>
+        <MudTd DataLabel="Diagnosis">
+            @switch (context.Rule.Diagnosis)
+            {
+                case Diagnosis.Warning:
+                    <MudTooltip Text="an action can be taken to improve the repo" Arrow="true" Placement="Placement.Top">
+                        <MudChip Size="Size.Small" Label="true" Color="Color.Info">Can be improved</MudChip>
+                    </MudTooltip>
+                    break;
+                case Diagnosis.Error:
+                    <MudTooltip Text="strongly recommended to address this" Arrow="true" Placement="Placement.Top">
+                        <MudChip Size="Size.Small" Label="true" Color="Color.Warning">Warning</MudChip>
+                    </MudTooltip>
+                    break;
+                default:
+                    <MudTooltip Text="looks good and no action needed" Arrow="true" Placement="Placement.Top">
+                        <MudChip Size="Size.Small" Label="true">Okay</MudChip>
+                    </MudTooltip>
+                    break;
+            }
+
+        </MudTd>
 
         <MudTd DataLabel="Note">@context.Rule.Note</MudTd>
         <MudTd DataLabel="Location">
@@ -54,7 +54,7 @@
 
 
         </MudTd>
-       
+
 
     </RowTemplate>
     <ChildRowContent>
@@ -104,7 +104,6 @@
 
     [Parameter]
     public IReadOnlyList<RuleModel> Items { get; set; } = new List<RuleModel>();
-
 
 
     private void ShowBtnPress(

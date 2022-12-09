@@ -42,27 +42,26 @@ public class LanguageSpecificAnalyzer : IAnalyzer
         AnalysisContext context)
     {
         var warnings = new List<string>();
-        Shared.AnalyzeRecursive(
-            context.RootEntries,
-            x => x.HasExtension(".sln"),
+        context.GitTree.AnalyzeRecursive(
+            node => node.HasExtension(".sln"),
             (
-                entry,
-                entries) =>
+                node,
+                nodes) =>
             {
-                if (entries.Any(x => x.HasExtension(".cs")))
-                    warnings.Add($"detected source files next to the solution file {Shared.CreateLink(Shared.GetEntryUrl(context, entry)!, entry.Path)}");
+                if (nodes.Any(x => x.HasExtension(".cs")))
+                    warnings.Add($"detected source files next to the solution file {Shared.CreateLink(node.GetUrl(context)!, node.Item.Path)}");
 
-                if (entries.Any(x => x.HasExtension(".csproj")))
-                    warnings.Add($"detected project files next to the solution file {Shared.CreateLink(Shared.GetEntryUrl(context, entry)!, entry.Path)}");
+                if (nodes.Any(x => x.HasExtension(".csproj")))
+                    warnings.Add($"detected project files next to the solution file {Shared.CreateLink(node.GetUrl(context)!, node.Item.Path)}");
             });
 
-        var csFile = Shared.GetFirstBlob(context.RootEntries, x => x.HasExtension(".cs"));
+        var csFile = context.GitTree.FirstFileOrDefault(x => x.HasExtension(".cs"));
         if (csFile is not null) warnings.Add("found code file in root folder. Consider adding a /src folder to contain code files");
 
-        var csProjFile = Shared.GetFirstBlob(context.RootEntries, x => x.HasExtension(".csproj"));
+        var csProjFile = context.GitTree.FirstFileOrDefault(x => x.HasExtension(".csproj"));
         if (csProjFile is not null) warnings.Add("found project file in root folder. Consider adding a /src folder to contain project files");
 
-        if (context.RootEntries.Count < 5) warnings.Add("Root folder looks incomplete. Essential files can be added.");
+        if (context.GitTree.Root.Children.Count < 5) warnings.Add("Root folder looks incomplete. Essential files can be added.");
 
         var (diagnosis, note) = GetDiagnosis(warnings);
         return Rule.DotnetSolutionStructure(diagnosis, note, $@"
@@ -82,19 +81,19 @@ Found {warnings.Count} issues.
     private Rule GetRulesetRule(
         AnalysisContext context)
     {
-        var entries = Shared.GetBlobsRecursive(context.RootEntries, x => x.HasExtension(".ruleset"));
-        var details = entries.Any()
+        var nodes = context.GitTree.FilesRecursive(x => x.HasExtension(".ruleset"));
+        var details = nodes.Any()
             ? $@"
 Found these rulesets:
 <br/>
-{string.Join("<br/>", entries.Select(x => Shared.GetEntryUrl(context, x)))}
+{string.Join("<br/>", nodes.Select(x => x.GetUrl(context)))}
 "
             : "";
-        var (diagnosis, note) = GetDiagnosis(entries);
+        var (diagnosis, note) = GetDiagnosis(nodes);
         return Rule.Ruleset(diagnosis, note, details);
 
         (Diagnosis, string) GetDiagnosis(
-            IEnumerable<GitHubGraphQlClient.Entry> e) =>
+            IEnumerable<GitTree.Node> e) =>
             e.Any()
                 ? (Diagnosis.Warning, $"found {e.Count()} .ruleset files")
                 : (Diagnosis.Info, "did not find ruleset files");
@@ -103,8 +102,8 @@ Found these rulesets:
     private Rule GetDotnetTestsRule(
         AnalysisContext context)
     {
-        var testProjects = Shared.GetBlobsRecursive(context.RootEntries, IsTestProject).ToArray();
-        var testFiles = Shared.GetBlobsRecursive(context.RootEntries, IsTestFile).ToArray();
+        var testProjects = context.GitTree.FilesRecursive(IsTestProject).ToArray();
+        var testFiles = context.GitTree.FilesRecursive(IsTestFile).ToArray();
         var (diagnosis, note) = GetDiagnosis(testProjects, testFiles);
         var details = $@"
 Detected {testProjects.Length} test projects.
@@ -113,18 +112,18 @@ Detected {testFiles.Length} test files.
         return Rule.DotnetTests(diagnosis, note, details);
 
         (Diagnosis, string) GetDiagnosis(
-            IEnumerable<GitHubGraphQlClient.Entry> projects,
-            IEnumerable<GitHubGraphQlClient.Entry> files) =>
+            IEnumerable<GitTree.Node> projects,
+            IEnumerable<GitTree.Node> files) =>
             !projects.Any() || !files.Any()
                 ? (Diagnosis.Warning, "found issues")
                 : (Diagnosis.Info, "found");
 
         bool IsTestProject(
-            GitHubGraphQlClient.Entry x) =>
+            GitTree.Node x) =>
             x.PathEndsWith(".csproj") && x.ParentPathEndsWith("test", "tests", "spec", "specs");
 
         bool IsTestFile(
-            GitHubGraphQlClient.Entry x)
+            GitTree.Node x)
         {
             return x.PathEndsWith(".cs") switch
             {

@@ -17,6 +17,7 @@ public class OverViewAnalyzer
             PrimaryLanguage = context.Repo.PrimaryLanguage?.Name,
             HomePageUrl = context.Repo.HomepageUrl,
             DiskUsage = context.Repo.DiskUsage,
+            GitObjectCount = context.GitTree.Count,
             LastUpdated = Shared.TimeAgo(context.Repo.UpdatedAt)
         };
 

@@ -1,19 +1,27 @@
+using Microsoft.Extensions.Logging;
 using RepositoryAnalysis.Model;
 
 namespace RepositoryAnalysis.Internal;
 
 public class DocumentationAnalyzer : IAnalyzer
 {
+    private readonly ILogger<DocumentationAnalyzer> _logger;
+
+    public DocumentationAnalyzer(ILogger<DocumentationAnalyzer> logger)
+    {
+        _logger = logger;
+    }
+    
     public async Task<IReadOnlyList<Rule>> Analyze(
         AnalysisContext context)
     {
         var rules = new List<Rule>
         {
-            GetReadmeRule(context),
-            GetDescriptionRule(context),
-            GetHomePageUrlRule(context),
-            GetChangeLogRule(context),
-            GetTopicsRule(context)
+            _logger.LogPerf( () => GetReadmeRule(context)),
+            _logger.LogPerf( () => GetDescriptionRule(context)),
+            _logger.LogPerf( () => GetHomePageUrlRule(context)),
+            _logger.LogPerf( () => GetChangeLogRule(context)),
+            _logger.LogPerf( () => GetTopicsRule(context)),
         };
         return await Task.FromResult(rules);
     }

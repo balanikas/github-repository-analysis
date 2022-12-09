@@ -20,7 +20,7 @@ builder.Host.ConfigureAppConfiguration((
 builder.Services.AddRazorPages();
 
 Log.Logger = new LoggerConfiguration()
-    .WriteTo.Console(new JsonFormatter())
+    .WriteTo.Console()
     .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
     .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning)
     .MinimumLevel.Override("System.Net.Http", LogEventLevel.Warning)

@@ -28,53 +28,61 @@ public class GitTree
 
     public Node? SingleFileOrDefaultRecursive(
         Func<Node, bool> predicate) =>
-        SingleFileOrDefaultRecursive(Root.Children, predicate);
+        SingleFileOrDefaultRecursive(Root.Children, predicate, GetRecommendedSearchDepth());
 
     public Node? SingleFileOrDefaultRecursive(
         List<Node> nodes,
-        Func<Node, bool> predicate)
+        Func<Node, bool> predicate, 
+        int searchDepth)
     {
         var node = nodes.SingleOrDefault(x => x.Item.Type == TreeType.Blob && predicate(x));
         if (node is not null) return node;
 
+        if (searchDepth == 0) return null;
+        
         return nodes
             .Where(x => x.Item.Type == TreeType.Tree)
-            .Select(x => SingleFileOrDefaultRecursive(x.Children, predicate))
+            .Select(x => SingleFileOrDefaultRecursive(x.Children, predicate, searchDepth - 1))
             .SingleOrDefault(found => found is not null);
     }
 
     public Node? FirstFileOrDefaultRecursive(
         Func<Node, bool> predicate) =>
-        FirstFileOrDefaultRecursive(Root.Children, predicate);
+        FirstFileOrDefaultRecursive(Root.Children, predicate, GetRecommendedSearchDepth());
 
     public Node? FirstFileOrDefaultRecursive(
         List<Node> nodes,
-        Func<Node, bool> predicate)
+        Func<Node, bool> predicate,
+        int searchDepth)
     {
         var node = nodes.FirstOrDefault(x => x.Item.Type == TreeType.Blob && predicate(x));
         if (node is not null) return node;
 
+        if (searchDepth == 0) return null;
+
         return nodes
             .Where(x => x.Item.Type == TreeType.Tree)
-            .Select(x => FirstFileOrDefaultRecursive(x.Children, predicate))
+            .Select(x => FirstFileOrDefaultRecursive(x.Children, predicate, searchDepth - 1))
             .FirstOrDefault(found => found is not null);
     }
 
     public IReadOnlyList<Node> FilesRecursive(
         Func<Node, bool> predicate) =>
-        FilesRecursive(Root.Children, predicate);
+        FilesRecursive(Root.Children, predicate, GetRecommendedSearchDepth());
 
     public IReadOnlyList<Node> FilesRecursive(
         List<Node> nodes,
-        Func<Node, bool> predicate)
+        Func<Node, bool> predicate,
+        int searchDepth)
     {
         var foundNodes = nodes
             .Where(x => x.Item.Type == TreeType.Blob && predicate(x))
             .ToList();
 
+        if (searchDepth == 0) return foundNodes;
         foreach (var node in nodes.Where(x => x.Item.Type == TreeType.Tree))
         {
-            var found = FilesRecursive(node.Children, predicate);
+            var found = FilesRecursive(node.Children, predicate, searchDepth - 1);
             foundNodes.AddRange(found);
         }
 
@@ -84,19 +92,23 @@ public class GitTree
     public void AnalyzeRecursive(
         Func<Node, bool> predicate,
         Action<Node, IReadOnlyList<Node>> action) =>
-        AnalyzeRecursive(Root.Children, predicate, action);
-
+        AnalyzeRecursive(Root.Children, predicate, action, GetRecommendedSearchDepth());
 
     public void AnalyzeRecursive(
         List<Node> nodes,
         Func<Node, bool> predicate,
-        Action<Node, IReadOnlyList<Node>> action)
+        Action<Node, IReadOnlyList<Node>> action,
+        int searchDepth)
     {
         foreach (var node in nodes.Where(x => x.Item.Type == TreeType.Blob && predicate(x))) action(node, nodes);
 
-        foreach (var e in nodes.Where(x => x.Item.Type == TreeType.Tree)) AnalyzeRecursive(e.Children, predicate, action);
+        if (searchDepth == 0) return;
+        
+        foreach (var e in nodes.Where(x => x.Item.Type == TreeType.Tree)) AnalyzeRecursive(e.Children, predicate, action, searchDepth - 1);
     }
 
+    private int GetRecommendedSearchDepth() => Count > 1000 ? 5 : int.MaxValue;
+    
     private void Walk(
         Node root,
         IReadOnlyList<TreeItem> tree,

@@ -11,4 +11,5 @@ public record OverView
     public string? HomePageUrl { get; init; }
     public int DiskUsage { get; init; }
     public required string LastUpdated { get; init; }
+    public int GitObjectCount { get; init; }
 }

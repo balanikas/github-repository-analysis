@@ -1,23 +1,31 @@
+using Microsoft.Extensions.Logging;
 using RepositoryAnalysis.Model;
 
 namespace RepositoryAnalysis.Internal;
 
 public class CommunityAnalyzer : IAnalyzer
 {
+    private readonly ILogger<CommunityAnalyzer> _logger;
+
+    public CommunityAnalyzer(ILogger<CommunityAnalyzer> logger)
+    {
+        _logger = logger;
+    }
+    
     public async Task<IReadOnlyList<Rule>> Analyze(
         AnalysisContext context)
     {
         var rules = new List<Rule>
         {
-            GetLicenseRule(context),
-            GetContributingRule(context),
-            GetCodeOfConductRule(context),
-            GetCodeOwnersRule(context),
-            GetIssuesRule(context),
-            GetPullRequestsRule(context),
-            GetDiscussionsRule(context),
-            GetSupportRule(context),
-            GetCitationRule(context)
+            _logger.LogPerf(() => GetLicenseRule(context)),
+            _logger.LogPerf(() => GetContributingRule(context)),
+            _logger.LogPerf(() => GetCodeOfConductRule(context)),
+            _logger.LogPerf(() => GetCodeOwnersRule(context)),
+            _logger.LogPerf(() => GetIssuesRule(context)),
+            _logger.LogPerf(() => GetPullRequestsRule(context)),
+            _logger.LogPerf(() => GetDiscussionsRule(context)),
+            _logger.LogPerf(() => GetSupportRule(context)),
+            _logger.LogPerf(() => GetCitationRule(context)),
         };
 
         return await Task.FromResult(rules);

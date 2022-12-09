@@ -3,7 +3,7 @@
     <MudImage ObjectFit="ObjectFit.Fill" Width="600" Height="300" Src="@Data.ImageUrl" Alt="@Data.Url" Elevation="25" Class="rounded-lg"/>
     <MudCard Width="600px" Height="300px">
         <MudCardContent >
-            <MudText >@Data.Description</MudText>
+            <MudText Typo="Typo.body2">@Data.Description</MudText>
             <br/>
             <MudText Typo="Typo.body2">License: @(Data.License ?? "-")</MudText>
             <MudText Typo="Typo.body2">Primary language: @Data.PrimaryLanguage</MudText>
@@ -13,7 +13,10 @@
                 <MudLink Typo="Typo.body2" Target="_blank" Href="@Data.HomePageUrl">@Data.HomePageUrl</MudLink>
             }
             <MudText Typo="Typo.body2">Disk usage: @(Data.DiskUsage) Kb</MudText>
-
+            <MudText Typo="Typo.body2">Git objects: @(Data.GitObjectCount) </MudText>
+ 
+            
+            
         </MudCardContent>
     </MudCard>
 </MudPaper>

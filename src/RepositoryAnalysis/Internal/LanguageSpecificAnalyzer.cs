@@ -1,21 +1,24 @@
+using Microsoft.Extensions.Logging;
 using RepositoryAnalysis.Model;
 
 namespace RepositoryAnalysis.Internal;
 
 public class LanguageSpecificAnalyzer : IAnalyzer
 {
+    private readonly ILogger<LanguageSpecificAnalyzer> _logger;
     private readonly IDictionary<string, Func<AnalysisContext, IReadOnlyList<Rule>>> _languageRulesMap;
 
-    public LanguageSpecificAnalyzer()
+    public LanguageSpecificAnalyzer(ILogger<LanguageSpecificAnalyzer> logger)
     {
+        _logger = logger;
         _languageRulesMap = new Dictionary<string, Func<AnalysisContext, IReadOnlyList<Rule>>>
         {
             {
                 "c#", context => new List<Rule>
                 {
-                    GetRulesetRule(context),
-                    GetDotnetTestsRule(context),
-                    GetSolutionStructureRule(context)
+                    _logger.LogPerf(() => GetRulesetRule(context)),
+                    _logger.LogPerf(() => GetDotnetTestsRule(context)),
+                    _logger.LogPerf(() => GetSolutionStructureRule(context)),
                 }
             }
         };

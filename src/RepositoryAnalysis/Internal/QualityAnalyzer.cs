@@ -1,18 +1,26 @@
+using Microsoft.Extensions.Logging;
 using RepositoryAnalysis.Model;
 
 namespace RepositoryAnalysis.Internal;
 
 public class QualityAnalyzer : IAnalyzer
 {
+    private readonly ILogger<QualityAnalyzer> _logger;
+
+    public QualityAnalyzer(ILogger<QualityAnalyzer> logger)
+    {
+        _logger = logger;
+    }
+    
     public async Task<IReadOnlyList<Rule>> Analyze(
         AnalysisContext context)
     {
         var rules = new List<Rule>
         {
-            await GetGitIgnoreRule(context),
-            GetDockerIgnoreRule(context),
-            GetEditorConfigRule(context),
-            GetLargeFilesRule(context)
+            await _logger.LogPerfAsync(() => GetGitIgnoreRule(context)),
+            _logger.LogPerf(() => GetDockerIgnoreRule(context)),
+            _logger.LogPerf(() => GetEditorConfigRule(context)),
+            _logger.LogPerf( () => GetLargeFilesRule(context))
         };
 
         return await Task.FromResult(rules);

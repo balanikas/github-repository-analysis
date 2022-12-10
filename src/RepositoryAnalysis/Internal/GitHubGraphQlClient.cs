@@ -178,7 +178,7 @@ public class GitHubGraphQlClient
 
         return response.Data;
     }
-    
+
     public class ListRepos
     {
         public class Data
@@ -205,7 +205,7 @@ public class GitHubGraphQlClient
         {
             public string name { get; init; }
         }
-        
+
         public class Topic
         {
             public string name { get; init; }
@@ -268,7 +268,7 @@ public class GitHubGraphQlClient
         public string Name { get; init; }
         public string Url { get; init; }
     }
-    
+
     public class PrimaryLanguage
     {
         public string Name { get; init; }

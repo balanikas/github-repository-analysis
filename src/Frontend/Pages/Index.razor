@@ -1,6 +1,7 @@
 ﻿@page "/"
 @using RepositoryAnalysis
 @using RepositoryAnalysis.Model
+@using System.Collections.ObjectModel
 @inject IDialogService DialogService
 @inject AnalysisService AnalysisService
 <PageTitle>Github Repository Analysis</PageTitle>
@@ -95,8 +96,6 @@
         await DialogService.ShowMessageBox(
             "Not a valid repository url",
             "Needs to be in this form: https://github.com/owner/repo");
-
-        StateHasChanged();
     }
 
 
@@ -114,8 +113,6 @@
         await DialogService.ShowMessageBox(
             "Repository not found",
             "Please check that repository actually exist");
-
-        StateHasChanged();
     }
 
     private async Task ShowErrorMessage()
@@ -123,8 +120,6 @@
         await DialogService.ShowMessageBox(
             "Something went wrong",
             "Please try again later, or try with another repository.");
-
-        StateHasChanged();
     }
 
     private async Task ShowIssues(
@@ -133,8 +128,6 @@
         await DialogService.ShowMessageBox(
             "Potential issues found",
             string.Join(Environment.NewLine, issues));
-
-        StateHasChanged();
     }
 
     private async Task OnExampleSubmit(
@@ -146,6 +139,13 @@
 
     private async Task OnSubmit()
     {
+        Analysis = new RepoAnalysis();
+        _documentationRules = new ReadOnlyCollection<RuleModel>(new List<RuleModel>());
+        _qualityRules = new ReadOnlyCollection<RuleModel>(new List<RuleModel>());
+        _communityRules = new ReadOnlyCollection<RuleModel>(new List<RuleModel>());
+        _securityRules = new ReadOnlyCollection<RuleModel>(new List<RuleModel>());
+        _langSpecificRules = new ReadOnlyCollection<RuleModel>(new List<RuleModel>());
+
         RepositoryUrl = RepositoryUrl.Trim();
         RepositoryUrl = RepositoryUrl.TrimEnd('/');
         if (!Uri.TryCreate(RepositoryUrl, UriKind.Absolute, out var uri))
@@ -186,8 +186,6 @@
 
         if (analysis.Issues.Any())
         {
-            LockUI = false;
-            StateHasChanged();
             await ShowIssues(analysis.Issues);
         }
 

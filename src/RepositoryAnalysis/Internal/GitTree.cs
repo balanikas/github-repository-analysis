@@ -32,14 +32,14 @@ public class GitTree
 
     public Node? SingleFileOrDefaultRecursive(
         List<Node> nodes,
-        Func<Node, bool> predicate, 
+        Func<Node, bool> predicate,
         int searchDepth)
     {
         var node = nodes.SingleOrDefault(x => x.Item.Type == TreeType.Blob && predicate(x));
         if (node is not null) return node;
 
         if (searchDepth == 0) return null;
-        
+
         return nodes
             .Where(x => x.Item.Type == TreeType.Tree)
             .Select(x => SingleFileOrDefaultRecursive(x.Children, predicate, searchDepth - 1))
@@ -103,12 +103,12 @@ public class GitTree
         foreach (var node in nodes.Where(x => x.Item.Type == TreeType.Blob && predicate(x))) action(node, nodes);
 
         if (searchDepth == 0) return;
-        
+
         foreach (var e in nodes.Where(x => x.Item.Type == TreeType.Tree)) AnalyzeRecursive(e.Children, predicate, action, searchDepth - 1);
     }
 
     private int GetRecommendedSearchDepth() => Count > 1000 ? 5 : int.MaxValue;
-    
+
     private void Walk(
         Node root,
         IReadOnlyList<TreeItem> tree,

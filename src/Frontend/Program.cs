@@ -3,7 +3,7 @@ using MudBlazor.Services;
 using RepositoryAnalysis;
 using Serilog;
 using Serilog.Events;
-using Serilog.Formatting.Json;
+using Serilog.Formatting.Compact;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,10 +20,12 @@ builder.Host.ConfigureAppConfiguration((
 builder.Services.AddRazorPages();
 
 Log.Logger = new LoggerConfiguration()
-    .WriteTo.Console()
+    .Enrich.FromLogContext()
+    .WriteTo.Console(new RenderedCompactJsonFormatter())
     .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
     .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning)
     .MinimumLevel.Override("System.Net.Http", LogEventLevel.Warning)
+    .MinimumLevel.Override("System.Net.Http.HttpClient", LogEventLevel.Information)
     .CreateLogger();
 
 builder.Host.UseSerilog();

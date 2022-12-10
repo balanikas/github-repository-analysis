@@ -5,10 +5,11 @@ namespace RepositoryAnalysis.Internal;
 
 public class LanguageSpecificAnalyzer : IAnalyzer
 {
-    private readonly ILogger<LanguageSpecificAnalyzer> _logger;
     private readonly IDictionary<string, Func<AnalysisContext, IReadOnlyList<Rule>>> _languageRulesMap;
+    private readonly ILogger<LanguageSpecificAnalyzer> _logger;
 
-    public LanguageSpecificAnalyzer(ILogger<LanguageSpecificAnalyzer> logger)
+    public LanguageSpecificAnalyzer(
+        ILogger<LanguageSpecificAnalyzer> logger)
     {
         _logger = logger;
         _languageRulesMap = new Dictionary<string, Func<AnalysisContext, IReadOnlyList<Rule>>>
@@ -18,7 +19,7 @@ public class LanguageSpecificAnalyzer : IAnalyzer
                 {
                     _logger.LogPerf(() => GetRulesetRule(context)),
                     _logger.LogPerf(() => GetDotnetTestsRule(context)),
-                    _logger.LogPerf(() => GetSolutionStructureRule(context)),
+                    _logger.LogPerf(() => GetSolutionStructureRule(context))
                 }
             }
         };

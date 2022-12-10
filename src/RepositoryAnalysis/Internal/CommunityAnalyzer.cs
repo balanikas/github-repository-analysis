@@ -7,11 +7,9 @@ public class CommunityAnalyzer : IAnalyzer
 {
     private readonly ILogger<CommunityAnalyzer> _logger;
 
-    public CommunityAnalyzer(ILogger<CommunityAnalyzer> logger)
-    {
-        _logger = logger;
-    }
-    
+    public CommunityAnalyzer(
+        ILogger<CommunityAnalyzer> logger) => _logger = logger;
+
     public async Task<IReadOnlyList<Rule>> Analyze(
         AnalysisContext context)
     {
@@ -25,7 +23,7 @@ public class CommunityAnalyzer : IAnalyzer
             _logger.LogPerf(() => GetPullRequestsRule(context)),
             _logger.LogPerf(() => GetDiscussionsRule(context)),
             _logger.LogPerf(() => GetSupportRule(context)),
-            _logger.LogPerf(() => GetCitationRule(context)),
+            _logger.LogPerf(() => GetCitationRule(context))
         };
 
         return await Task.FromResult(rules);
@@ -180,7 +178,7 @@ public class CommunityAnalyzer : IAnalyzer
             GitHubGraphQlClient.CodeOfConduct? e) =>
             e is not null
                 ? (Diagnosis.Info, "found")
-                : (Diagnosis.Warning, "missing");
+                : (Diagnosis.Warning, "missing code of conduct file");
     }
 
     private Rule GetContributingRule(

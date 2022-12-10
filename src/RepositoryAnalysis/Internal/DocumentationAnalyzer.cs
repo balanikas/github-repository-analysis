@@ -7,21 +7,19 @@ public class DocumentationAnalyzer : IAnalyzer
 {
     private readonly ILogger<DocumentationAnalyzer> _logger;
 
-    public DocumentationAnalyzer(ILogger<DocumentationAnalyzer> logger)
-    {
-        _logger = logger;
-    }
-    
+    public DocumentationAnalyzer(
+        ILogger<DocumentationAnalyzer> logger) => _logger = logger;
+
     public async Task<IReadOnlyList<Rule>> Analyze(
         AnalysisContext context)
     {
         var rules = new List<Rule>
         {
-            _logger.LogPerf( () => GetReadmeRule(context)),
-            _logger.LogPerf( () => GetDescriptionRule(context)),
-            _logger.LogPerf( () => GetHomePageUrlRule(context)),
-            _logger.LogPerf( () => GetChangeLogRule(context)),
-            _logger.LogPerf( () => GetTopicsRule(context)),
+            _logger.LogPerf(() => GetReadmeRule(context)),
+            _logger.LogPerf(() => GetDescriptionRule(context)),
+            _logger.LogPerf(() => GetHomePageUrlRule(context)),
+            _logger.LogPerf(() => GetChangeLogRule(context)),
+            _logger.LogPerf(() => GetTopicsRule(context))
         };
         return await Task.FromResult(rules);
     }

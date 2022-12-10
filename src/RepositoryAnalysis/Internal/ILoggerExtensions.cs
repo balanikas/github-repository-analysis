@@ -13,10 +13,11 @@ public static class ILoggerExtensions
         var _ = Stopwatch.StartNew();
         var result = f();
         _.Stop();
-        logger.LogInformation("{Name} took {Elapsed} ms", result.Name, _.ElapsedMilliseconds);
+
+        //logger.LogInformation("{Name} took {Elapsed} ms", result.Name, _.ElapsedMilliseconds);
         return result;
     }
-    
+
     public static async Task<Rule> LogPerfAsync<T>(
         this ILogger<T> logger,
         Func<Task<Rule>> f)
@@ -24,10 +25,10 @@ public static class ILoggerExtensions
         var _ = Stopwatch.StartNew();
         var result = await f();
         _.Stop();
-        logger.LogInformation("{Name} took {Elapsed} ms", result.Name, _.ElapsedMilliseconds);
+        //logger.LogInformation("{Name} took {Elapsed} ms", result.Name, _.ElapsedMilliseconds);
         return result;
     }
-    
+
     public static void LogRules<T>(
         this ILogger<T> logger,
         IEnumerable<Rule> rules,

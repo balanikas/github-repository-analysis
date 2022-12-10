@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Logging;
 using RepositoryAnalysis.Internal;
 using RepositoryAnalysis.Model;
+using Serilog.Context;
 
 namespace RepositoryAnalysis;
 
@@ -47,6 +48,9 @@ public class AnalysisService
     public async Task<RepoAnalysis> GetAnalysis(
         string url)
     {
+        using var _ = LogContext.PushProperty("RepositoryUrl", url);
+        _logger.LogInformation("Starting analysis.");
+    
         if (!await _repositoryVerifier.RepositoryExists(url)) return RepoAnalysis.NotFound;
 
         var (owner, name) = ExtractUrlParts(url);
@@ -54,7 +58,7 @@ public class AnalysisService
         var cachedAnalysis = await _cache.Get(owner, name);
         if (cachedAnalysis is not null)
         {
-            _logger.LogInformation("Fetched analysis of {Url} from cache", url);
+            _logger.LogInformation("Fetched analysis from cache");
             return cachedAnalysis;
         }
 
@@ -64,7 +68,7 @@ public class AnalysisService
         }
         catch (Exception e)
         {
-            _logger.LogError(e, "Error fetching repository data for {Url}", url);
+            _logger.LogError(e, "Error while building analysis context.");
             return RepoAnalysis.Error;
         }
 
@@ -77,7 +81,6 @@ public class AnalysisService
 
         try
         {
-            _logger.LogInformation("Starting analysis of {Url}", url);
             await Task.WhenAll(documentationTask, qualityTask, communityTask, securityTask, langSpecificTask);
 
             var allRules = documentationTask.Result
@@ -89,7 +92,7 @@ public class AnalysisService
         }
         catch (Exception e)
         {
-            _logger.LogError(e, "Error during analysis of {Url}", url);
+            _logger.LogError(e, "Error during analysis.");
             return RepoAnalysis.Error;
         }
 
@@ -113,14 +116,14 @@ public class AnalysisService
     {
         if (!Uri.TryCreate(url, UriKind.Absolute, out var uri))
         {
-            _logger.LogError("invalid {Url}", url);
+            _logger.LogError("invalid url {Url}", url);
             throw new ArgumentException($"invalid url {url}");
         }
 
         var paths = uri.AbsolutePath.Split("/");
         if (paths.Length != 3)
         {
-            _logger.LogError("invalid {Url}", url);
+            _logger.LogError("invalid url {Url}", url);
             throw new ArgumentException($"invalid url format for {url}");
         }
 

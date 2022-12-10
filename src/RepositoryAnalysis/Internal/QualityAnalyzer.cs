@@ -7,11 +7,9 @@ public class QualityAnalyzer : IAnalyzer
 {
     private readonly ILogger<QualityAnalyzer> _logger;
 
-    public QualityAnalyzer(ILogger<QualityAnalyzer> logger)
-    {
-        _logger = logger;
-    }
-    
+    public QualityAnalyzer(
+        ILogger<QualityAnalyzer> logger) => _logger = logger;
+
     public async Task<IReadOnlyList<Rule>> Analyze(
         AnalysisContext context)
     {
@@ -20,7 +18,7 @@ public class QualityAnalyzer : IAnalyzer
             await _logger.LogPerfAsync(() => GetGitIgnoreRule(context)),
             _logger.LogPerf(() => GetDockerIgnoreRule(context)),
             _logger.LogPerf(() => GetEditorConfigRule(context)),
-            _logger.LogPerf( () => GetLargeFilesRule(context))
+            _logger.LogPerf(() => GetLargeFilesRule(context))
         };
 
         return await Task.FromResult(rules);
@@ -85,8 +83,8 @@ Showing first 100 files:
 
             return e is not null
                 ? ignoredFiles.Any()
-                    ? (Diagnosis.Warning, "found but looks incomplete", details: dets)
-                    : (Diagnosis.Info, "found", details: dets)
+                    ? (Diagnosis.Warning, "found but contains violations", details: dets)
+                    : (Diagnosis.Info, "found and without any violations", details: dets)
                 : (Diagnosis.Error, "missing", details: dets);
         }
     }

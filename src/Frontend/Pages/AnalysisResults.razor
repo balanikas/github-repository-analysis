@@ -5,7 +5,7 @@
         <col style="width:150px;"/>
         <col style="width:150px;"/>
         <col style="width:400px;"/>
-        
+
         <col style="width:200px;"/>
 
     </ColGroup>
@@ -22,7 +22,9 @@
         <MudTd>
             <MudButton Variant="Variant.Filled" Size="Size.Small" OnClick="@(() => ShowBtnPress(context.Rule.Id))">@(context.ShowDetails ? "Hide" : "Show") Details</MudButton>
         </MudTd>
-        <MudTd DataLabel="Name">@context.Rule.Name</MudTd>
+        <MudTd DataLabel="Name">
+            <MudText Typo="Typo.body1">@context.Rule.Name</MudText>
+        </MudTd>
         <MudTd DataLabel="Diagnosis">
             @switch (context.Rule.Diagnosis)
             {
@@ -45,7 +47,10 @@
 
         </MudTd>
 
-        <MudTd DataLabel="Note">@context.Rule.Note</MudTd>
+        <MudTd DataLabel="Note">
+            <MudText Typo="Typo.body1">@context.Rule.Note</MudText>
+
+        </MudTd>
         <MudTd DataLabel="Location">
             @if (!string.IsNullOrEmpty(context.Rule.ResourceName))
             {
@@ -57,16 +62,16 @@
 
 
     </RowTemplate>
-    <ChildRowContent>
+    <ChildRowContent >
         @if (context.ShowDetails)
         {
-            <MudTr>
-                <td colspan="4">
+            <MudTr >
+                <td colspan="5">
 
 
-                    <MudCard Elevation="0">
-                        <MudCardHeader>
-                            <CardHeaderContent>
+                    <MudCard Elevation="0" Class="ml-8">
+                        <MudCardHeader >
+                            <CardHeaderContent >
                                 <MudText Typo="Typo.body1">@((MarkupString)context.Rule.Explanation.Text)</MudText>
 
                                 @if (context.Rule.Explanation.Details is not null)

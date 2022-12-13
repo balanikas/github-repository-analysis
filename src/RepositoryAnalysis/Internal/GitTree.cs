@@ -149,6 +149,6 @@ public class GitTree
         public TreeItem Item { get; }
         public List<Node> Children { get; } = new();
 
-        public override string ToString() => Item?.Path ?? "";
+        public override string ToString() => Item.Path ?? "";
     }
 }

@@ -1,6 +1,8 @@
+using System.Reflection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using RepositoryAnalysis.Internal;
+using RepositoryAnalysis.Internal.Rules;
 
 namespace RepositoryAnalysis;
 
@@ -27,11 +29,17 @@ public static class DependencyInjectionExtensions
         services.AddTransient<GitHubRestClient>();
         services.AddTransient<AnalysisCache>();
         services.AddTransient<AnalysisContext>();
-        services.AddTransient<OverViewAnalyzer>();
-        services.AddTransient<DocumentationAnalyzer>();
-        services.AddTransient<QualityAnalyzer>();
-        services.AddTransient<SecurityAnalyzer>();
-        services.AddTransient<CommunityAnalyzer>();
-        services.AddTransient<LanguageSpecificAnalyzer>();
+        services.AddTransient<OverView>();
+        AddInterfaceImplementations<IAnalyzer>();
+        AddInterfaceImplementations<IRuleApplicator>();
+        services.AddSingleton<RulesRepository>();
+
+        void AddInterfaceImplementations<T>()
+        {
+            var types = Assembly.GetExecutingAssembly().GetTypes()
+                .Where(x => x is { IsInterface: false, IsAbstract: false } && x.GetInterface(typeof(T).Name) != null);
+
+            foreach (var type in types) services.AddSingleton(typeof(T), type.UnderlyingSystemType);
+        }
     }
 }

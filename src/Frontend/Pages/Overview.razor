@@ -1,7 +1,7 @@
 @using RepositoryAnalysis.Model
 <MudPaper Class=" d-flex flex-row-reverse flex-grow-1 gap-16 mt-4" Elevation="0">
-    <MudImage ObjectFit="ObjectFit.Fill" Width="600" Height="300" Src="@Data.ImageUrl" Alt="@Data.Url" Elevation="25" Class="rounded-lg"/>
-    <MudCard Width="600px" Height="300px">
+    <MudImage ObjectFit="ObjectFit.Fill" Width="400" Height="200" Src="@Data.ImageUrl" Alt="@Data.Url" Elevation="25" Class="rounded-lg"/>
+    <MudCard Width="800px" Height="200px" Elevation="5">
         <MudCardContent >
             <MudText Typo="Typo.body2">@Data.Description</MudText>
             <br/>
@@ -14,9 +14,8 @@
             }
             <MudText Typo="Typo.body2">Disk usage: @(Data.DiskUsage) Kb</MudText>
             <MudText Typo="Typo.body2">Git objects: @(Data.GitObjectCount) </MudText>
- 
-            
-            
+
+
         </MudCardContent>
     </MudCard>
 </MudPaper>

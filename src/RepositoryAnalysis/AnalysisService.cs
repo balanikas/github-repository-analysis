@@ -1,6 +1,5 @@
 using Microsoft.Extensions.Logging;
 using RepositoryAnalysis.Internal;
-using RepositoryAnalysis.Internal.Rules;
 using RepositoryAnalysis.Model;
 using Serilog.Context;
 using OverView = RepositoryAnalysis.Internal.OverView;
@@ -37,9 +36,6 @@ public class AnalysisService
     {
         using var _ = LogContext.PushProperty("RepositoryUrl", url);
         _logger.LogInformation("Starting analysis.");
-
-        //todo: unecessary call, remove
-        //if (!await _repositoryVerifier.RepositoryExists(url)) return RepoAnalysis.NotFound;
 
         var (owner, name) = ExtractUrlParts(url);
 
@@ -81,11 +77,7 @@ public class AnalysisService
         var analysis = new RepoAnalysis
         {
             OverView = overView,
-            Documentation = allRules.Where(x => x.Category == RuleCategory.Documentation).ToArray(),
-            Quality = allRules.Where(x => x.Category == RuleCategory.Quality).ToArray(),
-            Community = allRules.Where(x => x.Category == RuleCategory.Community).ToArray(),
-            Security = allRules.Where(x => x.Category == RuleCategory.Security).ToArray(),
-            LanguageSpecific = allRules.Where(x => x.Category == RuleCategory.LanguageSpecific).ToArray(),
+            Rules = allRules,
             UpdatedAt = _context.Repo.UpdatedAt,
             Issues = _context.GetIssues()
         };

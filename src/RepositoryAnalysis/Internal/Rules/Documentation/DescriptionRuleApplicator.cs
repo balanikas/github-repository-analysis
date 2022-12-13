@@ -4,7 +4,7 @@ namespace RepositoryAnalysis.Internal.Rules.Documentation;
 
 public class DescriptionRuleApplicator : IRuleApplicator
 {
-    public string RuleName => "readme";
+    public string RuleName => "description";
     public RuleCategory Category => RuleCategory.Documentation;
     public Language Language => Language.None;
 

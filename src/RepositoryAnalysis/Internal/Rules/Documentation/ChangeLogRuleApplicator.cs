@@ -4,7 +4,7 @@ namespace RepositoryAnalysis.Internal.Rules.Documentation;
 
 public class ChangeLogRuleApplicator : IRuleApplicator
 {
-    public string RuleName => "readme";
+    public string RuleName => "changelog";
     public RuleCategory Category => RuleCategory.Documentation;
     public Language Language => Language.None;
 

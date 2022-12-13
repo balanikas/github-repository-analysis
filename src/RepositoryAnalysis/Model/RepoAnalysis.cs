@@ -14,11 +14,7 @@ public record RepoAnalysis
     public static RepoAnalysis NotFound => new() { Status = AnalysisStatus.NotFound };
 
     public OverView? OverView { get; init; }
-    public IReadOnlyList<Rule> Quality { get; init; } = Array.Empty<Rule>();
-    public IReadOnlyList<Rule> Documentation { get; init; } = Array.Empty<Rule>();
-    public IReadOnlyList<Rule> Community { get; init; } = Array.Empty<Rule>();
-    public IReadOnlyList<Rule> Security { get; init; } = Array.Empty<Rule>();
-    public IReadOnlyList<Rule> LanguageSpecific { get; init; } = Array.Empty<Rule>();
+    public IReadOnlyList<Rule> Rules { get; init; } = Array.Empty<Rule>();
     public AnalysisStatus Status { get; init; } = AnalysisStatus.Ok;
     public DateTime UpdatedAt { get; init; }
 

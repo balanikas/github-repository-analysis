@@ -14,18 +14,18 @@ public static class ILoggerExtensions
         var result = f();
         _.Stop();
 
-        //logger.LogInformation("{Name} took {Elapsed} ms", result.Name, _.ElapsedMilliseconds);
+        logger.LogInformation("{Name} took {Elapsed} ms", result.Name, _.ElapsedMilliseconds);
         return result;
     }
 
-    public static async Task<Rule> LogPerfAsync<T>(
-        this ILogger<T> logger,
+    public static async Task<Rule> LogPerfAsync(
+        this ILogger logger,
         Func<Task<Rule>> f)
     {
         var _ = Stopwatch.StartNew();
         var result = await f();
         _.Stop();
-        //logger.LogInformation("{Name} took {Elapsed} ms", result.Name, _.ElapsedMilliseconds);
+        logger.LogInformation("{Name} took {Elapsed} ms", result.Name, _.ElapsedMilliseconds);
         return result;
     }
 
@@ -35,12 +35,12 @@ public static class ILoggerExtensions
         string url)
     {
         var logs = rules.Select(rule => new RuleLog { Name = rule.Name, Diagnosis = rule.Diagnosis });
-        logger.LogInformation("Analysis of rules {Rules} for {Url}", logs, url);
+        logger.LogInformation("Analysis of rules {Rules}", logs);
     }
 
     private record RuleLog
     {
-        public Diagnosis Diagnosis;
-        public string Name;
+        public Diagnosis Diagnosis { get; set; }
+        public string Name { get; set; }
     }
 }

@@ -56,7 +56,7 @@ public class GitHubGraphQlClient
     }
 
 
-    public async Task<Repo> GetUpdatedAt(
+    public async Task<Repo?> GetUpdatedAt(
         string owner,
         string name)
     {

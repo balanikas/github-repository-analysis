@@ -1,48 +1,35 @@
 using Microsoft.Extensions.Logging;
 using RepositoryAnalysis.Internal;
+using RepositoryAnalysis.Internal.Rules;
 using RepositoryAnalysis.Model;
 using Serilog.Context;
+using OverView = RepositoryAnalysis.Internal.OverView;
 
 namespace RepositoryAnalysis;
 
 public class AnalysisService
 {
+    private readonly IEnumerable<IAnalyzer> _analyzers;
     private readonly AnalysisCache _cache;
-    private readonly CommunityAnalyzer _communityAnalyzer;
     private readonly AnalysisContext _context;
-    private readonly DocumentationAnalyzer _documentationAnalyzer;
     private readonly GitHubGraphQlClient _gitHubGraphQlClient;
-    private readonly LanguageSpecificAnalyzer _languageSpecificAnalyzer;
     private readonly ILogger<AnalysisService> _logger;
-    private readonly OverViewAnalyzer _overViewAnalyzer;
-    private readonly QualityAnalyzer _qualityAnalyzer;
-    private readonly RepositoryVerifier _repositoryVerifier;
-    private readonly SecurityAnalyzer _securityAnalyzer;
+    private readonly OverView _overView;
 
     public AnalysisService(
         ILogger<AnalysisService> logger,
         GitHubGraphQlClient gitHubGraphQlClient,
         AnalysisCache cache,
-        RepositoryVerifier repositoryVerifier,
         AnalysisContext context,
-        OverViewAnalyzer overViewAnalyzer,
-        DocumentationAnalyzer documentationAnalyzer,
-        LanguageSpecificAnalyzer languageSpecificAnalyzer,
-        QualityAnalyzer qualityAnalyzer,
-        CommunityAnalyzer communityAnalyzer,
-        SecurityAnalyzer securityAnalyzer)
+        OverView overView,
+        IEnumerable<IAnalyzer> analyzers)
     {
         _logger = logger;
         _gitHubGraphQlClient = gitHubGraphQlClient;
         _cache = cache;
-        _repositoryVerifier = repositoryVerifier;
         _context = context;
-        _overViewAnalyzer = overViewAnalyzer;
-        _documentationAnalyzer = documentationAnalyzer;
-        _languageSpecificAnalyzer = languageSpecificAnalyzer;
-        _qualityAnalyzer = qualityAnalyzer;
-        _communityAnalyzer = communityAnalyzer;
-        _securityAnalyzer = securityAnalyzer;
+        _overView = overView;
+        _analyzers = analyzers;
     }
 
     public async Task<RepoAnalysis> GetAnalysis(
@@ -50,12 +37,16 @@ public class AnalysisService
     {
         using var _ = LogContext.PushProperty("RepositoryUrl", url);
         _logger.LogInformation("Starting analysis.");
-    
-        if (!await _repositoryVerifier.RepositoryExists(url)) return RepoAnalysis.NotFound;
+
+        //todo: unecessary call, remove
+        //if (!await _repositoryVerifier.RepositoryExists(url)) return RepoAnalysis.NotFound;
 
         var (owner, name) = ExtractUrlParts(url);
 
-        var cachedAnalysis = await _cache.Get(owner, name);
+        var repository = await _context.GraphQlClient.GetUpdatedAt(owner, name);
+        if (repository is null) return RepoAnalysis.NotFound;
+
+        var cachedAnalysis = _cache.Get(repository, owner, name);
         if (cachedAnalysis is not null)
         {
             _logger.LogInformation("Fetched analysis from cache");
@@ -72,22 +63,13 @@ public class AnalysisService
             return RepoAnalysis.Error;
         }
 
-        var overView = _overViewAnalyzer.Analyze(_context);
-        var documentationTask = _documentationAnalyzer.Analyze(_context);
-        var qualityTask = _qualityAnalyzer.Analyze(_context);
-        var communityTask = _communityAnalyzer.Analyze(_context);
-        var securityTask = _securityAnalyzer.Analyze(_context);
-        var langSpecificTask = _languageSpecificAnalyzer.Analyze(_context);
-
+        var overView = _overView.Analyze(_context);
+        var tasks = _analyzers.Select(x => x.Analyze(_context)).ToArray();
+        Rule[] allRules;
         try
         {
-            await Task.WhenAll(documentationTask, qualityTask, communityTask, securityTask, langSpecificTask);
-
-            var allRules = documentationTask.Result
-                .Concat(qualityTask.Result)
-                .Concat(communityTask.Result)
-                .Concat(securityTask.Result)
-                .Concat(langSpecificTask.Result);
+            await Task.WhenAll(tasks);
+            allRules = tasks.SelectMany(x => x.Result).ToArray();
             _logger.LogRules(allRules, url);
         }
         catch (Exception e)
@@ -99,11 +81,11 @@ public class AnalysisService
         var analysis = new RepoAnalysis
         {
             OverView = overView,
-            Documentation = documentationTask.Result,
-            Quality = qualityTask.Result,
-            Community = communityTask.Result,
-            Security = securityTask.Result,
-            LanguageSpecific = langSpecificTask.Result,
+            Documentation = allRules.Where(x => x.Category == RuleCategory.Documentation).ToArray(),
+            Quality = allRules.Where(x => x.Category == RuleCategory.Quality).ToArray(),
+            Community = allRules.Where(x => x.Category == RuleCategory.Community).ToArray(),
+            Security = allRules.Where(x => x.Category == RuleCategory.Security).ToArray(),
+            LanguageSpecific = allRules.Where(x => x.Category == RuleCategory.LanguageSpecific).ToArray(),
             UpdatedAt = _context.Repo.UpdatedAt,
             Issues = _context.GetIssues()
         };

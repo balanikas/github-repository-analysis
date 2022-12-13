@@ -1,13 +1,11 @@
-using RepositoryAnalysis.Model;
-
 namespace RepositoryAnalysis.Internal;
 
-public class OverViewAnalyzer
+public class OverView
 {
-    public OverView Analyze(
+    public Model.OverView Analyze(
         AnalysisContext context)
     {
-        var overview = new OverView
+        var overview = new Model.OverView
         {
             Description = context.Repo.Description,
             Url = context.Repo.Url,

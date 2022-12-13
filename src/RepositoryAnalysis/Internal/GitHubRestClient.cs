@@ -27,7 +27,7 @@ public class GitHubRestClient
     public async Task<(string, IgnoreList)> GetGitIgnoreRules(
         string language)
     {
-        if (CachedTemplates.ContainsKey(language)) return (GetTemplateName(language), CachedTemplates[language]);
+        if (CachedTemplates.TryGetValue(language, out var value)) return (GetTemplateName(language), value);
 
         GitIgnoreTemplate template;
         try

@@ -1,0 +1,74 @@
+@using RepositoryAnalysis.Model
+<MudDataGrid Items="@Rules" SortMode="SortMode.Single" Elevation="5" Hover="true" Dense="true" ColumnResizeMode="ResizeMode.Column">
+    <Columns>
+        <HierarchyColumn T="Rule"/>
+        <Column T="Rule" Field="Name" Title="name"/>
+        <Column T="Rule" Field="Category" Title="category"/>
+        <Column T="Rule" Field="Diagnosis" Title="diagnosis">
+            <CellTemplate>
+                @switch (context.Item.Diagnosis)
+                {
+                    case Diagnosis.Warning:
+                        <MudTooltip Text="an action can be taken to improve the repo" Arrow="true" Placement="Placement.Top">
+                            <MudChip Size="Size.Small" Label="true" Color="Color.Info">Can be improved</MudChip>
+                        </MudTooltip>
+                        break;
+                    case Diagnosis.Error:
+                        <MudTooltip Text="strongly recommended to address this" Arrow="true" Placement="Placement.Top">
+                            <MudChip Size="Size.Small" Label="true" Color="Color.Warning">Warning</MudChip>
+                        </MudTooltip>
+                        break;
+                    default:
+                        <MudTooltip Text="looks good and no action needed" Arrow="true" Placement="Placement.Top">
+                            <MudChip Size="Size.Small" Label="true">Okay</MudChip>
+                        </MudTooltip>
+                        break;
+                }
+            </CellTemplate>
+        </Column>
+        <Column T="Rule" Field="Note" Title="note" Sortable="false"/>
+        <Column T="Rule" Field="ResourceUrl" Title="location" Sortable="false">
+            <CellTemplate>
+                <MudLink Typo="Typo.body2" Target="_blank" Href="@context.Item.ResourceUrl">@context.Item.ResourceName</MudLink>
+            </CellTemplate>
+        </Column>
+    </Columns>
+    <ChildRowContent>
+        <MudCard MaxWidth="800px" Elevation="0">
+            <MudCardHeader >
+                <CardHeaderContent>
+                    <MudText Typo="Typo.body2">@((MarkupString)context.Item.Explanation.Text)</MudText>
+
+                    @if (context.Item.Explanation.Details is not null)
+                    {
+                        <br/>
+                        <MudText Style="background-color: lightgrey" Color="Color.Surface" Typo="Typo.body2">@((MarkupString)context.Item.Explanation.Details)</MudText>
+                    }
+                    <br/>
+                    @if (context.Item.Explanation.AboutUrl is not null)
+                    {
+                        <MudPaper Class="d-flex align-content-start flex-wrap flex-grow-1 gap-2" Elevation="0">
+                            <MudText Typo="Typo.body2">For more information, see</MudText>
+                            <MudLink Typo="Typo.body2" Target="_blank" Href="@context.Item.Explanation.AboutUrl">@context.Item.Explanation.AboutHeader</MudLink>
+                        </MudPaper>
+                    }
+
+                    @if (context.Item.Explanation.GuidanceUrl is not null)
+                    {
+                        <MudPaper Class="d-flex align-content-start flex-wrap flex-grow-1 gap-2" Elevation="0">
+                            <MudText Typo="Typo.body2">For guidance, see</MudText>
+                            <MudLink Typo="Typo.body2" Target="_blank" Href="@context.Item.Explanation.GuidanceUrl">@context.Item.Explanation.GuidanceHeader</MudLink>
+                        </MudPaper>
+                    }
+                </CardHeaderContent>
+            </MudCardHeader>
+        </MudCard>
+    </ChildRowContent>
+</MudDataGrid>
+
+@code {
+
+    [Parameter]
+    public IReadOnlyList<Rule> Rules { get; set; } = new List<Rule>();
+
+}

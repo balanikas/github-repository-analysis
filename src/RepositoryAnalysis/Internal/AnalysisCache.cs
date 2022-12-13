@@ -6,7 +6,7 @@ namespace RepositoryAnalysis.Internal;
 public class AnalysisCache
 {
     private static readonly ConcurrentDictionary<string, RepoAnalysis> Cache = new();
-    
+
     public RepoAnalysis? Get(
         GitHubGraphQlClient.Repo repository,
         string owner,

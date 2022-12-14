@@ -16,8 +16,9 @@ public class LangSpecificAnalyzer : AnalyzerBase
         AnalysisContext context)
     {
         var appliedRules = new List<Rule>();
-        if (!Enum.TryParse<Language>(context.Repo.PrimaryLanguage?.Name, out var lang)) return appliedRules;
-        foreach (var r in Repository.GetRulesByCategoryAndLanguage(Category, lang))
+        var parsedLang = Shared.ParseLanguage(context.Repo.PrimaryLanguage?.Name);
+        if (parsedLang is Language.None) return appliedRules;
+        foreach (var r in Repository.GetRulesByCategoryAndLanguage(Category, parsedLang))
         {
             var t = await Logger.LogPerfAsync(() => r.ApplyAsync(context));
             appliedRules.Add(t);

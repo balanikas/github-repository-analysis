@@ -27,7 +27,7 @@
             </CellTemplate>
         </Column>
         <Column T="Rule" Field="Note" Title="note" Sortable="false"/>
-        <Column T="Rule" Field="ResourceUrl" Title="location" Sortable="false">
+        <Column T="Rule" Field="ResourceUrl" Title="link" Sortable="false">
             <CellTemplate>
                 <MudLink Typo="Typo.body2" Target="_blank" Href="@context.Item.ResourceUrl">@context.Item.ResourceName</MudLink>
             </CellTemplate>

@@ -65,7 +65,7 @@ public class AnalysisService
         try
         {
             await Task.WhenAll(tasks);
-            allRules = tasks.SelectMany(x => x.Result).ToArray();
+            allRules = tasks.SelectMany(x => x.Result).OrderByDescending(x => x.Diagnosis).ToArray();
             _logger.LogRules(allRules, url);
         }
         catch (Exception e)

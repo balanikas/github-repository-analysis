@@ -83,6 +83,7 @@ public class GitHubGraphQlClient
 
     diskUsage
     updatedAt
+    pushedAt
     repositoryTopics {{
         totalCount
     }}

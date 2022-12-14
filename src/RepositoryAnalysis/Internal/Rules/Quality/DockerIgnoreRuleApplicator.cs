@@ -35,7 +35,8 @@ to images using ADD or COPY.",
                 AboutUrl = "https://docs.docker.com/develop/develop-images/dockerfile_best-practices/",
                 AboutHeader = "about Dockerfile"
             },
-            ResourceName = dockerFile?.Item.Path, ResourceUrl = dockerFile.GetUrl(context)
+            ResourceName = dockerFile?.Item.Path, 
+            ResourceUrl = dockerFile.GetUrl(context)
         };
 
         (Diagnosis, string) GetDiagnosis(
@@ -46,7 +47,7 @@ to images using ADD or COPY.",
                 return (Diagnosis.Info, "found docker file and docker ignore");
             if (file is not null && ignore is null)
                 return (Diagnosis.Warning, "found docker file but no docker ignore");
-            if (file is not null && ignore is null)
+            if (file is null && ignore is not null)
                 return (Diagnosis.Warning, "found docker ignore but no docker file");
 
             return (Diagnosis.NotApplicable, "not found");

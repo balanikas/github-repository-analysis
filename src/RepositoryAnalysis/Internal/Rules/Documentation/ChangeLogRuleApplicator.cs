@@ -19,26 +19,24 @@ public class ChangeLogRuleApplicator : IRuleApplicator
                 "release_notes.txt"));
         var (diagnosis, note) = GetDiagnosis(node);
         return new Rule
+        {
+            Name = RuleName,
+            Category = Category,
+            Note = note,
+            Diagnosis = diagnosis,
+            Explanation = new Explanation
             {
-                Name = RuleName,
-                Category = Category,
-                Note = note,
-                Diagnosis = diagnosis,
-                Explanation = new Explanation
-                {
-                    Details = null,
-                    Text = $@"
+                Details = null,
+                Text = $@"
 A changelog is a kind of summary of all your changes. 
 It should be easy to understand both by the users using your project and the developers working on it.
 Adding a CHANGELOG.md file in the repo root is a good start.
 <br/>
 Note: this currently only look for related files in the repo root, and does not look in 
 {Shared.CreateLink("https://help.github.com/articles/creating-releases/", "Github Releases")}"
-                }
-            } with
-            {
-                ResourceName = node?.Item.Path, ResourceUrl = node.GetUrl(context)
-            };
+            },
+            ResourceName = node?.Item.Path, ResourceUrl = node.GetUrl(context)
+        };
 
         (Diagnosis, string) GetDiagnosis(
             GitTree.Node? e) =>

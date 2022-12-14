@@ -1,7 +1,6 @@
-using RepositoryAnalysis.Internal.Rules;
 using RepositoryAnalysis.Model;
 
-namespace RepositoryAnalysis.Internal;
+namespace RepositoryAnalysis.Internal.Rules;
 
 public interface IAnalyzer
 {

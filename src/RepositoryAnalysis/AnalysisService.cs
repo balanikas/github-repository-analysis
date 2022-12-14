@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Logging;
 using RepositoryAnalysis.Internal;
+using RepositoryAnalysis.Internal.Rules;
 using RepositoryAnalysis.Model;
 using Serilog.Context;
 using OverView = RepositoryAnalysis.Internal.OverView;
@@ -65,7 +66,7 @@ public class AnalysisService
         try
         {
             await Task.WhenAll(tasks);
-            allRules = tasks.SelectMany(x => x.Result).OrderByDescending(x => x.Diagnosis).ToArray();
+            allRules = tasks.SelectMany(x => x.Result).Where(x => x.Diagnosis != Diagnosis.NotApplicable).OrderByDescending(x => x.Diagnosis).ToArray();
             _logger.LogRules(allRules, url);
         }
         catch (Exception e)

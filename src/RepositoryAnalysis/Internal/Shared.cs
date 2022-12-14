@@ -7,10 +7,7 @@ public static class Shared
     public static Language ParseLanguage(
         string? language)
     {
-        if (Enum.TryParse<Language>(language, true, out var lang))
-        {
-            return lang;
-        }
+        if (Enum.TryParse<Language>(language, true, out var lang)) return lang;
 
         //fallback
         return language?.ToLower() switch
@@ -19,6 +16,7 @@ public static class Shared
             _ => Language.None
         };
     }
+
     public static string CreateIssueTemplateLink(
         AnalysisContext context,
         string path,

@@ -21,8 +21,7 @@ public class SupportRuleApplicator : IRuleApplicator
                  x.PathEquals("support") ||
                  x.PathEquals("docs/support") ||
                  x.PathEquals(".github/support")
-                 
-                 );
+        );
         var (diagnosis, note) = GetDiagnosis(node);
 
         return new Rule

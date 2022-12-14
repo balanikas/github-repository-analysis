@@ -17,24 +17,22 @@ public class HomePageRuleApplicator : IRuleApplicator
         var (diagnosis, note) = GetDiagnosis();
         //todo: check head request if url exists
         return new Rule
+        {
+            Name = RuleName,
+            Category = Category,
+            Note = note,
+            Diagnosis = diagnosis,
+            Explanation = new Explanation
             {
-                Name = RuleName,
-                Category = Category,
-                Note = note,
-                Diagnosis = diagnosis,
-                Explanation = new Explanation
-                {
-                    Details = null,
-                    Text = @"
+                Details = null,
+                Text = @"
 A repository homepage url helps users to get more information about the project. 
 It can be edited in the About section.",
-                    GuidanceUrl = "https://docs.github.com/en/get-started/quickstart/create-a-repo",
-                    GuidanceHeader = "this guide on how to create a repository"
-                }
-            } with
-            {
-                ResourceName = context.Repo.HomepageUrl, ResourceUrl = context.Repo.HomepageUrl
-            };
+                GuidanceUrl = "https://docs.github.com/en/get-started/quickstart/create-a-repo",
+                GuidanceHeader = "this guide on how to create a repository"
+            },
+            ResourceName = context.Repo.HomepageUrl, ResourceUrl = context.Repo.HomepageUrl
+        };
 
         (Diagnosis, string) GetDiagnosis() =>
             !string.IsNullOrEmpty(context.Repo.HomepageUrl)

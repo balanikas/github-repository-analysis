@@ -8,6 +8,8 @@ public class AnalysisContext
     {
         GraphQlClient = graphQlClient;
         RestClient = restClient;
+        GitTree = new GitTree();
+        Repo = new GitHubGraphQlClient.Repo();
     }
 
     public GitHubGraphQlClient GraphQlClient { get; }

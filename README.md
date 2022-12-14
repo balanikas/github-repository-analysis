@@ -10,7 +10,7 @@ Analysis of public github repositories
 
 https://user-images.githubusercontent.com/2317329/205167273-49ee35ee-0695-4b4b-bf52-606bc7e91421.mov
 
-
+To get started, see [a relative link](CONTRIBUTING.md)
 
 This service is primarily targeted to small or medium sized repos,
 that are owned by a single person or a small group of contributors.
@@ -24,6 +24,5 @@ The analysis is presented as a set of detections, where each detection is either
 
 This service currently has extra checks for csharp repositories, but any repository should work.
 For feedback, please create a new issue at https://github.com/balanikas/github-repository-analysis/issues
-
 
 site: https://githubrepositoryanalysis.com/

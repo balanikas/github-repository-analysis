@@ -1,7 +1,24 @@
+using RepositoryAnalysis.Internal.Rules;
+
 namespace RepositoryAnalysis.Internal;
 
 public static class Shared
 {
+    public static Language ParseLanguage(
+        string? language)
+    {
+        if (Enum.TryParse<Language>(language, true, out var lang))
+        {
+            return lang;
+        }
+
+        //fallback
+        return language?.ToLower() switch
+        {
+            "c#" => Language.CSharp,
+            _ => Language.None
+        };
+    }
     public static string CreateIssueTemplateLink(
         AnalysisContext context,
         string path,

@@ -64,6 +64,7 @@ public class GitHubGraphQlClient
 {{
   repository(name: ""{name}"", owner: ""{owner}"") {{
     updatedAt
+    pushedAt
   }}
 }}";
 
@@ -288,6 +289,7 @@ public class GitHubGraphQlClient
     public class Repo
     {
         public DateTime UpdatedAt { get; init; }
+        public DateTime PushedAt { get; init; }
         public RepositoryTopics RepositoryTopics { get; init; }
 
         public CodeOfConduct? CodeOfConduct { get; init; }

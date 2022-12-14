@@ -17,6 +17,7 @@ public record RepoAnalysis
     public IReadOnlyList<Rule> Rules { get; init; } = Array.Empty<Rule>();
     public AnalysisStatus Status { get; init; } = AnalysisStatus.Ok;
     public DateTime UpdatedAt { get; init; }
+    public DateTime PushedAt { get; init; }
 
     public IReadOnlyList<string> Issues { get; init; }
 }

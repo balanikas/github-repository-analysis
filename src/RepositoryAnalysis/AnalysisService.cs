@@ -79,6 +79,7 @@ public class AnalysisService
             OverView = overView,
             Rules = allRules,
             UpdatedAt = _context.Repo.UpdatedAt,
+            PushedAt = _context.Repo.PushedAt,
             Issues = _context.GetIssues()
         };
 

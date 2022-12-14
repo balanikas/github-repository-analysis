@@ -15,9 +15,14 @@ public class SupportRuleApplicator : IRuleApplicator
         AnalysisContext context)
     {
         var node = context.GitTree.SingleFileOrDefaultRecursive(
-            x => x.PathEquals("support") ||
+            x => x.PathEquals("support.md") ||
+                 x.PathEquals("docs/support.md") ||
+                 x.PathEquals(".github/support.md") ||
+                 x.PathEquals("support") ||
                  x.PathEquals("docs/support") ||
-                 x.PathEquals(".github/support"));
+                 x.PathEquals(".github/support")
+                 
+                 );
         var (diagnosis, note) = GetDiagnosis(node);
 
         return new Rule

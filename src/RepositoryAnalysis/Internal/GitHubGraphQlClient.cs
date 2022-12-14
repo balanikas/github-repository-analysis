@@ -80,7 +80,14 @@ public class GitHubGraphQlClient
         var query = $@"
 {{
   repository(name: ""{name}"", owner: ""{owner}"") {{
-
+     releases(first: 1) {{
+      edges {{
+        node {{
+          name
+          url
+        }}
+      }}
+    }}
     diskUsage
     updatedAt
     pushedAt
@@ -289,6 +296,7 @@ public class GitHubGraphQlClient
 
     public class Repo
     {
+        public Releases Releases { get; init; }
         public DateTime UpdatedAt { get; init; }
         public DateTime PushedAt { get; init; }
         public RepositoryTopics RepositoryTopics { get; init; }
@@ -329,4 +337,21 @@ public class GitHubGraphQlClient
     {
         public int TotalCount { get; init; }
     }
+    
+    public class Releases
+    {
+        public List<Edge> Edges { get; init; }
+    }
+
+    public class Edge
+    {
+        public Node Node { get; init; }
+    }
+
+    public class Node
+    {
+        public string Name { get; init; }
+        public string Url { get; init; }
+    }
 }
+

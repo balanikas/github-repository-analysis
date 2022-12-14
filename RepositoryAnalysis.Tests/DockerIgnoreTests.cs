@@ -1,0 +1,50 @@
+namespace Repository.Tests;
+
+public class DockerIgnoreTests
+{
+    [Theory]
+    [MemberData(nameof(Data))]
+    public async Task Test(
+        GitTree tree,
+        Diagnosis diagnosis)
+    {
+        var repo = new GitHubGraphQlClient.Repo
+        {
+            Url = "",
+            DefaultBranchRef = new GitHubGraphQlClient.DefaultBranchRef
+            {
+                Name = ""
+            }
+        };
+
+        var result = await new DockerIgnoreRuleApplicator().ApplyAsync(new AnalysisContext(tree, repo));
+        result.Diagnosis.Should().Be(diagnosis);
+    }
+
+    public static IEnumerable<object[]> Data() =>
+        new List<object[]>
+        {
+            _Test(Diagnosis.Info,
+                ("Dockerfile", TreeType.Blob),
+                (".dockerignore", TreeType.Blob)),
+            _Test(Diagnosis.Info,
+                ("Dockerfile", TreeType.Blob),
+                ("f", TreeType.Tree),
+                ("f/.dockerignore", TreeType.Blob)),
+            _Test(Diagnosis.Info,
+                ("f", TreeType.Tree),
+                ("f/Dockerfile", TreeType.Blob),
+                (".dockerignore", TreeType.Blob)),
+            _Test(Diagnosis.Warning,
+                (".dockerignore", TreeType.Blob)),
+            _Test(Diagnosis.Warning,
+                ("Dockerfile", TreeType.Blob)),
+        };
+
+    static object[] _Test(Diagnosis diagnosis, params (string,TreeType)[] items) =>
+        new object[]
+        {
+            new GitTree(new TreeResponse("", "", items.Select(x => new TreeItem(x.Item1,"",x.Item2,0,"","")).ToArray(), false)),
+            diagnosis
+        };
+}

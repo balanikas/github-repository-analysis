@@ -24,7 +24,6 @@ public static class DependencyInjectionExtensions
     {
         services.AddOptions<GitHubOptions>(GitHubOptions.GitHub);
         services.AddHttpClient<GitHubGraphQlClient>();
-        services.AddHttpClient<RepositoryVerifier>();
         services.AddTransient<AnalysisService>();
         services.AddTransient<GitHubRestClient>();
         services.AddTransient<AnalysisCache>();

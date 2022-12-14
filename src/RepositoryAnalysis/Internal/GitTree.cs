@@ -4,6 +4,8 @@ namespace RepositoryAnalysis.Internal;
 
 public class GitTree
 {
+    public GitTree() => Root = new Node(new TreeItem("", "", TreeType.Tree, 0, "", ""));
+
     public GitTree(
         TreeResponse treeResponse)
     {
@@ -107,7 +109,7 @@ public class GitTree
         foreach (var e in nodes.Where(x => x.Item.Type == TreeType.Tree)) AnalyzeRecursive(e.Children, predicate, action, searchDepth - 1);
     }
 
-    private int GetRecommendedSearchDepth() => Count > 1000 ? 5 : int.MaxValue;
+    private int GetRecommendedSearchDepth() => int.MaxValue;
 
     private void Walk(
         Node root,

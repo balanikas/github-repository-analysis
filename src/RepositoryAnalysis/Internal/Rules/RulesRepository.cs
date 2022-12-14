@@ -1,6 +1,4 @@
-using RepositoryAnalysis.Internal.Rules;
-
-namespace RepositoryAnalysis.Internal;
+namespace RepositoryAnalysis.Internal.Rules;
 
 public class RulesRepository
 {

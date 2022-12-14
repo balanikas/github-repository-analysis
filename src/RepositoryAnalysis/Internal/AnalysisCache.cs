@@ -14,7 +14,7 @@ public class AnalysisCache
     {
         if (!Cache.ContainsKey(owner + name)) return null;
         var value = Cache[owner + name];
-        return (value.UpdatedAt < repository.UpdatedAt || value.PushedAt < repository.PushedAt) ? null : value;
+        return value.UpdatedAt < repository.UpdatedAt || value.PushedAt < repository.PushedAt ? null : value;
     }
 
     public RepoAnalysis Add(

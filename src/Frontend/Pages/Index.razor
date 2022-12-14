@@ -7,7 +7,6 @@
 
 <MudPaper Height="250px" Width="100%" Class="mb-4 pb-4" Elevation="5">
     <MudContainer MaxWidth="MaxWidth.Medium">
-
         <MudItem Class="mt-2 pt-2">
             <MudTextField Disabled="@LockUI" InputType="InputType.Url"
                           Adornment="Adornment.End" AdornmentIcon="@Icons.Filled.Search"
@@ -28,19 +27,20 @@
             @*               Variant="Variant.Outlined"> *@
             @* </MudTextField> *@
         </MudItem>
-
         <MudProgressLinear Class=@(LockUI ? "" : "invisible") Color="Color.Primary" Size="Size.Large" Indeterminate="true"/>
         <br/>
-
         <MudText Align="Align.Center">Try these examples: </MudText>
-        <MudButton Disabled="@LockUI" Color="Color.Info" Size="Size.Small" OnClick='() => OnExampleSubmit("https://github.com/dotnet/runtime")' Variant="Variant.Text">https://github.com/dotnet/runtime</MudButton>
-        <MudButton Disabled="@LockUI" Color="Color.Info" Size="Size.Small" OnClick='() => OnExampleSubmit("https://github.com/Fody/NullGuard")' Variant="Variant.Text">https://github.com/Fody/NullGuard</MudButton>
-        <MudButton Disabled="@LockUI" Color="Color.Info" Size="Size.Small" OnClick='() => OnExampleSubmit("https://github.com/dotnet/roslyn")' Variant="Variant.Text">https://github.com/dotnet/roslyn</MudButton>
-        <MudButton Disabled="@LockUI" Color="Color.Info" Size="Size.Small" OnClick='() => OnExampleSubmit("https://github.com/Azure/azure-sdk-for-net")' Variant="Variant.Text">https://github.com/Azure/azure-sdk-for-net</MudButton>
-        <MudButton Disabled="@LockUI" Color="Color.Info" Size="Size.Small" OnClick='() => OnExampleSubmit("https://github.com/balanikas/github-repository-analysis")' Variant="Variant.Text">https://github.com/balanikas/github-repository-analysis</MudButton>
-        <MudButton Disabled="@LockUI" Color="Color.Info" Size="Size.Small" OnClick='() => OnExampleSubmit("https://github.com/balanikas/test")' Variant="Variant.Text">https://github.com/balanikas/test</MudButton>
-        <MudButton Disabled="@LockUI" Color="Color.Info" Size="Size.Small" OnClick='() => OnExampleSubmit("https://github.com/App-vNext/Polly")' Variant="Variant.Text">https://github.com/App-vNext/Polly</MudButton>
-
+        <MudChip Size="Size.Small" OnClick='() => OnExampleSubmit("https://github.com/dotnet/runtime")' Variant="Variant.Text">dotnet/runtime</MudChip>
+        <MudChip Size="Size.Small" OnClick='() => OnExampleSubmit("https://github.com/JSkimming/Castle.Core.AsyncInterceptor")' Variant="Variant.Text">JSkimming/Castle.Core.AsyncInterceptor</MudChip>
+        <MudChip Size="Size.Small" OnClick='() => OnExampleSubmit("https://github.com/dotnet/roslyn")' Variant="Variant.Text">dotnet/roslyn</MudChip>
+        <MudChip Size="Size.Small" OnClick='() => OnExampleSubmit("https://github.com/Fody/NullGuard")' Variant="Variant.Text">Fody/NullGuard</MudChip>
+        <MudChip Size="Size.Small" OnClick='() => OnExampleSubmit("https://github.com/Azure/azure-sdk-for-net")' Variant="Variant.Text">Azure/azure-sdk-for-net</MudChip>
+        <MudChip Size="Size.Small" OnClick='() => OnExampleSubmit("https://github.com/App-vNext/Polly")' Variant="Variant.Text">App-vNext/Polly</MudChip>
+        <MudChip Size="Size.Small" OnClick='() => OnExampleSubmit("https://github.com/hakimel/reveal.js")' Variant="Variant.Text">hakimel/reveal.js</MudChip>
+        <MudChip Size="Size.Small" OnClick='() => OnExampleSubmit("https://github.com/id-Software/DOOM")' Variant="Variant.Text">id-Software/DOOM</MudChip>
+        <MudChip Size="Size.Small" OnClick='() => OnExampleSubmit("https://github.com/id-Software/DOOM-3-BFG")' Variant="Variant.Text">id-Software/DOOM-3-BFG</MudChip>
+        <MudChip Size="Size.Small" OnClick='() => OnExampleSubmit("https://github.com/davidfowl/BedrockFramework")' Variant="Variant.Text">davidfowl/BedrockFramework</MudChip>
+        <MudChip Size="Size.Small" OnClick='() => OnExampleSubmit("https://github.com/balanikas/github-repository-analysis")' Variant="Variant.Text">balanikas/github-repository-analysis</MudChip>
     </MudContainer>
 </MudPaper>
 
@@ -51,16 +51,14 @@
     }
     <br/>
     <ResultsTable Rules="_rules"></ResultsTable>
-
 </MudContainer>
-
 
 @code {
 
-    public string RepositoryUrl { get; set; } = "";
-    public RepoAnalysis Analysis { get; set; } = RepoAnalysis.Empty;
-    public bool LockUI { get; set; }
-    private IReadOnlyList<Rule> _rules;
+    private string RepositoryUrl { get; set; } = "";
+    private RepoAnalysis Analysis { get; set; } = RepoAnalysis.Empty;
+    private bool LockUI { get; set; }
+    private IReadOnlyList<Rule> _rules = Array.Empty<Rule>();
 
     [Parameter]
     [SupplyParameterFromQuery(Name = "url")]
@@ -72,7 +70,6 @@
             "Not a valid repository url",
             "Needs to be in this form: https://github.com/owner/repo");
     }
-
 
     protected override async Task OnParametersSetAsync()
     {
@@ -114,8 +111,6 @@
 
     private async Task OnSubmit()
     {
-    //Analysis = new RepoAnalysis();
-
         RepositoryUrl = RepositoryUrl.Trim();
         RepositoryUrl = RepositoryUrl.TrimEnd('/');
         if (!Uri.TryCreate(RepositoryUrl, UriKind.Absolute, out var uri))
@@ -171,6 +166,6 @@
         await AnalysisService.DoBulkTest(Topic);
     }
 
-    public string Topic { get; set; } = "";
+    private string Topic { get; } = "";
 
 }

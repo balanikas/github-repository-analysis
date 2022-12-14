@@ -37,7 +37,8 @@ Once a pull request is opened, you can discuss and review the potential changes 
                 AboutUrl =
                     "https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests",
                 AboutHeader = "about pull requests",
-                GuidanceUrl = "https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/creating-a-pull-request-template-for-your-repository",
+                GuidanceUrl =
+                    "https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/creating-a-pull-request-template-for-your-repository",
                 GuidanceHeader = "how to add a pull request template"
             }
         };

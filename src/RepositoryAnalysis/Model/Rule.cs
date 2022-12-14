@@ -7,12 +7,12 @@ public record Rule
 {
     public Guid Id { get; } = Guid.NewGuid();
     public required string Name { get; init; }
-    public string Note { get; init; } = "";
+    public required string Note { get; init; }
     public string? ResourceName { get; init; }
     public string? ResourceUrl { get; init; }
     public required Explanation Explanation { get; init; }
     public Diagnosis Diagnosis { get; init; } = Diagnosis.Info;
-    public RuleCategory Category { get; init; }
+    public required RuleCategory Category { get; init; }
 
 
     public virtual bool Equals(
@@ -22,7 +22,8 @@ public record Rule
     protected virtual bool PrintMembers(
         StringBuilder builder)
     {
-        builder.Append($"Id = {Id}");
+        builder.Append($"{nameof(Name)} = {Name}");
+        builder.Append($"{nameof(Category)} = {Id}");
         return true;
     }
 

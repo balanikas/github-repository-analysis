@@ -3,9 +3,8 @@ namespace RepositoryAnalysis.Internal;
 public class OverView
 {
     public Model.OverView Analyze(
-        AnalysisContext context)
-    {
-        var overview = new Model.OverView
+        AnalysisContext context) =>
+        new()
         {
             Description = context.Repo.Description,
             Url = context.Repo.Url,
@@ -16,9 +15,6 @@ public class OverView
             HomePageUrl = context.Repo.HomepageUrl,
             DiskUsage = context.Repo.DiskUsage,
             GitObjectCount = context.GitTree.Count,
-            LastUpdated = Shared.TimeAgo(context.Repo.UpdatedAt)
+            LastUpdated = Shared.TimeAgo(context.Repo.PushedAt)
         };
-
-        return overview;
-    }
 }

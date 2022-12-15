@@ -8,6 +8,13 @@ Analysis of public github repositories
 
 https://githubrepositoryanalysis.com/
 
+
+https://user-images.githubusercontent.com/2317329/207807236-684bf53d-96c3-4c2c-ac73-c6d5389ab1fa.mov
+
+
+
+
+
 ## How it works
 Given a repository, the system will fetch all publicly available data for that repository,
 evaluate it based on a set of rules, and present the results.

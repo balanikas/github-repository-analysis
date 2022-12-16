@@ -30,7 +30,9 @@ public class ReadmeRuleApplicator : IRuleApplicator
 A repository should contain a readme file, to tell other people why your project is useful, what they can do with your project, and how they can use it.",
                 AboutUrl =
                     "https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-readmes",
-                AboutHeader = "about readmes"
+                AboutHeader = "about readmes",
+                GuidanceUrl = diagnosis == Diagnosis.Error ? Path.Combine(context.Repo.Url, "community") : null,
+                GuidanceHeader = "Community Standards"
             },
             ResourceName = node?.Item.Path, ResourceUrl = node.GetUrl(context)
         };

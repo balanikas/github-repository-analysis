@@ -28,8 +28,10 @@ public class DescriptionRuleApplicator : IRuleApplicator
                 Text = @"
 A repository description helps users to understand what the repository is about.
 It can be edited in the About section.",
-                GuidanceUrl = "https://docs.github.com/en/get-started/quickstart/create-a-repo",
-                GuidanceHeader = "this guide on how to create a repository"
+                AboutUrl = "https://docs.github.com/en/get-started/quickstart/create-a-repo",
+                AboutHeader = "this guide on how to create a repository",
+                GuidanceUrl = diagnosis == Diagnosis.Warning ? Path.Combine(context.Repo.Url, "community") : null,
+                GuidanceHeader = "Community Standards"
             }
         };
 

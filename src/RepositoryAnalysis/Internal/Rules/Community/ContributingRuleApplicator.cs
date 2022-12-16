@@ -39,7 +39,9 @@ To help your project contributors do good work, you can add a file with contribu
 When someone opens a pull request or creates an issue, they will see a link to that file. The link to the contributing guidelines also appears on your repository's contribute page.",
                 AboutUrl =
                     "https://docs.github.com/en/communities/setting-up-your-project-for-healthy-contributions/setting-guidelines-for-repository-contributors",
-                AboutHeader = "about contributing guidelines"
+                AboutHeader = "about contributing guidelines",
+                GuidanceUrl = node is null ? Path.Combine(context.Repo.Url, "community") : null,
+                GuidanceHeader = "Community Standards"
             },
             ResourceName = node?.Item.Path, ResourceUrl = node.GetUrl(context)
         };

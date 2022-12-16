@@ -145,8 +145,9 @@ public class GitTree
 
     public class Node
     {
-        public Node(TreeItem item) => Item = item;
-        
+        public Node(
+            TreeItem item) => Item = item;
+
         public TreeItem Item { get; }
         public List<Node> Children { get; } = new();
         public override string ToString() => Item.Path ?? "";

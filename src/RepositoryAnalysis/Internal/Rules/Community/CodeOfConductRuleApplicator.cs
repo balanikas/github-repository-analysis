@@ -32,7 +32,9 @@ A code of conduct defines standards for how to engage in a community. It signals
 It also outlines procedures for addressing problems between members of your project's community. ",
                 AboutUrl =
                     "https://docs.github.com/en/communities/setting-up-your-project-for-healthy-contributions/adding-a-code-of-conduct-to-your-project",
-                AboutHeader = "about code of conduct"
+                AboutHeader = "about code of conduct",
+                GuidanceUrl = diagnosis == Diagnosis.Warning ? Path.Combine(context.Repo.Url, "community") : null,
+                GuidanceHeader = "Community Standards"
             },
             ResourceName = entry?.Name, ResourceUrl = entry?.Url
         };

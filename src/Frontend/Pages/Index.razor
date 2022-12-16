@@ -8,14 +8,18 @@
 <MudPaper Height="250px" Width="100%" Class="mb-4 pb-4" Elevation="5">
     <MudContainer MaxWidth="MaxWidth.Medium">
         <MudItem Class="mt-2 pt-2">
-            <MudTextField Disabled="@LockUI" InputType="InputType.Url"
-                          Adornment="Adornment.End" AdornmentIcon="@Icons.Filled.Search"
-                          AdornmentColor="Color.Primary"
-                          OnAdornmentClick="OnSubmit"
-                          InputMode="InputMode.url"
-                          HelperText="Enter a github repository url and scan for any issues"
-                          @bind-Value="RepositoryUrl" Label="https://github.com/owner/repo" Variant="Variant.Outlined">
-            </MudTextField>
+            <EditForm Model="RepositoryUrl" OnSubmit="OnFormSubmit">
+                <MudTextField Disabled="@LockUI" InputType="InputType.Text"
+                              Adornment="Adornment.End" AdornmentIcon="@Icons.Filled.Search"
+                              AdornmentColor="Color.Primary"
+                              OnAdornmentClick="OnSubmit"
+                              On
+                              InputMode="InputMode.url"
+                              HelperText="Enter a github repository url and scan for any issues"
+                              @bind-Value="RepositoryUrl" Label="https://github.com/owner/repo" Variant="Variant.Outlined">
+                </MudTextField>
+            </EditForm>
+
             @* <MudTextField Disabled="@LockUI" *@
             @*               InputType="InputType.Text" *@
             @*               Adornment="Adornment.End" *@
@@ -106,6 +110,12 @@
         string url)
     {
         RepositoryUrl = url;
+        await OnSubmit();
+    }
+
+    private async Task OnFormSubmit(
+        EditContext arg)
+    {
         await OnSubmit();
     }
 

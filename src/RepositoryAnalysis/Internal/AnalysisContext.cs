@@ -2,12 +2,14 @@ namespace RepositoryAnalysis.Internal;
 
 public class AnalysisContext
 {
-    public AnalysisContext(GitTree gitTree, GitHubGraphQlClient.Repo repo)
+    public AnalysisContext(
+        GitTree gitTree,
+        GitHubGraphQlClient.Repo repo)
     {
         GitTree = gitTree;
         Repo = repo;
     }
-    
+
     public AnalysisContext(
         GitHubGraphQlClient graphQlClient,
         GitHubRestClient restClient)

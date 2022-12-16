@@ -35,7 +35,7 @@ to images using ADD or COPY.",
                 AboutUrl = "https://docs.docker.com/develop/develop-images/dockerfile_best-practices/",
                 AboutHeader = "about Dockerfile"
             },
-            ResourceName = dockerFile?.Item.Path, 
+            ResourceName = dockerFile?.Item.Path,
             ResourceUrl = dockerFile.GetUrl(context)
         };
 

@@ -38,9 +38,8 @@ For your repository to truly be open source, you'll need to license it so that o
                 AboutUrl =
                     "https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/licensing-a-repository",
                 AboutHeader = "about open source licensing",
-                GuidanceUrl =
-                    "https://choosealicense.com/",
-                GuidanceHeader = "how to choose a license"
+                GuidanceUrl = diagnosis == Diagnosis.Error ? Path.Combine(context.Repo.Url, "community") : null,
+                GuidanceHeader = "Community Standards"
             },
             ResourceName = license?.Name, ResourceUrl = license?.Url
         };

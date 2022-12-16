@@ -37,7 +37,9 @@ Issues let you track your work on GitHub, where development happens.
 You may wish to turn issues off for your repository if you do not accept contributions or bug reports.
 ",
                 AboutUrl = "https://docs.github.com/en/issues/tracking-your-work-with-issues/about-issues",
-                AboutHeader = "about issues"
+                AboutHeader = "about issues",
+                GuidanceUrl = diagnosis == Diagnosis.Warning ? Path.Combine(context.Repo.Url, "community") : null,
+                GuidanceHeader = "Community Standards"
             }
         };
 

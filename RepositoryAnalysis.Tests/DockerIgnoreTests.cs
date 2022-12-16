@@ -38,13 +38,15 @@ public class DockerIgnoreTests
             _Test(Diagnosis.Warning,
                 (".dockerignore", TreeType.Blob)),
             _Test(Diagnosis.Warning,
-                ("Dockerfile", TreeType.Blob)),
+                ("Dockerfile", TreeType.Blob))
         };
 
-    static object[] _Test(Diagnosis diagnosis, params (string,TreeType)[] items) =>
+    private static object[] _Test(
+        Diagnosis diagnosis,
+        params (string, TreeType)[] items) =>
         new object[]
         {
-            new GitTree(new TreeResponse("", "", items.Select(x => new TreeItem(x.Item1,"",x.Item2,0,"","")).ToArray(), false)),
+            new GitTree(new TreeResponse("", "", items.Select(x => new TreeItem(x.Item1, "", x.Item2, 0, "", "")).ToArray(), false)),
             diagnosis
         };
 }

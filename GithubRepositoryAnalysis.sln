@@ -9,7 +9,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionFolder", "SolutionF
 		src\Dockerfile = src\Dockerfile
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepositoryAnalysis.Tests", "RepositoryAnalysis.Tests\RepositoryAnalysis.Tests.csproj", "{7C27614F-E9EB-436A-BAE0-FFCCE27886C6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepositoryAnalysis.Tests", "test\RepositoryAnalysis.Tests\RepositoryAnalysis.Tests.csproj", "{4DBE7A21-2EF4-475D-A453-89A1160F9903}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,9 +25,9 @@ Global
 		{44F51C41-3FC0-493C-822B-B51AB02D9A27}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{44F51C41-3FC0-493C-822B-B51AB02D9A27}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{44F51C41-3FC0-493C-822B-B51AB02D9A27}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7C27614F-E9EB-436A-BAE0-FFCCE27886C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7C27614F-E9EB-436A-BAE0-FFCCE27886C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7C27614F-E9EB-436A-BAE0-FFCCE27886C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7C27614F-E9EB-436A-BAE0-FFCCE27886C6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4DBE7A21-2EF4-475D-A453-89A1160F9903}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4DBE7A21-2EF4-475D-A453-89A1160F9903}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4DBE7A21-2EF4-475D-A453-89A1160F9903}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4DBE7A21-2EF4-475D-A453-89A1160F9903}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

@@ -25,7 +25,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\src\RepositoryAnalysis\RepositoryAnalysis.csproj"/>
+        <ProjectReference Include="..\..\src\RepositoryAnalysis\RepositoryAnalysis.csproj"/>
     </ItemGroup>
 
 </Project>

@@ -12,9 +12,8 @@ public class OverView
             LicenseUrl = context.Repo.LicenseInfo?.Url,
             ImageUrl = context.Repo.OpenGraphImageUrl,
             PrimaryLanguage = context.Repo.PrimaryLanguage?.Name,
-            HomePageUrl = context.Repo.HomepageUrl,
             DiskUsage = context.Repo.DiskUsage,
             GitObjectCount = context.GitTree.Count,
-            LastUpdated = Shared.TimeAgo(context.Repo.PushedAt)
+            LastUpdated = Shared.TimeAgo(context.Repo.PushedAt?.DateTime)
         };
 }

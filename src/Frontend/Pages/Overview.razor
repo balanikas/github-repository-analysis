@@ -1,6 +1,6 @@
 @using RepositoryAnalysis.Model
 <MudPaper Class=" d-flex flex-row-reverse flex-grow-1 gap-16 mt-4" Elevation="0">
-    <MudImage ObjectFit="ObjectFit.Fill" Width="400" Height="200" Src="@Data.ImageUrl" Alt="@Data.Url" Elevation="25" Class="rounded-lg"/>
+    <MudImage ObjectFit="ObjectFit.Fill" Width="400" Height="200" Src="@Data.ImageUrl.ToString()" Alt="@Data.Url.ToString()" Elevation="25" Class="rounded-lg"/>
     <MudCard Width="800px" Height="200px" Elevation="5">
         <MudCardContent >
             <MudText Typo="Typo.body2">@Data.Description</MudText>
@@ -8,11 +8,10 @@
             <MudText Typo="Typo.body2">License: @(Data.License ?? "-")</MudText>
             <MudText Typo="Typo.body2">Primary language: @Data.PrimaryLanguage</MudText>
             <MudText Typo="Typo.body2">Last updated: @Data.LastUpdated</MudText>
-            @if (Data.HomePageUrl is not null)
+            @if (Data.DiskUsage is not null)
             {
-                <MudLink Typo="Typo.body2" Target="_blank" Href="@Data.HomePageUrl">@Data.HomePageUrl</MudLink>
+                <MudText Typo="Typo.body2">Disk usage: @(Data.DiskUsage) Kb</MudText>
             }
-            <MudText Typo="Typo.body2">Disk usage: @(Data.DiskUsage) Kb</MudText>
             <MudText Typo="Typo.body2">Git objects: @(Data.GitObjectCount) </MudText>
 
 

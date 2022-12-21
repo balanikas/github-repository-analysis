@@ -31,7 +31,7 @@ A repository should contain a readme file, to tell other people why your project
                 AboutUrl =
                     "https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-readmes",
                 AboutHeader = "about readmes",
-                GuidanceUrl = diagnosis == Diagnosis.Error ? Path.Combine(context.Repo.Url, "community") : null,
+                GuidanceUrl = diagnosis == Diagnosis.Error ? Path.Combine(context.Repo.Url.ToString(), "community") : null,
                 GuidanceHeader = "Community Standards"
             },
             ResourceName = node?.Item.Path, ResourceUrl = node.GetUrl(context)

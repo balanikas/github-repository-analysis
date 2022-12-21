@@ -16,7 +16,7 @@ public class PullRequestsRuleApplicator : IRuleApplicator
     {
         var (diagnosis, note) = GetDiagnosis();
         var templates = "";
-        if (context.Repo.PullRequestTemplates.Any())
+        if (context.Repo.PullRequestTemplates != null && context.Repo.PullRequestTemplates.Any())
         {
             var names = context.Repo.PullRequestTemplates.Select(x => x.Filename);
             templates = "Templates found: <br/>" + string.Join("<br/>", names);
@@ -44,7 +44,7 @@ Once a pull request is opened, you can discuss and review the potential changes 
         };
 
         (Diagnosis, string) GetDiagnosis() =>
-            context.Repo.PullRequestTemplates.Any()
+            context.Repo.PullRequestTemplates != null && context.Repo.PullRequestTemplates.Any()
                 ? (Diagnosis.Info,
                     $"found {context.Repo.PullRequests.TotalCount} pull requests and {context.Repo.PullRequestTemplates.Count} pull request templates")
                 : (Diagnosis.Warning, "missing pull request templates");

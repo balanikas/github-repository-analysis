@@ -38,7 +38,7 @@ You can use a CODEOWNERS file to define individuals or teams that are responsibl
         (Diagnosis, string) GetDiagnosis(
             GitTree.Node? e) =>
             e is not null
-                ? context.Repo.Codeowners.Errors.Any()
+                ? context.Repo.Codeowners != null && context.Repo.Codeowners.Errors.Any()
                     ? (Diagnosis.Warning, $"{context.Repo.Codeowners.Errors.Count} errors in {e.Item.Path}")
                     : (Diagnosis.Info, "")
                 : (Diagnosis.Warning, "missing code owners file");

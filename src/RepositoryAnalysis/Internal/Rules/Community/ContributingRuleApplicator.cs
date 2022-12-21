@@ -40,7 +40,7 @@ When someone opens a pull request or creates an issue, they will see a link to t
                 AboutUrl =
                     "https://docs.github.com/en/communities/setting-up-your-project-for-healthy-contributions/setting-guidelines-for-repository-contributors",
                 AboutHeader = "about contributing guidelines",
-                GuidanceUrl = node is null ? Path.Combine(context.Repo.Url, "community") : null,
+                GuidanceUrl = node is null ? Path.Combine(context.Repo.Url.ToString(), "community") : null,
                 GuidanceHeader = "Community Standards"
             },
             ResourceName = node?.Item.Path, ResourceUrl = node.GetUrl(context)

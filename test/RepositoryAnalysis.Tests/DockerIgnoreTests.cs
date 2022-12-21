@@ -1,3 +1,6 @@
+using Moq;
+using RepositoryAnalysis.Internal.GraphQL;
+
 namespace Repository.Tests;
 
 public class DockerIgnoreTests
@@ -8,16 +11,12 @@ public class DockerIgnoreTests
         GitTree tree,
         Diagnosis diagnosis)
     {
-        var repo = new GitHubGraphQlClient.Repo
-        {
-            Url = "",
-            DefaultBranchRef = new GitHubGraphQlClient.DefaultBranchRef
-            {
-                Name = ""
-            }
-        };
-
-        var result = await new DockerIgnoreRuleApplicator().ApplyAsync(new AnalysisContext(tree, repo));
+        var repo = new Mock<IGetRepo_Repository>();
+        repo.Setup(x => x.Url)
+            .Returns(new Uri("http://dummy.com"));
+        repo.Setup(x => x.DefaultBranchRef)
+            .Returns(new GetRepo_Repository_DefaultBranchRef_Ref("", null, null));
+        var result = await new DockerIgnoreRuleApplicator().ApplyAsync(new AnalysisContext(tree, repo.Object));
         result.Diagnosis.Should().Be(diagnosis);
     }
 

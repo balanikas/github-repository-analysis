@@ -171,11 +171,6 @@
         await Task.CompletedTask;
     }
 
-    private async Task OnSubmitDebug()
-    {
-        await AnalysisService.DoBulkTest(Topic);
-    }
 
-    private string Topic { get; } = "";
 
 }

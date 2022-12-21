@@ -22,7 +22,7 @@ public static class Shared
         string path,
         string name)
     {
-        var url = Path.Combine(context.Repo.Url, "blob", context.Repo.DefaultBranchRef.Name, ".github/ISSUE_TEMPLATE", path);
+        var url = Path.Combine(context.Repo.Url.ToString(), "blob", context.Repo.DefaultBranchRef?.Name!, ".github/ISSUE_TEMPLATE", path);
         return $@"<strong><a target=""_blank"" href=""{url}"">{name}</a></strong>";
     }
 
@@ -32,10 +32,12 @@ public static class Shared
         $@"<u><strong><a target=""_blank"" href=""{url}"">{name}</a></strong></u>";
 
     public static string TimeAgo(
-        DateTime dateTime)
+        DateTime? dateTime)
     {
+        if (dateTime is null) return "";
+
         string result;
-        var timeSpan = DateTime.Now.Subtract(dateTime);
+        var timeSpan = DateTime.Now.Subtract(dateTime.Value);
 
         if (timeSpan <= TimeSpan.FromHours(24))
             result = timeSpan.Hours > 1

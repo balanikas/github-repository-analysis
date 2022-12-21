@@ -1,3 +1,4 @@
+using RepositoryAnalysis.Internal.GraphQL;
 using RepositoryAnalysis.Model;
 
 namespace RepositoryAnalysis.Internal.Rules.Documentation;
@@ -17,7 +18,7 @@ public class ChangeLogRuleApplicator : IRuleApplicator
         var node = context.GitTree.FirstFileOrDefault(
             x => x.PathEndsWith("changelog.md", "change_log.md", "releasenotes.md", "release_notes.txt", "changelog.txt", "change_log.txt", "releasenotes.txt",
                 "release_notes.txt"));
-        var release = context.Repo.Releases.Edges.SingleOrDefault()?.Node;
+        var release = context.Repo.Releases.Edges?.SingleOrDefault()?.Node;
         var (diagnosis, note, resourceName, resourceUrl) = GetDiagnosis(node, release);
 
         return new Rule
@@ -41,12 +42,12 @@ Adding a CHANGELOG.md file in the repo root is a good start. Or use the Github R
 
         (Diagnosis, string, string?, string?) GetDiagnosis(
             GitTree.Node? n,
-            GitHubGraphQlClient.Node? r)
+            IGetRepo_Repository_Releases_Edges_Node? r)
         {
             if (n is not null)
                 return (Diagnosis.Info, "found", node?.Item.Path, node.GetUrl(context));
             return r is not null
-                ? (Diagnosis.Info, "found", r.Name, r.Url)
+                ? (Diagnosis.Info, "found", r.Name, r.Url.ToString())
                 : (Diagnosis.Warning, "missing", null, null);
         }
     }

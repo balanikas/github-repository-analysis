@@ -2,7 +2,7 @@ namespace RepositoryAnalysis.Model;
 
 public record OverView
 {
-    public Uri ImageUrl { get; init; }
+    public Uri? ImageUrl { get; init; }
     public string? Description { get; init; }
     public string? PrimaryLanguage { get; init; }
     public required Uri Url { get; init; }

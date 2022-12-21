@@ -22,11 +22,11 @@ internal class GitTree
 
     public Node? SingleFileOrDefault(
         Func<Node, bool> predicate) =>
-        Root.Children.SingleOrDefault(x => x.Item.Type == TreeType.Blob && predicate(x));
+        Root.Children.SingleOrDefault(x => x.Item.Type.Value == TreeType.Blob && predicate(x));
 
     public Node? FirstFileOrDefault(
         Func<Node, bool> predicate) =>
-        Root.Children.FirstOrDefault(x => x.Item.Type == TreeType.Blob && predicate(x));
+        Root.Children.FirstOrDefault(x => x.Item.Type.Value == TreeType.Blob && predicate(x));
 
     public Node? SingleFileOrDefaultRecursive(
         Func<Node, bool> predicate) =>
@@ -37,13 +37,13 @@ internal class GitTree
         Func<Node, bool> predicate,
         int searchDepth)
     {
-        var node = nodes.SingleOrDefault(x => x.Item.Type == TreeType.Blob && predicate(x));
+        var node = nodes.SingleOrDefault(x => x.Item.Type.Value == TreeType.Blob && predicate(x));
         if (node is not null) return node;
 
         if (searchDepth == 0) return null;
 
         return nodes
-            .Where(x => x.Item.Type == TreeType.Tree)
+            .Where(x => x.Item.Type.Value == TreeType.Tree)
             .Select(x => SingleFileOrDefaultRecursive(x.Children, predicate, searchDepth - 1))
             .SingleOrDefault(found => found is not null);
     }
@@ -57,13 +57,13 @@ internal class GitTree
         Func<Node, bool> predicate,
         int searchDepth)
     {
-        var node = nodes.FirstOrDefault(x => x.Item.Type == TreeType.Blob && predicate(x));
+        var node = nodes.FirstOrDefault(x => x.Item.Type.Value == TreeType.Blob && predicate(x));
         if (node is not null) return node;
 
         if (searchDepth == 0) return null;
 
         return nodes
-            .Where(x => x.Item.Type == TreeType.Tree)
+            .Where(x => x.Item.Type.Value == TreeType.Tree)
             .Select(x => FirstFileOrDefaultRecursive(x.Children, predicate, searchDepth - 1))
             .FirstOrDefault(found => found is not null);
     }
@@ -78,11 +78,11 @@ internal class GitTree
         int searchDepth)
     {
         var foundNodes = nodes
-            .Where(x => x.Item.Type == TreeType.Blob && predicate(x))
+            .Where(x => x.Item.Type.Value == TreeType.Blob && predicate(x))
             .ToList();
 
         if (searchDepth == 0) return foundNodes;
-        foreach (var node in nodes.Where(x => x.Item.Type == TreeType.Tree))
+        foreach (var node in nodes.Where(x => x.Item.Type.Value == TreeType.Tree))
         {
             var found = FilesRecursive(node.Children, predicate, searchDepth - 1);
             foundNodes.AddRange(found);
@@ -102,11 +102,19 @@ internal class GitTree
         Action<Node, IReadOnlyList<Node>> action,
         int searchDepth)
     {
-        foreach (var node in nodes.Where(x => x.Item.Type == TreeType.Blob && predicate(x))) action(node, nodes);
+        foreach (var node in nodes)
+        {
+            if (node.Item.Type.Value == TreeType.Blob && predicate(node))
+                action(node, nodes);
+        }
 
         if (searchDepth == 0) return;
 
-        foreach (var e in nodes.Where(x => x.Item.Type == TreeType.Tree)) AnalyzeRecursive(e.Children, predicate, action, searchDepth - 1);
+        foreach (var n in nodes)
+        {
+            if (n.Item.Type.Value == TreeType.Tree)
+                AnalyzeRecursive(n.Children, predicate, action, searchDepth - 1);
+        }
     }
 
     private int GetRecommendedSearchDepth() => int.MaxValue;
@@ -130,11 +138,11 @@ internal class GitTree
                 }
 
             currentIndex++;
-            if (item.Type == TreeType.Blob)
+            if (item.Type.Value == TreeType.Blob)
             {
                 root.Children.Add(new Node(item));
             }
-            else if (item.Type == TreeType.Tree)
+            else if (item.Type.Value == TreeType.Tree)
             {
                 var node = new Node(item);
                 root.Children.Add(node);

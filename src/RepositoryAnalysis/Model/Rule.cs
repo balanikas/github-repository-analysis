@@ -4,7 +4,7 @@ namespace RepositoryAnalysis.Model;
 
 public record Rule
 {
-    public Guid Id { get; } = Guid.NewGuid();
+    private Guid Id { get; } = Guid.NewGuid();
     public required string Name { get; init; }
     public required string Note { get; init; }
     public string? ResourceName { get; init; }

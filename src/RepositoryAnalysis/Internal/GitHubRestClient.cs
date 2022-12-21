@@ -1,5 +1,4 @@
 using System.Collections.Concurrent;
-using MAB.DotIgnore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Octokit;
@@ -8,7 +7,7 @@ namespace RepositoryAnalysis.Internal;
 
 internal class GitHubRestClient
 {
-    private static readonly ConcurrentDictionary<string, IgnoreList> CachedTemplates = new();
+    private static readonly ConcurrentDictionary<string, Ignore.Ignore> CachedTemplates = new();
 
     private readonly GitHubClient _client;
     private readonly ILogger<GitHubGraphQlClient> _logger;
@@ -24,7 +23,7 @@ internal class GitHubRestClient
         };
     }
 
-    public async Task<(string, IgnoreList)> GetGitIgnoreRules(
+    public async Task<(string, Ignore.Ignore)> GetGitIgnoreRules(
         string language)
     {
         if (CachedTemplates.TryGetValue(language, out var value)) return (GetTemplateName(language), value);
@@ -37,11 +36,13 @@ internal class GitHubRestClient
         catch (ApiException e)
         {
             _logger.LogError(e, "Error fetching git ignore template for language {Language}", language);
-            return (GetTemplateName(language), new IgnoreList());
+            return (GetTemplateName(language), new Ignore.Ignore());
         }
 
         var rules = template.Source.Split("\n");
-        return (GetTemplateName(language), CachedTemplates.GetOrAdd(language, new IgnoreList(rules)));
+        var ignore = new Ignore.Ignore();
+        ignore.Add(rules);
+        return (GetTemplateName(language), CachedTemplates.GetOrAdd(language, ignore));
     }
 
     private static string GetTemplateName(

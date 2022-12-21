@@ -27,7 +27,7 @@ internal class AmazonSecretsManagerConfigurationProvider : ConfigurationProvider
         if (chain.ListProfiles().Any())
         {
             var secret = GetSecret();
-            Data = JsonSerializer.Deserialize<Dictionary<string, string>>(secret);
+            Data = JsonSerializer.Deserialize<Dictionary<string, string?>>(secret)!;
         }
         else
         {

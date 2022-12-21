@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using RepositoryAnalysis.Model;
 
 namespace RepositoryAnalysis.Internal.Rules.Quality;
@@ -38,13 +39,17 @@ To share the ignore rules with other users who clone the repository, commit the 
             if (e is null) return (Diagnosis.Error, "missing", "");
             if (context.Repo.PrimaryLanguage is null) return (Diagnosis.Info, "no primary language found, will not analyze", "");
 
-            var (templateName, ignoreList) = await context.RestClient.GetGitIgnoreRules(context.Repo.PrimaryLanguage.Name);
+            var (templateName, ignore) = await context.RestClient.GetGitIgnoreRules(context.Repo.PrimaryLanguage.Name);
+            var watch = Stopwatch.StartNew();
+
             var ignoredFiles = new List<string>();
             context.GitTree.AnalyzeRecursive(
-                x => ignoreList.IsIgnored(x.Item.Path, x.IsTree()),
+                x => ignore.IsIgnored(x.Item.Path),
                 (
                     x,
                     _) => ignoredFiles.Add(x.Item.Path));
+
+            Console.WriteLine("Ignore " + watch.ElapsedMilliseconds);
 
             var dets = ignoredFiles.Any()
                 ? $@"

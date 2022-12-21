@@ -40,7 +40,6 @@ public static class DependencyInjectionExtensions
                 client.BaseAddress = new Uri("https://api.github.com/graphql");
                 client.DefaultRequestHeaders
                     .Add("Authorization", "Bearer " + Environment.GetEnvironmentVariable("GitHub__Token"));
-                
             });
 
         void AddInterfaceImplementations<T>()

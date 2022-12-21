@@ -34,13 +34,13 @@ internal class GitHubGraphQlClient
 
         if (result.Errors.Any())
         {
-            _logger.LogError(result.Errors[0].Exception, $"Could not get repository {owner}/{name}");
+            _logger.LogError(result.Errors[0].Exception, "Could not get repository {Owner}/{Name}", owner,name);
             throw new Exception($"Could not get repository {owner}/{name}", result.Errors[0].Exception);
         }
 
         if (result.Data?.Repository is null)
         {
-            _logger.LogError($"Could not get repository {owner}/{name}");
+            _logger.LogError("Could not get repository {Owner}/{Name}", owner,name);
             throw new Exception($"Could not get repository {owner}/{name}");
         }
 

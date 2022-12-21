@@ -12,20 +12,17 @@ internal class AnalysisService : IAnalysisService
     private readonly IEnumerable<IAnalyzer> _analyzers;
     private readonly AnalysisCache _cache;
     private readonly AnalysisContext _context;
-    private readonly GitHubGraphQlClient _gitHubGraphQlClient;
     private readonly ILogger<AnalysisService> _logger;
     private readonly OverView _overView;
 
     public AnalysisService(
         ILogger<AnalysisService> logger,
-        GitHubGraphQlClient gitHubGraphQlClient,
         AnalysisCache cache,
         AnalysisContext context,
         OverView overView,
         IEnumerable<IAnalyzer> analyzers)
     {
         _logger = logger;
-        _gitHubGraphQlClient = gitHubGraphQlClient;
         _cache = cache;
         _context = context;
         _overView = overView;
@@ -67,7 +64,7 @@ internal class AnalysisService : IAnalysisService
         {
             await Task.WhenAll(tasks);
             allRules = tasks.SelectMany(x => x.Result).Where(x => x.Diagnosis != Diagnosis.NotApplicable).OrderByDescending(x => x.Diagnosis).ToArray();
-            _logger.LogRules(allRules, url);
+            _logger.LogRules(allRules);
         }
         catch (Exception e)
         {
@@ -80,7 +77,7 @@ internal class AnalysisService : IAnalysisService
             OverView = overView,
             Rules = allRules,
             UpdatedAt = _context.Repo.UpdatedAt.DateTime,
-            PushedAt = _context.Repo.PushedAt.Value.DateTime,
+            PushedAt = _context.Repo.PushedAt!.Value.DateTime,
             Issues = _context.GetIssues()
         };
 

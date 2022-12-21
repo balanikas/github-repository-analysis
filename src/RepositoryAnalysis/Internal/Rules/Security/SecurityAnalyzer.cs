@@ -1,8 +1,9 @@
 using Microsoft.Extensions.Logging;
+using RepositoryAnalysis.Model;
 
 namespace RepositoryAnalysis.Internal.Rules.Security;
 
-public class SecurityAnalyzer : AnalyzerBase
+internal class SecurityAnalyzer : AnalyzerBase
 {
     public SecurityAnalyzer(
         RulesRepository repository,

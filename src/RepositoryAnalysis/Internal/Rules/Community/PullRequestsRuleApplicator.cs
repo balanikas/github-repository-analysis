@@ -2,7 +2,7 @@ using RepositoryAnalysis.Model;
 
 namespace RepositoryAnalysis.Internal.Rules.Community;
 
-public class PullRequestsRuleApplicator : IRuleApplicator
+internal class PullRequestsRuleApplicator : IRuleApplicator
 {
     public string RuleName => "pull requests";
     public RuleCategory Category => RuleCategory.Community;

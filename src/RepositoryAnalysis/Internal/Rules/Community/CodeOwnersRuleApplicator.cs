@@ -2,7 +2,7 @@ using RepositoryAnalysis.Model;
 
 namespace RepositoryAnalysis.Internal.Rules.Community;
 
-public class CodeOwnersRuleApplicator : IRuleApplicator
+internal class CodeOwnersRuleApplicator : IRuleApplicator
 {
     public string RuleName => "code owners";
     public RuleCategory Category => RuleCategory.Community;

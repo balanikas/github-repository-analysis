@@ -6,7 +6,7 @@ using Octokit;
 
 namespace RepositoryAnalysis.Internal;
 
-public class GitHubRestClient
+internal class GitHubRestClient
 {
     private static readonly ConcurrentDictionary<string, IgnoreList> CachedTemplates = new();
 
@@ -20,7 +20,7 @@ public class GitHubRestClient
         _logger = logger;
         _client = new GitHubClient(new ProductHeaderValue("github-repository-analysis"))
         {
-            Credentials = new Credentials(githubOptions.Value.Token)
+            Credentials = new Credentials(Environment.GetEnvironmentVariable("GitHub__Token"))
         };
     }
 

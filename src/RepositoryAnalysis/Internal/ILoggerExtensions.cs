@@ -4,7 +4,7 @@ using RepositoryAnalysis.Model;
 
 namespace RepositoryAnalysis.Internal;
 
-public static class ILoggerExtensions
+internal static class ILoggerExtensions
 {
     public static Rule LogPerf<T>(
         this ILogger<T> logger,

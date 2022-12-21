@@ -2,7 +2,7 @@ using Octokit;
 
 namespace RepositoryAnalysis.Internal;
 
-public class GitTree
+internal class GitTree
 {
     public GitTree() => Root = new Node(new TreeItem("", "", TreeType.Tree, 0, "", ""));
 

@@ -2,7 +2,7 @@ using RepositoryAnalysis.Model;
 
 namespace RepositoryAnalysis.Internal.Rules.Community;
 
-public class SupportRuleApplicator : IRuleApplicator
+internal class SupportRuleApplicator : IRuleApplicator
 {
     public string RuleName => "support";
     public RuleCategory Category => RuleCategory.Community;

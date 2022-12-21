@@ -2,7 +2,7 @@ using RepositoryAnalysis.Internal.Rules;
 
 namespace RepositoryAnalysis.Internal;
 
-public static class Shared
+internal static class Shared
 {
     public static Language ParseLanguage(
         string? language)

@@ -2,7 +2,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace RepositoryAnalysis.Internal;
 
-public class AmazonSecretsManagerConfigurationSource : IConfigurationSource
+internal class AmazonSecretsManagerConfigurationSource : IConfigurationSource
 {
     private readonly string _region;
     private readonly string _secretName;

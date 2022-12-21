@@ -3,7 +3,7 @@ using RepositoryAnalysis.Model;
 
 namespace RepositoryAnalysis.Internal.Rules.Documentation;
 
-public class ChangeLogRuleApplicator : IRuleApplicator
+internal class ChangeLogRuleApplicator : IRuleApplicator
 {
     public string RuleName => "changelog";
     public RuleCategory Category => RuleCategory.Documentation;

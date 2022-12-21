@@ -2,7 +2,7 @@ using RepositoryAnalysis.Model;
 
 namespace RepositoryAnalysis.Internal.Rules.LanguageSpecific;
 
-public class SolutionStructureRuleApplicator : IRuleApplicator
+internal class SolutionStructureRuleApplicator : IRuleApplicator
 {
     public string RuleName => "solution structure";
     public RuleCategory Category => RuleCategory.LanguageSpecific;

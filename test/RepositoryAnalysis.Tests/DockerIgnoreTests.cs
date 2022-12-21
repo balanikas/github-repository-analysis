@@ -7,7 +7,7 @@ public class DockerIgnoreTests
 {
     [Theory]
     [MemberData(nameof(Data))]
-    public async Task Test(
+    internal async Task Test(
         GitTree tree,
         Diagnosis diagnosis)
     {

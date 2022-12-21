@@ -2,7 +2,7 @@ using RepositoryAnalysis.Model;
 
 namespace RepositoryAnalysis.Internal.Rules.Documentation;
 
-public class ReadmeRuleApplicator : IRuleApplicator
+internal class ReadmeRuleApplicator : IRuleApplicator
 {
     public string RuleName => "readme";
     public RuleCategory Category => RuleCategory.Documentation;

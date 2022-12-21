@@ -2,7 +2,7 @@ using RepositoryAnalysis.Model;
 
 namespace RepositoryAnalysis.Internal.Rules.LanguageSpecific;
 
-public class RulesetRuleApplicator : IRuleApplicator
+internal class RulesetRuleApplicator : IRuleApplicator
 {
     public string RuleName => "ruleset";
     public RuleCategory Category => RuleCategory.LanguageSpecific;

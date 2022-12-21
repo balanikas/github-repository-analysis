@@ -8,7 +8,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace RepositoryAnalysis.Internal;
 
-public class AmazonSecretsManagerConfigurationProvider : ConfigurationProvider
+internal class AmazonSecretsManagerConfigurationProvider : ConfigurationProvider
 {
     private readonly string _region;
     private readonly string _secretName;

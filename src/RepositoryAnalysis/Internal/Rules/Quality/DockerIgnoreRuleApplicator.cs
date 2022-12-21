@@ -2,7 +2,7 @@ using RepositoryAnalysis.Model;
 
 namespace RepositoryAnalysis.Internal.Rules.Quality;
 
-public class DockerIgnoreRuleApplicator : IRuleApplicator
+internal class DockerIgnoreRuleApplicator : IRuleApplicator
 {
     public string RuleName => "dockerignore";
     public RuleCategory Category => RuleCategory.Quality;

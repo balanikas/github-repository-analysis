@@ -3,7 +3,7 @@ using RepositoryAnalysis.Internal.GraphQL;
 
 namespace RepositoryAnalysis.Internal;
 
-public class GitHubGraphQlClient
+internal class GitHubGraphQlClient
 {
     private readonly GithubClient _githubClient;
     private readonly ILogger<GitHubGraphQlClient> _logger;

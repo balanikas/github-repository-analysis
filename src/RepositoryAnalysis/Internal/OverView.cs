@@ -1,6 +1,6 @@
 namespace RepositoryAnalysis.Internal;
 
-public class OverView
+internal class OverView
 {
     public Model.OverView Analyze(
         AnalysisContext context) =>

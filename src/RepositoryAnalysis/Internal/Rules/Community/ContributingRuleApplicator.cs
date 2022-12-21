@@ -2,7 +2,7 @@ using RepositoryAnalysis.Model;
 
 namespace RepositoryAnalysis.Internal.Rules.Community;
 
-public class ContributingRuleApplicator : IRuleApplicator
+internal class ContributingRuleApplicator : IRuleApplicator
 {
     public string RuleName => "contributing";
     public RuleCategory Category => RuleCategory.Community;

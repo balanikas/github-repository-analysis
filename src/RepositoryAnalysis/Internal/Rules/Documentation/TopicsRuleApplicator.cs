@@ -2,7 +2,7 @@ using RepositoryAnalysis.Model;
 
 namespace RepositoryAnalysis.Internal.Rules.Documentation;
 
-public class TopicsRuleApplicator : IRuleApplicator
+internal class TopicsRuleApplicator : IRuleApplicator
 {
     public string RuleName => "topics";
     public RuleCategory Category => RuleCategory.Documentation;

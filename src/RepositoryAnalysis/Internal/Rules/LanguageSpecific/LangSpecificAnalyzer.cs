@@ -3,7 +3,7 @@ using RepositoryAnalysis.Model;
 
 namespace RepositoryAnalysis.Internal.Rules.LanguageSpecific;
 
-public class LangSpecificAnalyzer : AnalyzerBase
+internal class LangSpecificAnalyzer : AnalyzerBase
 {
     public LangSpecificAnalyzer(
         RulesRepository repository,

@@ -1,5 +1,4 @@
 using System.Text;
-using RepositoryAnalysis.Internal.Rules;
 
 namespace RepositoryAnalysis.Model;
 

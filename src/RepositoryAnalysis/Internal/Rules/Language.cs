@@ -1,6 +1,6 @@
 namespace RepositoryAnalysis.Internal.Rules;
 
-public enum Language
+internal enum Language
 {
     CSharp,
     Python,

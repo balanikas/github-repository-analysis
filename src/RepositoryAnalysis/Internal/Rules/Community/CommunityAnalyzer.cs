@@ -1,8 +1,9 @@
 using Microsoft.Extensions.Logging;
+using RepositoryAnalysis.Model;
 
 namespace RepositoryAnalysis.Internal.Rules.Community;
 
-public class CommunityAnalyzer : AnalyzerBase
+internal class CommunityAnalyzer : AnalyzerBase
 {
     public CommunityAnalyzer(
         RulesRepository repository,

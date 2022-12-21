@@ -1,8 +1,9 @@
 using Microsoft.Extensions.Logging;
+using RepositoryAnalysis.Model;
 
 namespace RepositoryAnalysis.Internal.Rules.Quality;
 
-public class QualityAnalyzer : AnalyzerBase
+internal class QualityAnalyzer : AnalyzerBase
 {
     public QualityAnalyzer(
         RulesRepository repository,

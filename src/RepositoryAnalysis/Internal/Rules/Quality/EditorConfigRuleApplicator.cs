@@ -2,7 +2,7 @@ using RepositoryAnalysis.Model;
 
 namespace RepositoryAnalysis.Internal.Rules.Quality;
 
-public class EditorConfigRuleApplicator : IRuleApplicator
+internal class EditorConfigRuleApplicator : IRuleApplicator
 {
     public string RuleName => "editorconfig";
     public RuleCategory Category => RuleCategory.Quality;

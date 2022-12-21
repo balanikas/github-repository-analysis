@@ -3,7 +3,7 @@ using RepositoryAnalysis.Model;
 
 namespace RepositoryAnalysis.Internal.Rules;
 
-public abstract class AnalyzerBase : IAnalyzer
+internal abstract class AnalyzerBase : IAnalyzer
 {
     protected readonly ILogger Logger;
     protected readonly RulesRepository Repository;

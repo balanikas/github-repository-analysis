@@ -8,39 +8,43 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="AWSSDK.SecretsManager" Version="3.7.100.26" />
-        <PackageReference Include="Microsoft.Extensions.Configuration" Version="7.0.0" />
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0" />
-        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.0" />
-        <PackageReference Include="Microsoft.Extensions.Options" Version="7.0.0" />
-        <PackageReference Include="Microsoft.Extensions.Http" Version="7.0.0" />
-        <PackageReference Include="Octokit" Version="4.0.2" />
-        <PackageReference Include="MAB.DotIgnore" Version="3.0.2" />
-        <PackageReference Include="Serilog" Version="2.10.0" />
-        <PackageReference Include="StrawberryShake.CodeGeneration.CSharp.Analyzers" Version="12.15.2" />
-        <PackageReference Include="StrawberryShake.Transport.Http" Version="12.15.2" />
+        <PackageReference Include="AWSSDK.SecretsManager" Version="3.7.100.26"/>
+        <PackageReference Include="Microsoft.Extensions.Configuration" Version="7.0.0"/>
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0"/>
+        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.0"/>
+        <PackageReference Include="Microsoft.Extensions.Options" Version="7.0.0"/>
+        <PackageReference Include="Microsoft.Extensions.Http" Version="7.0.0"/>
+        <PackageReference Include="Octokit" Version="4.0.2"/>
+        <PackageReference Include="MAB.DotIgnore" Version="3.0.2"/>
+        <PackageReference Include="Serilog" Version="2.10.0"/>
+        <PackageReference Include="StrawberryShake.CodeGeneration.CSharp.Analyzers" Version="12.15.2"/>
+        <PackageReference Include="StrawberryShake.Transport.Http" Version="12.15.2"/>
     </ItemGroup>
 
     <ItemGroup>
-      <GraphQL Update="Internal\GraphQL\GetAge.graphql">
-        <Generator>MSBuild:Compile</Generator>
-      </GraphQL>
-      <GraphQL Update="Internal\GraphQL\GetRepo.graphql">
-        <Generator>MSBuild:Compile</Generator>
-      </GraphQL>
-      <GraphQL Update="Internal\GraphQL\schema.graphql">
-        <Generator>MSBuild:Compile</Generator>
-      </GraphQL>
-      <GraphQL Update="Internal\GraphQL\schema.extensions.graphql">
-        <Generator>MSBuild:Compile</Generator>
-      </GraphQL>
+        <GraphQL Update="Internal\GraphQL\GetAge.graphql">
+            <Generator>MSBuild:Compile</Generator>
+        </GraphQL>
+        <GraphQL Update="Internal\GraphQL\GetRepo.graphql">
+            <Generator>MSBuild:Compile</Generator>
+        </GraphQL>
+        <GraphQL Update="Internal\GraphQL\schema.graphql">
+            <Generator>MSBuild:Compile</Generator>
+        </GraphQL>
+        <GraphQL Update="Internal\GraphQL\schema.extensions.graphql">
+            <Generator>MSBuild:Compile</Generator>
+        </GraphQL>
     </ItemGroup>
 
     <ItemGroup>
-      <GraphQLConfig Update="Internal\GraphQL\.graphqlrc.json">
-        <Generator>MSBuild:Compile</Generator>
-      </GraphQLConfig>
+        <GraphQLConfig Update="Internal\GraphQL\.graphqlrc.json">
+            <Generator>MSBuild:Compile</Generator>
+        </GraphQLConfig>
     </ItemGroup>
 
-
+    <ItemGroup>
+        <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+            <_Parameter1>RepositoryAnalysis.Tests</_Parameter1>
+        </AssemblyAttribute>
+    </ItemGroup>
 </Project>

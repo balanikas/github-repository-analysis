@@ -1,3 +1,4 @@
+using RepositoryAnalysis.Internal.GraphQL;
 using RepositoryAnalysis.Model;
 
 namespace RepositoryAnalysis.Internal.Rules.Community;
@@ -33,14 +34,14 @@ It also outlines procedures for addressing problems between members of your proj
                 AboutUrl =
                     "https://docs.github.com/en/communities/setting-up-your-project-for-healthy-contributions/adding-a-code-of-conduct-to-your-project",
                 AboutHeader = "about code of conduct",
-                GuidanceUrl = diagnosis == Diagnosis.Warning ? Path.Combine(context.Repo.Url, "community") : null,
+                GuidanceUrl = diagnosis == Diagnosis.Warning ? Path.Combine(context.Repo.Url.ToString(), "community") : null,
                 GuidanceHeader = "Community Standards"
             },
-            ResourceName = entry?.Name, ResourceUrl = entry?.Url
+            ResourceName = entry?.Name, ResourceUrl = entry?.Url?.ToString()
         };
 
         (Diagnosis, string) GetDiagnosis(
-            GitHubGraphQlClient.CodeOfConduct? e) =>
+            IGetRepo_Repository_CodeOfConduct? e) =>
             e is not null
                 ? (Diagnosis.Info, "found")
                 : (Diagnosis.Warning, "missing code of conduct file");

@@ -1,3 +1,4 @@
+using RepositoryAnalysis.Internal.GraphQL;
 using RepositoryAnalysis.Model;
 
 namespace RepositoryAnalysis.Internal.Rules.Community;
@@ -18,7 +19,7 @@ public class LicenseRuleApplicator : IRuleApplicator
         var (diagnosis, note) = GetDiagnosis(license);
 
         (Diagnosis, string) GetDiagnosis(
-            GitHubGraphQlClient.LicenseInfo? e) =>
+            IGetRepo_Repository_LicenseInfo? e) =>
             e is not null
                 ? (Diagnosis.Info, "found")
                 : (Diagnosis.Error, "missing");
@@ -38,10 +39,10 @@ For your repository to truly be open source, you'll need to license it so that o
                 AboutUrl =
                     "https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/licensing-a-repository",
                 AboutHeader = "about open source licensing",
-                GuidanceUrl = diagnosis == Diagnosis.Error ? Path.Combine(context.Repo.Url, "community") : null,
+                GuidanceUrl = diagnosis == Diagnosis.Error ? Path.Combine(context.Repo.Url.ToString(), "community") : null,
                 GuidanceHeader = "Community Standards"
             },
-            ResourceName = license?.Name, ResourceUrl = license?.Url
+            ResourceName = license?.Name, ResourceUrl = license?.Url?.ToString()
         };
     }
 }

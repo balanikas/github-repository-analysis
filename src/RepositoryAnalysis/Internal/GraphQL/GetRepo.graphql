@@ -1,0 +1,84 @@
+query GetRepo($name: String!, $owner: String!) {
+    repository(name: $name, owner: $owner) {
+        releases(first: 1) {
+            edges {
+                node {
+                    name
+                    url
+                }
+            }
+        }
+        diskUsage
+        updatedAt
+        pushedAt
+        repositoryTopics {
+            totalCount
+        }
+        codeOfConduct {
+            url
+            name
+        }
+        codeowners {
+            errors {
+                kind
+            }
+        }
+        defaultBranchRef {
+            name
+            target {
+                commitResourcePath
+            }
+            branchProtectionRule {
+                allowsForcePushes
+                dismissesStaleReviews
+                lockBranch
+                requiresApprovingReviews
+                requiresConversationResolution
+                requiresStatusChecks
+                requiresStrictStatusChecks
+            }
+        }
+        description
+        hasDiscussionsEnabled
+        hasIssuesEnabled
+
+        isArchived
+        isEmpty
+        isLocked
+        isSecurityPolicyEnabled
+        issueTemplates {
+            name
+            filename
+        }
+        licenseInfo {
+            name
+            url
+        }
+        openGraphImageUrl
+        primaryLanguage {
+            name
+            color
+        }
+        pullRequestTemplates {
+            filename
+        }
+
+        url
+        vulnerabilityAlerts {
+            totalCount
+        }
+        pullRequests {
+            totalCount
+        }
+        issues(first: 5, states: OPEN) {
+            edges {
+                node {
+                    resourcePath
+                    labels(first: 1) {
+                        totalCount
+                    }
+                }
+            }
+        }
+    }
+}

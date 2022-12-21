@@ -32,9 +32,9 @@ builder.Host.UseSerilog();
 
 builder.Services.AddServerSideBlazor();
 builder.Services.AddMudServices();
-builder.Services.AddAppServices();
-builder.Services.Configure<GitHubOptions>(
-    builder.Configuration.GetSection(GitHubOptions.GitHub));
+var configOptions = builder.Configuration.GetSection(GitHubOptions.GitHub);
+var instance = configOptions.Get<GitHubOptions>();
+builder.Services.AddAppServices(instance!);
 builder.Services.Configure<GitHubOptions>(builder.Configuration);
 
 var app = builder.Build();

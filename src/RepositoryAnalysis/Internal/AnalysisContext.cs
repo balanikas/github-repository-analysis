@@ -1,10 +1,12 @@
+using RepositoryAnalysis.Internal.GraphQL;
+
 namespace RepositoryAnalysis.Internal;
 
 public class AnalysisContext
 {
     public AnalysisContext(
         GitTree gitTree,
-        GitHubGraphQlClient.Repo repo)
+        IGetRepo_Repository repo)
     {
         GitTree = gitTree;
         Repo = repo;
@@ -17,12 +19,11 @@ public class AnalysisContext
         GraphQlClient = graphQlClient;
         RestClient = restClient;
         GitTree = new GitTree();
-        Repo = new GitHubGraphQlClient.Repo();
     }
 
     public GitHubGraphQlClient GraphQlClient { get; }
     public GitHubRestClient RestClient { get; }
-    public GitHubGraphQlClient.Repo Repo { get; private set; }
+    public IGetRepo_Repository Repo { get; private set; }
     public GitTree GitTree { get; private set; }
 
     public async Task Build(
@@ -30,7 +31,7 @@ public class AnalysisContext
         string name)
     {
         Repo = await GraphQlClient.GetRepository(owner, name);
-        GitTree = await RestClient.GetGitTree(owner, name, Repo.DefaultBranchRef.Target.CommitResourcePath);
+        GitTree = await RestClient.GetGitTree(owner, name, Repo.DefaultBranchRef!.Target!.CommitResourcePath.ToString());
     }
 
     public IReadOnlyList<string> GetIssues()

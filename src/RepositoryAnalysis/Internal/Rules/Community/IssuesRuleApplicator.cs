@@ -17,7 +17,7 @@ public class IssuesRuleApplicator : IRuleApplicator
         var (diagnosis, note) = GetDiagnosis();
 
         var templates = "";
-        if (context.Repo.IssueTemplates.Any())
+        if (context.Repo.IssueTemplates != null && context.Repo.IssueTemplates.Any())
         {
             var names = context.Repo.IssueTemplates.Select(x => x.Name);
             templates = "Templates found: <br/>" + string.Join("<br/>", names);
@@ -38,14 +38,14 @@ You may wish to turn issues off for your repository if you do not accept contrib
 ",
                 AboutUrl = "https://docs.github.com/en/issues/tracking-your-work-with-issues/about-issues",
                 AboutHeader = "about issues",
-                GuidanceUrl = diagnosis == Diagnosis.Warning ? Path.Combine(context.Repo.Url, "community") : null,
+                GuidanceUrl = diagnosis == Diagnosis.Warning ? Path.Combine(context.Repo.Url.ToString(), "community") : null,
                 GuidanceHeader = "Community Standards"
             }
         };
 
         (Diagnosis, string) GetDiagnosis() =>
             context.Repo.HasIssuesEnabled
-                ? context.Repo.IssueTemplates.Any()
+                ? context.Repo.IssueTemplates != null && context.Repo.IssueTemplates.Any()
                     ? (Diagnosis.Info, $"issues are enabled and found {context.Repo.IssueTemplates.Count} issue templates")
                     : (Diagnosis.Warning, "issues are enabled but missing issue templates")
                 : (Diagnosis.Info, "feature is disabled");

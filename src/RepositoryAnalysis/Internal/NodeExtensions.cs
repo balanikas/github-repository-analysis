@@ -8,7 +8,7 @@ public static class NodeExtensions
         this GitTree.Node? node,
         AnalysisContext context) =>
         node is not null
-            ? Path.Combine(context.Repo.Url, node.Item.Type.ToString(), context.Repo.DefaultBranchRef.Name, node.Item.Path)
+            ? Path.Combine(context.Repo.Url.ToString(), node.Item.Type.ToString(), context.Repo.DefaultBranchRef!.Name, node.Item.Path)
             : null;
 
     public static bool HasExtension(

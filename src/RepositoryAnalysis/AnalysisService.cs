@@ -79,8 +79,8 @@ public class AnalysisService
         {
             OverView = overView,
             Rules = allRules,
-            UpdatedAt = _context.Repo.UpdatedAt,
-            PushedAt = _context.Repo.PushedAt,
+            UpdatedAt = _context.Repo.UpdatedAt.DateTime,
+            PushedAt = _context.Repo.PushedAt.Value.DateTime,
             Issues = _context.GetIssues()
         };
 
@@ -107,15 +107,5 @@ public class AnalysisService
         var repo = paths.Last();
 
         return (owner, repo);
-    }
-
-    public async Task DoBulkTest(
-        string topic)
-    {
-        var test = new BulkAnalysisTest();
-        await test.Run(
-            topic,
-            x => _gitHubGraphQlClient.ListReposByTopic(x),
-            GetAnalysis);
     }
 }

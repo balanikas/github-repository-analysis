@@ -2,7 +2,7 @@ using RepositoryAnalysis.Model;
 
 namespace RepositoryAnalysis.Internal.Rules.LanguageSpecific;
 
-public class TestingRuleApplicator : IRuleApplicator
+internal class TestingRuleApplicator : IRuleApplicator
 {
     public string RuleName => "testing";
     public RuleCategory Category => RuleCategory.LanguageSpecific;

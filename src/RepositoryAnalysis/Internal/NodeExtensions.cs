@@ -2,7 +2,7 @@ using Octokit;
 
 namespace RepositoryAnalysis.Internal;
 
-public static class NodeExtensions
+internal static class NodeExtensions
 {
     public static string? GetUrl(
         this GitTree.Node? node,

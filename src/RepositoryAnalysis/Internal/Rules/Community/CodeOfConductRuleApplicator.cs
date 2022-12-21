@@ -3,7 +3,7 @@ using RepositoryAnalysis.Model;
 
 namespace RepositoryAnalysis.Internal.Rules.Community;
 
-public class CodeOfConductRuleApplicator : IRuleApplicator
+internal class CodeOfConductRuleApplicator : IRuleApplicator
 {
     public string RuleName => "code of conduct";
     public RuleCategory Category => RuleCategory.Community;

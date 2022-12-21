@@ -2,7 +2,7 @@ using RepositoryAnalysis.Model;
 
 namespace RepositoryAnalysis.Internal.Rules.Quality;
 
-public class GitIgnoreRuleApplicator : IRuleApplicator
+internal class GitIgnoreRuleApplicator : IRuleApplicator
 {
     public string RuleName => "gitignore";
     public RuleCategory Category => RuleCategory.Quality;

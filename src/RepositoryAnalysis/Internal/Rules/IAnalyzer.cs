@@ -2,7 +2,7 @@ using RepositoryAnalysis.Model;
 
 namespace RepositoryAnalysis.Internal.Rules;
 
-public interface IAnalyzer
+internal interface IAnalyzer
 {
     public RuleCategory Category { get; }
 

@@ -2,7 +2,7 @@ using RepositoryAnalysis.Internal.GraphQL;
 
 namespace RepositoryAnalysis.Internal;
 
-public class AnalysisContext
+internal class AnalysisContext
 {
     public AnalysisContext(
         GitTree gitTree,

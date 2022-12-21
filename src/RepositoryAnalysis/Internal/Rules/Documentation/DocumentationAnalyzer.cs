@@ -1,8 +1,9 @@
 using Microsoft.Extensions.Logging;
+using RepositoryAnalysis.Model;
 
 namespace RepositoryAnalysis.Internal.Rules.Documentation;
 
-public class DocumentationAnalyzer : AnalyzerBase
+internal class DocumentationAnalyzer : AnalyzerBase
 {
     public DocumentationAnalyzer(
         RulesRepository repository,

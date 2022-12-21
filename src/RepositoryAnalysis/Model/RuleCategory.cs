@@ -1,4 +1,4 @@
-namespace RepositoryAnalysis.Internal.Rules;
+namespace RepositoryAnalysis.Model;
 
 public enum RuleCategory
 {

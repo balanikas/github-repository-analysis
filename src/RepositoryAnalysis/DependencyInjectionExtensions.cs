@@ -24,7 +24,7 @@ public static class DependencyInjectionExtensions
         GitHubOptions gitHubOptions)
     {
         services.AddSingleton<GitHubGraphQlClient>();
-        services.AddTransient<AnalysisService>();
+        services.AddTransient<IAnalysisService, AnalysisService>();
         services.AddTransient<GitHubRestClient>();
         services.AddTransient<AnalysisCache>();
         services.AddTransient<AnalysisContext>();
@@ -32,14 +32,15 @@ public static class DependencyInjectionExtensions
         AddInterfaceImplementations<IAnalyzer>();
         AddInterfaceImplementations<IRuleApplicator>();
         services.AddSingleton<RulesRepository>();
-        
+
         services
             .AddGithubClient()
             .ConfigureHttpClient(client =>
             {
                 client.BaseAddress = new Uri("https://api.github.com/graphql");
                 client.DefaultRequestHeaders
-                    .Add("Authorization", "Bearer " +  gitHubOptions.Token);
+                    .Add("Authorization", "Bearer " + gitHubOptions.Token);
+                
             });
 
         void AddInterfaceImplementations<T>()

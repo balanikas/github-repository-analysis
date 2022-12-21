@@ -2,7 +2,7 @@ using RepositoryAnalysis.Model;
 
 namespace RepositoryAnalysis.Internal.Rules.Quality;
 
-public class LargeFilesRuleApplicator : IRuleApplicator
+internal class LargeFilesRuleApplicator : IRuleApplicator
 {
     public string RuleName => "large files";
     public RuleCategory Category => RuleCategory.Quality;

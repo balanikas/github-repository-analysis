@@ -4,7 +4,7 @@ using RepositoryAnalysis.Model;
 
 namespace RepositoryAnalysis.Internal;
 
-public class AnalysisCache
+internal class AnalysisCache
 {
     private static readonly ConcurrentDictionary<string, RepoAnalysis> Cache = new();
 

@@ -6,7 +6,7 @@ using Octokit;
 
 namespace RepositoryAnalysis.Internal;
 
-public class GitHubRestClient
+internal class GitHubRestClient
 {
     private static readonly ConcurrentDictionary<string, IgnoreList> CachedTemplates = new();
 

@@ -7,7 +7,7 @@ using OverView = RepositoryAnalysis.Internal.OverView;
 
 namespace RepositoryAnalysis;
 
-public class AnalysisService
+internal class AnalysisService : IAnalysisService
 {
     private readonly IEnumerable<IAnalyzer> _analyzers;
     private readonly AnalysisCache _cache;

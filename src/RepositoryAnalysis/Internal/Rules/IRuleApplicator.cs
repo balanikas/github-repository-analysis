@@ -2,7 +2,7 @@ using RepositoryAnalysis.Model;
 
 namespace RepositoryAnalysis.Internal.Rules;
 
-public interface IRuleApplicator
+internal interface IRuleApplicator
 {
     string RuleName { get; }
     RuleCategory Category { get; }

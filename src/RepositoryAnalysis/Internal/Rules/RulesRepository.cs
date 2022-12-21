@@ -1,6 +1,8 @@
+using RepositoryAnalysis.Model;
+
 namespace RepositoryAnalysis.Internal.Rules;
 
-public class RulesRepository
+internal class RulesRepository
 {
     private readonly IReadOnlyList<IRuleApplicator> _rules;
 

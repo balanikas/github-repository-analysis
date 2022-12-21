@@ -3,7 +3,7 @@ using RepositoryAnalysis.Model;
 
 namespace RepositoryAnalysis.Internal.Rules.Community;
 
-public class LicenseRuleApplicator : IRuleApplicator
+internal class LicenseRuleApplicator : IRuleApplicator
 {
     public string RuleName => "license";
     public RuleCategory Category => RuleCategory.Community;

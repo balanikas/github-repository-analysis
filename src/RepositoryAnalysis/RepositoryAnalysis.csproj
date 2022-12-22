@@ -34,6 +34,9 @@
         <GraphQL Update="Internal\GraphQL\schema.extensions.graphql">
             <Generator>MSBuild:Compile</Generator>
         </GraphQL>
+        <GraphQL Update="Internal\GraphQL\GetFile.graphql">
+            <Generator>MSBuild:Compile</Generator>
+        </GraphQL>
     </ItemGroup>
 
     <ItemGroup>

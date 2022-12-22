@@ -4,6 +4,9 @@ namespace RepositoryAnalysis.Internal;
 
 internal class AnalysisContext
 {
+    private string _name;
+    private string _owner;
+
     public AnalysisContext(
         GitTree gitTree,
         IGetRepo_Repository repo)
@@ -32,7 +35,13 @@ internal class AnalysisContext
     {
         Repo = await GraphQlClient.GetRepository(owner, name);
         GitTree = await RestClient.GetGitTree(owner, name, Repo.DefaultBranchRef!.Target!.CommitResourcePath.ToString());
+        _owner = owner;
+        _name = name;
     }
+
+    public async Task<string> GetFile(
+        string fileName) =>
+        await GraphQlClient.GetTextContent(_owner, _name, Repo.DefaultBranchRef!.Name, fileName);
 
     public IReadOnlyList<string> GetIssues()
     {

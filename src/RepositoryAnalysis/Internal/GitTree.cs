@@ -103,18 +103,14 @@ internal class GitTree
         int searchDepth)
     {
         foreach (var node in nodes)
-        {
             if (node.Item.Type.Value == TreeType.Blob && predicate(node))
                 action(node, nodes);
-        }
 
         if (searchDepth == 0) return;
 
         foreach (var n in nodes)
-        {
             if (n.Item.Type.Value == TreeType.Tree)
                 AnalyzeRecursive(n.Children, predicate, action, searchDepth - 1);
-        }
     }
 
     private int GetRecommendedSearchDepth() => int.MaxValue;

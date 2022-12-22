@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using RepositoryAnalysis.Model;
 
 namespace RepositoryAnalysis.Internal.Rules.Quality;
@@ -37,10 +36,10 @@ To share the ignore rules with other users who clone the repository, commit the 
             GitTree.Node? e)
         {
             if (e is null) return (Diagnosis.Error, "missing", "");
-            if (context.Repo.PrimaryLanguage is null) return (Diagnosis.Info, "no primary language found, will not analyze", "");
 
-            var (templateName, ignore) = await context.RestClient.GetGitIgnoreRules(context.Repo.PrimaryLanguage.Name);
-            var watch = Stopwatch.StartNew();
+            var fileContent = await context.GetFile(".gitignore");
+            var ignore = new Ignore.Ignore();
+            ignore.Add(fileContent.Split("\n"));
 
             var ignoredFiles = new List<string>();
             context.GitTree.AnalyzeRecursive(
@@ -49,22 +48,20 @@ To share the ignore rules with other users who clone the repository, commit the 
                     x,
                     _) => ignoredFiles.Add(x.Item.Path));
 
-            Console.WriteLine("Ignore " + watch.ElapsedMilliseconds);
-
-            var dets = ignoredFiles.Any()
+            var visualCount = ignoredFiles.Count > 50 ? 50 : ignoredFiles.Count;
+            var details = ignoredFiles.Any()
                 ? $@"
-According to the recommended gitignore rules for the language of the repo, {templateName}.gitignore, 
+According to the gitignore rules at the root of this repo,
 these files should not exist in the repo. See {Shared.CreateLink("https://github.com/github/gitignore", "Recommended Ignore Files")}
 <br/>
-Showing first 100 files:
+Showing first {visualCount} files:
 <br/>
-<br/>
-{string.Join("<br/>", ignoredFiles.Take(100))}"
+{string.Join("<br/>", ignoredFiles.Take(visualCount))}"
                 : "";
 
             return ignoredFiles.Any()
-                ? (Diagnosis.Warning, "found but contains violations", details: dets)
-                : (Diagnosis.Info, "found and without any violations", details: dets);
+                ? (Diagnosis.Warning, "found but contains violations", details)
+                : (Diagnosis.Info, "found and without any violations", details);
         }
     }
 }

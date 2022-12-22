@@ -58,7 +58,7 @@ Showing first {visualCount} files:
 <br/>
 {string.Join("<br/>", ignoredFiles.Take(visualCount))}"
                 : "";
-
+            
             return ignoredFiles.Any()
                 ? (Diagnosis.Warning, "found but contains violations", details)
                 : (Diagnosis.Info, "found and without any violations", details);

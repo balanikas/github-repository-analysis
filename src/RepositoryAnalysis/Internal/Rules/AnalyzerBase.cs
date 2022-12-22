@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Microsoft.Extensions.Logging;
 using RepositoryAnalysis.Model;
 
@@ -21,13 +22,40 @@ internal abstract class AnalyzerBase : IAnalyzer
     public RuleCategory Category { get; }
 
     public virtual async Task<IReadOnlyList<Rule>> Analyze(
-        AnalysisContext context)
+        AnalysisContext context) =>
+        await Analyze(context, Repository.GetRulesByCategory(Category));
+
+    protected async Task<IReadOnlyList<Rule>> Analyze(
+        AnalysisContext context,
+        IReadOnlyList<IRuleApplicator> applicators)
     {
         var appliedRules = new List<Rule>();
-        foreach (var r in Repository.GetRulesByCategory(Category))
+        foreach (var ruleApplicator in applicators)
         {
-            var t = await Logger.LogPerfAsync(() => r.ApplyAsync(context));
-            appliedRules.Add(t);
+            try
+            {
+                var _ = Stopwatch.StartNew();
+                var rule = await ruleApplicator.ApplyAsync(context);
+                _.Stop();
+                Logger.LogInformation("{Name} took {Elapsed} ms", rule.Name, _.ElapsedMilliseconds);
+                appliedRules.Add(rule);
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e,"Failed to apply rule {Name}", ruleApplicator.RuleName);
+
+                appliedRules.Add(new Rule
+                {
+                    Category = ruleApplicator.Category,
+                    Name = ruleApplicator.RuleName,
+                    Note = "failed to apply this rule",
+                    Explanation = new Explanation
+                    {
+                        Text = "failed to apply this rule"
+                    },
+                    Diagnosis = Diagnosis.Failed
+                });
+            }
         }
 
         return appliedRules;

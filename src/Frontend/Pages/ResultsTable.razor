@@ -18,6 +18,11 @@
                             <MudChip Size="Size.Small" Label="true" Color="Color.Warning">Warning</MudChip>
                         </MudTooltip>
                         break;
+                    case Diagnosis.Failed:
+                        <MudTooltip Text="failed to apply rule" Arrow="true" Placement="Placement.Top">
+                            <MudChip Size="Size.Small" Label="true" Color="Color.Error">Error</MudChip>
+                        </MudTooltip>
+                        break;
                     default:
                         <MudTooltip Text="looks good and no action needed" Arrow="true" Placement="Placement.Top">
                             <MudChip Size="Size.Small" Label="true">Okay</MudChip>

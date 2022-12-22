@@ -41,7 +41,6 @@ query GetRepo($name: String!, $owner: String!) {
         description
         hasDiscussionsEnabled
         hasIssuesEnabled
-
         isArchived
         isEmpty
         isLocked
@@ -70,13 +69,13 @@ query GetRepo($name: String!, $owner: String!) {
         pullRequests {
             totalCount
         }
-        issues(first: 5, states: OPEN) {
+        issues(first: 100, states: OPEN) {
             edges {
                 node {
-                    resourcePath
-                    labels(first: 1) {
+                    labels {
                         totalCount
                     }
+                    number
                 }
             }
         }

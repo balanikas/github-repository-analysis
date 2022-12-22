@@ -6,6 +6,5 @@ public enum Diagnosis
     Failed = 3,
     Info = 2,
     Warning = 1,
-    Error = 0,
-    
+    Error = 0
 }

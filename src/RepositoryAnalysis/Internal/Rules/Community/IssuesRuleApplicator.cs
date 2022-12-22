@@ -1,10 +1,11 @@
+using RepositoryAnalysis.Internal.GraphQL;
 using RepositoryAnalysis.Model;
 
 namespace RepositoryAnalysis.Internal.Rules.Community;
 
-internal class IssuesRuleApplicator : IRuleApplicator
+internal class IssueLabelsRuleApplicator : IRuleApplicator
 {
-    public string RuleName => "issues";
+    public string RuleName => "issue labels";
     public RuleCategory Category => RuleCategory.Community;
     public Language Language => Language.None;
 
@@ -14,14 +15,7 @@ internal class IssuesRuleApplicator : IRuleApplicator
     private Rule Apply(
         AnalysisContext context)
     {
-        var (diagnosis, note) = GetDiagnosis();
-
-        var templates = "";
-        if (context.Repo.IssueTemplates != null && context.Repo.IssueTemplates.Any())
-        {
-            var names = context.Repo.IssueTemplates.Select(x => x.Name);
-            templates = "Templates found: <br/>" + string.Join("<br/>", names);
-        }
+        var (diagnosis, note, details) = GetDiagnosis();
 
         return new Rule
         {
@@ -31,23 +25,41 @@ internal class IssuesRuleApplicator : IRuleApplicator
             Diagnosis = diagnosis,
             Explanation = new Explanation
             {
-                Details = templates,
+                Details = details,
                 Text = @"
-Issues let you track your work on GitHub, where development happens.
+Issue labels let you categorize your work on GitHub, where development happens.
 You may wish to turn issues off for your repository if you do not accept contributions or bug reports.
 ",
-                AboutUrl = "https://docs.github.com/en/issues/tracking-your-work-with-issues/about-issues",
-                AboutHeader = "about issues",
-                GuidanceUrl = diagnosis == Diagnosis.Warning ? Path.Combine(context.Repo.Url.ToString(), "community") : null,
-                GuidanceHeader = "Community Standards"
+                AboutUrl = "https://docs.github.com/en/issues/using-labels-and-milestones-to-track-work/managing-labels",
+                AboutHeader = "about issue labels"
             }
         };
 
-        (Diagnosis, string) GetDiagnosis() =>
-            context.Repo.HasIssuesEnabled
-                ? context.Repo.IssueTemplates != null && context.Repo.IssueTemplates.Any()
-                    ? (Diagnosis.Info, $"issues are enabled and found {context.Repo.IssueTemplates.Count} issue templates")
-                    : (Diagnosis.Warning, "issues are enabled but missing issue templates")
-                : (Diagnosis.Info, "feature is disabled");
+        (Diagnosis, string, string) GetDiagnosis()
+        {
+            if (!context.Repo.HasIssuesEnabled) return (Diagnosis.NotApplicable, "feature is disabled", "");
+            if (context.Repo.Issues.Edges is null) return (Diagnosis.NotApplicable, "no open issues", "");
+
+            var nodes = context.Repo.Issues.Edges
+                .Where(x => x.Node is not null)
+                .Select(x => x.Node!)
+                .ToArray();
+            var nodesWithoutLabels = nodes
+                .Where(x => x.Labels is not null && x.Labels.TotalCount == 0)
+                .ToArray();
+
+            if (nodesWithoutLabels.Length <= 0) return (Diagnosis.Info, "issues are enabled and all open issues are labeled", "");
+
+            var percent = (int)Math.Round((double)(100 * nodesWithoutLabels.Length) / nodes.Length);
+            var details = $"""
+Sample of unlabeled issues: <br/>{string.Join("<br/>", nodesWithoutLabels.Take(5).Select(x => GetUrl(x, context)))}
+""";
+            return (Diagnosis.Warning, $"found {percent}% of {nodes.Length} issues issues unlabeled", details);
+        }
     }
+
+    private string? GetUrl(
+        IGetRepo_Repository_Issues_Edges_Node node,
+        AnalysisContext context) =>
+        Shared.CreateLink(Path.Combine(context.Repo.Url.ToString(), "issues", node.Number.ToString()), "issue " + node.Number);
 }

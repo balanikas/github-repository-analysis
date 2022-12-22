@@ -31,7 +31,6 @@ internal abstract class AnalyzerBase : IAnalyzer
     {
         var appliedRules = new List<Rule>();
         foreach (var ruleApplicator in applicators)
-        {
             try
             {
                 var _ = Stopwatch.StartNew();
@@ -42,7 +41,7 @@ internal abstract class AnalyzerBase : IAnalyzer
             }
             catch (Exception e)
             {
-                Logger.LogError(e,"Failed to apply rule {Name}", ruleApplicator.RuleName);
+                Logger.LogError(e, "Failed to apply rule {Name}", ruleApplicator.RuleName);
 
                 appliedRules.Add(new Rule
                 {
@@ -56,7 +55,6 @@ internal abstract class AnalyzerBase : IAnalyzer
                     Diagnosis = Diagnosis.Failed
                 });
             }
-        }
 
         return appliedRules;
     }

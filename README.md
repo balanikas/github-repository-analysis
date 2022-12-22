@@ -17,7 +17,7 @@ https://user-images.githubusercontent.com/2317329/207807236-684bf53d-96c3-4c2c-a
 
 ## How it works
 Given a repository, the system will fetch all publicly available data for that repository,
-evaluate it based on a set of rules, and present the results.
+evaluate it based on a set of rules, and present the results together with additional guidance.
 
 ## How to add a new rule
 Lets add a rule that detects whether a readme file exists at the repository root.

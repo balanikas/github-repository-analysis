@@ -1,5 +1,11 @@
 query GetRepo($name: String!, $owner: String!) {
     repository(name: $name, owner: $owner) {
+        isSecurityPolicyEnabled
+        securityPolicyUrl
+        hasVulnerabilityAlertsEnabled
+        vulnerabilityAlerts {
+            totalCount
+        }
         releases(first: 1) {
             edges {
                 node {
@@ -44,7 +50,6 @@ query GetRepo($name: String!, $owner: String!) {
         isArchived
         isEmpty
         isLocked
-        isSecurityPolicyEnabled
         issueTemplates {
             name
             filename
@@ -63,9 +68,6 @@ query GetRepo($name: String!, $owner: String!) {
         }
 
         url
-        vulnerabilityAlerts {
-            totalCount
-        }
         pullRequests(first: 10, states: OPEN) {
             nodes {
                 createdAt

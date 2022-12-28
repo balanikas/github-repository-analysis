@@ -50,4 +50,8 @@
             <_Parameter1>RepositoryAnalysis.Tests</_Parameter1>
         </AssemblyAttribute>
     </ItemGroup>
+
+    <ItemGroup>
+        <Folder Include="Internal\GraphQL\Generated"/>
+    </ItemGroup>
 </Project>

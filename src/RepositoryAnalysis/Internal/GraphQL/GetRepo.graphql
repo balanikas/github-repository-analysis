@@ -66,8 +66,10 @@ query GetRepo($name: String!, $owner: String!) {
         vulnerabilityAlerts {
             totalCount
         }
-        pullRequests {
-            totalCount
+        pullRequests(first: 10, states: OPEN) {
+            nodes {
+                createdAt
+            }
         }
         issues(first: 100, states: OPEN) {
             edges {
@@ -76,6 +78,7 @@ query GetRepo($name: String!, $owner: String!) {
                         totalCount
                     }
                     number
+                    createdAt
                 }
             }
         }

@@ -1,11 +1,10 @@
-using RepositoryAnalysis.Internal.GraphQL;
 using RepositoryAnalysis.Model;
 
 namespace RepositoryAnalysis.Internal.Rules.Community;
 
-internal class IssueLabelsRuleApplicator : IRuleApplicator
+internal class IssuesRuleApplicator : IRuleApplicator
 {
-    public string RuleName => "issue labels";
+    public string RuleName => "issues";
     public RuleCategory Category => RuleCategory.Community;
     public Language Language => Language.None;
 
@@ -27,12 +26,18 @@ internal class IssueLabelsRuleApplicator : IRuleApplicator
             {
                 Details = details,
                 Text = @"
-Issue labels let you categorize your work on GitHub, where development happens.
+Issues let you categorize your work on GitHub, where development happens.
 You may wish to turn issues off for your repository if you do not accept contributions or bug reports.
 ",
-                AboutUrl = "https://docs.github.com/en/issues/using-labels-and-milestones-to-track-work/managing-labels",
-                AboutHeader = "about issue labels"
-            }
+                AboutUrl = "https://docs.github.com/en/issues",
+                AboutHeader = "about issues"
+            },
+            ResourceName = diagnosis == Diagnosis.Warning
+                ? "oldest issues"
+                : null,
+            ResourceUrl = diagnosis == Diagnosis.Warning
+                ? Path.Combine(context.Repo.Url.ToString(), "issues?q=is%3Aissue+is%3Aopen+sort%3Acreated-asc")
+                : null
         };
 
         (Diagnosis, string, string) GetDiagnosis()
@@ -43,23 +48,29 @@ You may wish to turn issues off for your repository if you do not accept contrib
             var nodes = context.Repo.Issues.Edges
                 .Where(x => x.Node is not null)
                 .Select(x => x.Node!)
-                .ToArray();
-            var nodesWithoutLabels = nodes
-                .Where(x => x.Labels is not null && x.Labels.TotalCount == 0)
-                .ToArray();
+                .ToList();
 
-            if (nodesWithoutLabels.Length <= 0) return (Diagnosis.Info, "issues are enabled and all open issues are labeled", "");
+            var creationDates = nodes.Select(x => x.CreatedAt).OrderBy(x => x.DateTime);
+            var oldestCreationDate = creationDates.First();
+            var foundStale = oldestCreationDate <= new DateTimeOffset(DateTime.UtcNow.AddDays(-365));
+            var avgCreationDate = DateTimeOffset.FromUnixTimeSeconds((long)nodes.Average(x => x.CreatedAt.ToUnixTimeSeconds()));
+            var foundHighAverage = avgCreationDate <= new DateTimeOffset(DateTime.UtcNow.AddDays(-90));
+            if (!foundStale && !foundHighAverage)
+                return (Diagnosis.Info,
+                    $"found {nodes.Count} open issues", "");
 
-            var percent = (int)Math.Round((double)(100 * nodesWithoutLabels.Length) / nodes.Length);
-            var details = $"""
-Sample of unlabeled issues: <br/>{string.Join("<br/>", nodesWithoutLabels.Take(5).Select(x => GetUrl(x, context)))}
+            var details = "Found old open issues.<br/>";
+            if (foundStale)
+                details += $"""
+Oldest one was created {(DateTime.UtcNow - oldestCreationDate).Days} days ago.
+<br/>
 """;
-            return (Diagnosis.Warning, $"found {percent}% of {nodes.Length} issues issues unlabeled", details);
+            if (foundHighAverage)
+                details += $"""
+Issues have been open on average for {(DateTime.UtcNow - avgCreationDate).Days} days.
+""";
+
+            return (Diagnosis.Warning, "found old issues", details);
         }
     }
-
-    private string? GetUrl(
-        IGetRepo_Repository_Issues_Edges_Node node,
-        AnalysisContext context) =>
-        Shared.CreateLink(Path.Combine(context.Repo.Url.ToString(), "issues", node.Number.ToString()), "issue " + node.Number);
 }

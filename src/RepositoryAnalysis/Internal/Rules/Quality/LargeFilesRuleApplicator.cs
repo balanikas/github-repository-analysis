@@ -14,7 +14,7 @@ internal class LargeFilesRuleApplicator : IRuleApplicator
     private Rule Apply(
         AnalysisContext context)
     {
-        var nodes = context.GitTree.FilesRecursive(x => x.Item.Size > 10_000_000);
+        var nodes = context.GitTree.FilesRecursive(x => x.Item.Size > 100_000_000);
         var showExamples = "";
         if (nodes.Any())
             showExamples = @$"
@@ -43,7 +43,7 @@ Large files contained in a repository might be a sign of unoptimized repository.
         (Diagnosis, string) GetDiagnosis(
             IReadOnlyList<GitTree.Node> e) =>
             e.Any()
-                ? (Diagnosis.Warning, $"found {e.Count} big files")
+                ? (Diagnosis.Warning, $"found {e.Count} big files (larger than 100Mb)")
                 : (Diagnosis.Info, "did not find any large files");
     }
 }

@@ -43,7 +43,7 @@ You may wish to turn issues off for your repository if you do not accept contrib
         (Diagnosis, string, string) GetDiagnosis()
         {
             if (!context.Repo.HasIssuesEnabled) return (Diagnosis.NotApplicable, "feature is disabled", "");
-            if (context.Repo.Issues.Edges is null) return (Diagnosis.NotApplicable, "no open issues", "");
+            if (context.Repo.Issues.Edges is null || !context.Repo.Issues.Edges.Any()) return (Diagnosis.NotApplicable, "no open issues", "");
 
             var nodes = context.Repo.Issues.Edges
                 .Where(x => x.Node is not null)

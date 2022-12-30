@@ -14,29 +14,19 @@ internal class TopicsRuleApplicator : IRuleApplicator
     private Rule Apply(
         AnalysisContext context)
     {
-        var (diagnosis, note) = GetDiagnosis();
-        return new Rule
-        {
-            Name = RuleName,
-            Category = Category,
-            Note = note,
-            Diagnosis = diagnosis,
-            Explanation = new Explanation
-            {
-                Details = null,
-                Text = @"
-To help other people find and contribute to your project, you can add topics to your repository related to your project's intended purpose, subject area, affinity groups, or other important qualities.",
-                AboutUrl =
-                    "https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/classifying-your-repository-with-topics",
-                AboutHeader = "about topics",
-                GuidanceUrl = "https://docs.github",
-                GuidanceHeader = "how to work with topics"
-            }
-        };
+        var diagnostics = context.Repo.RepositoryTopics.TotalCount > 0
+            ? new RuleDiagnostics(Diagnosis.Info, $"found {context.Repo.RepositoryTopics.TotalCount} topics")
+            : new RuleDiagnostics(Diagnosis.Warning, "no topics found");
 
-        (Diagnosis, string) GetDiagnosis() =>
-            context.Repo.RepositoryTopics.TotalCount > 0
-                ? (Diagnosis.Info, $"found {context.Repo.RepositoryTopics.TotalCount} topics")
-                : (Diagnosis.Warning, "no topics found");
+        return Rule.Create(this, diagnostics, new Explanation
+        {
+            Text = @"
+To help other people find and contribute to your project, you can add topics to your repository related to your project's intended purpose, subject area, affinity groups, or other important qualities.",
+            AboutUrl =
+                "https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/classifying-your-repository-with-topics",
+            AboutHeader = "about topics",
+            GuidanceUrl = "https://docs.github",
+            GuidanceHeader = "how to work with topics"
+        });
     }
 }

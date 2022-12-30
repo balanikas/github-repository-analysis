@@ -14,33 +14,25 @@ internal class CodeOwnersRuleApplicator : IRuleApplicator
     private Rule Apply(
         AnalysisContext context)
     {
-        var node = context.GitTree.SingleFileOrDefaultRecursive(x => x.HasFileName("codeowners"));
-
-        var (diagnosis, note) = GetDiagnosis(node);
-        return new Rule
+        var diagnostics = GetDiagnosis();
+        return Rule.Create(this, diagnostics, new Explanation
         {
-            Name = RuleName,
-            Category = Category,
-            Note = note,
-            Diagnosis = diagnosis,
-            Explanation = new Explanation
-            {
-                Details = null,
-                Text = @"
+            Text = @"
 You can use a CODEOWNERS file to define individuals or teams that are responsible for code in a repository.",
-                AboutUrl =
-                    "https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners",
-                AboutHeader = "about code owners"
-            },
-            ResourceName = node?.Item.Path, ResourceUrl = node.GetUrl(context)
-        };
+            AboutUrl =
+                "https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners",
+            AboutHeader = "about code owners"
+        });
 
-        (Diagnosis, string) GetDiagnosis(
-            GitTree.Node? e) =>
-            e is not null
+        RuleDiagnostics GetDiagnosis()
+        {
+            var node = context.GitTree.SingleFileOrDefaultRecursive(x => x.HasFileName("codeowners"));
+            return node is not null
                 ? context.Repo.Codeowners != null && context.Repo.Codeowners.Errors.Any()
-                    ? (Diagnosis.Warning, $"{context.Repo.Codeowners.Errors.Count} errors in {e.Item.Path}")
-                    : (Diagnosis.Info, "")
-                : (Diagnosis.Warning, "missing code owners file");
+                    ? new RuleDiagnostics(Diagnosis.Warning, $"{context.Repo.Codeowners.Errors.Count} errors in {node.Item.Path}", null, node.Item.Path,
+                        node.GetUrl(context))
+                    : new RuleDiagnostics(Diagnosis.Info, "", null, node.Item.Path, node.GetUrl(context))
+                : new RuleDiagnostics(Diagnosis.Warning, "missing code owners file");
+        }
     }
 }

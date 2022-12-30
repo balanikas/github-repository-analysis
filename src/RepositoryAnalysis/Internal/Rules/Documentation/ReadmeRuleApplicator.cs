@@ -15,38 +15,23 @@ internal class ReadmeRuleApplicator : IRuleApplicator
         AnalysisContext context)
     {
         var node = context.GitTree.FirstFileOrDefault(x => x.PathEquals("readme", "readme.md", "readme.txt", "readme.rst"));
-        var (diagnosis, note) = GetDiagnosis(node);
-
-        return new Rule
-        {
-            Name = RuleName,
-            Category = Category,
-            Note = note,
-            Diagnosis = diagnosis,
-            Explanation = new Explanation
+        var diagnostics = node is not null
+            ? node.Item.Size switch
             {
-                Details = null,
-                Text = @"
-A repository should contain a readme file, to tell other people why your project is useful, what they can do with your project, and how they can use it.",
-                AboutUrl =
-                    "https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-readmes",
-                AboutHeader = "about readmes",
-                GuidanceUrl = diagnosis == Diagnosis.Error ? Path.Combine(context.Repo.Url.ToString(), "community") : null,
-                GuidanceHeader = "Community Standards"
-            },
-            ResourceName = node?.Item.Path, ResourceUrl = node.GetUrl(context)
-        };
+                < 200 => new RuleDiagnostics(Diagnosis.Warning, "readme is too short", null, node.Item.Path, node.GetUrl(context)),
+                _ => new RuleDiagnostics(Diagnosis.Info, "found", null, node.Item.Path, node.GetUrl(context))
+            }
+            : new RuleDiagnostics(Diagnosis.Error, "missing");
 
-        (Diagnosis, string) GetDiagnosis(
-            GitTree.Node? e)
+        return Rule.Create(this, diagnostics, new Explanation
         {
-            return e is not null
-                ? e.Item.Size switch
-                {
-                    < 200 => (Diagnosis.Warning, "readme is too short"),
-                    _ => (Diagnosis.Info, "found")
-                }
-                : (Diagnosis.Error, "missing");
-        }
+            Text = @"
+A repository should contain a readme file, to tell other people why your project is useful, what they can do with your project, and how they can use it.",
+            AboutUrl =
+                "https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-readmes",
+            AboutHeader = "about readmes",
+            GuidanceUrl = diagnostics.Diagnosis == Diagnosis.Error ? Path.Combine(context.Repo.Url.ToString(), "community") : null,
+            GuidanceHeader = "Community Standards"
+        });
     }
 }

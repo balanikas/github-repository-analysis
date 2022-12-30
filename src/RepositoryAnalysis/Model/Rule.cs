@@ -1,28 +1,42 @@
 using System.Text;
+using RepositoryAnalysis.Internal.Rules;
 
 namespace RepositoryAnalysis.Model;
 
-public record Rule
+public record Rule(
+    RuleDiagnostics Diagnostics)
 {
     private Guid Id { get; } = Guid.NewGuid();
     public required string Name { get; init; }
-    public required string Note { get; init; }
-    public string? ResourceName { get; init; }
-    public string? ResourceUrl { get; init; }
     public required Explanation Explanation { get; init; }
-    public Diagnosis Diagnosis { get; init; } = Diagnosis.Info;
     public required RuleCategory Category { get; init; }
-
+    public string? ResourceName => Diagnostics.ResourceName;
+    public string? ResourceUrl => Diagnostics.ResourceUrl;
+    public Diagnosis Diagnosis => Diagnostics.Diagnosis;
+    public string Note => Diagnostics.Note;
+    public string? Details => Diagnostics.Details;
 
     public virtual bool Equals(
         Rule? other) =>
         other is not null && Id == other.Id;
 
+
+    internal static Rule Create(
+        IRuleApplicator ruleApplicator,
+        RuleDiagnostics diagnostics,
+        Explanation explanation) =>
+        new Rule(diagnostics)
+        {
+            Category = ruleApplicator.Category,
+            Name = ruleApplicator.RuleName,
+            Explanation = explanation
+        };
+
     protected virtual bool PrintMembers(
         StringBuilder builder)
     {
         builder.Append($"{nameof(Name)} = {Name}");
-        builder.Append($"{nameof(Category)} = {Id}");
+        builder.Append($"{nameof(Category)} = {Category}");
         return true;
     }
 

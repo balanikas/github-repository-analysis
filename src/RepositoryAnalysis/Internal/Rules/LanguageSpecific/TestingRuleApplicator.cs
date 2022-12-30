@@ -14,36 +14,20 @@ internal class TestingRuleApplicator : IRuleApplicator
     private Rule Apply(
         AnalysisContext context)
     {
-        var testProjects = context.GitTree.FilesRecursive(IsTestProject).ToArray();
-        var testFiles = context.GitTree.FilesRecursive(IsTestFile).ToArray();
-        var (diagnosis, note) = GetDiagnosis(testProjects, testFiles);
-        var details = $@"
-Detected {testProjects.Length} test projects.
-Detected {testFiles.Length} test files.
-";
-        return new Rule
-        {
-            Name = RuleName,
-            Category = Category,
-            Note = note,
-            Diagnosis = diagnosis,
-            Explanation = new Explanation
-            {
-                Details = details,
-                Text = @"
-Tests increase the quality of software. 
-",
-                AboutUrl = "https://learn.microsoft.com/en-us/dotnet/core/testing/",
-                AboutHeader = "testing in dotnet"
-            }
-        };
+        var diagnostics = GetDiagnosis();
 
-        (Diagnosis, string) GetDiagnosis(
-            IEnumerable<GitTree.Node> projects,
-            IEnumerable<GitTree.Node> files) =>
-            !projects.Any() || !files.Any()
-                ? (Diagnosis.Warning, "found issues")
-                : (Diagnosis.Info, "found");
+        RuleDiagnostics GetDiagnosis()
+        {
+            var projects = context.GitTree.FilesRecursive(IsTestProject).ToArray();
+            var files = context.GitTree.FilesRecursive(IsTestFile).ToArray();
+            var details = $@"
+Detected {projects.Length} test projects.
+Detected {files.Length} test files.
+";
+            return !projects.Any() || !files.Any()
+                ? new RuleDiagnostics(Diagnosis.Warning, "found issues", details)
+                : new RuleDiagnostics(Diagnosis.Info, "found", details);
+        }
 
         bool IsTestProject(
             GitTree.Node x) =>
@@ -58,5 +42,14 @@ Tests increase the quality of software.
                 _ => false
             };
         }
+
+        return Rule.Create(this, diagnostics, new Explanation
+        {
+            Text = @"
+Tests increase the quality of software. 
+",
+            AboutUrl = "https://learn.microsoft.com/en-us/dotnet/core/testing/",
+            AboutHeader = "testing in dotnet"
+        });
     }
 }

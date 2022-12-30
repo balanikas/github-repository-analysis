@@ -24,38 +24,29 @@ internal class ContributingRuleApplicator : IRuleApplicator
                 ".github/contributing.rst"
             ));
 
-        var (diagnosis, note) = GetDiagnosis(node);
-        return new Rule
+        var diagnostics = GetDiagnosis();
+
+        return Rule.Create(this, diagnostics, new Explanation
         {
-            Name = RuleName,
-            Category = Category,
-            Note = note,
-            Diagnosis = diagnosis,
-            Explanation = new Explanation
-            {
-                Details = null,
-                Text = @"
+            Text = @"
 To help your project contributors do good work, you can add a file with contribution guidelines to your project repository's root, docs, or .github folder. 
 When someone opens a pull request or creates an issue, they will see a link to that file. The link to the contributing guidelines also appears on your repository's contribute page.",
-                AboutUrl =
-                    "https://docs.github.com/en/communities/setting-up-your-project-for-healthy-contributions/setting-guidelines-for-repository-contributors",
-                AboutHeader = "about contributing guidelines",
-                GuidanceUrl = node is null ? Path.Combine(context.Repo.Url.ToString(), "community") : null,
-                GuidanceHeader = "Community Standards"
-            },
-            ResourceName = node?.Item.Path, ResourceUrl = node.GetUrl(context)
-        };
+            AboutUrl =
+                "https://docs.github.com/en/communities/setting-up-your-project-for-healthy-contributions/setting-guidelines-for-repository-contributors",
+            AboutHeader = "about contributing guidelines",
+            GuidanceUrl = node is null ? context.GetCommunityUrl() : null,
+            GuidanceHeader = "Community Standards"
+        });
 
-        (Diagnosis, string) GetDiagnosis(
-            GitTree.Node? e)
+        RuleDiagnostics GetDiagnosis()
         {
-            return e is not null
-                ? e.Item.Size switch
+            return node is not null
+                ? node.Item.Size switch
                 {
-                    < 100 => (Diagnosis.Warning, "content is too short"),
-                    _ => (Diagnosis.Info, "found")
+                    < 100 => new RuleDiagnostics(Diagnosis.Warning, "content is too short", null, node?.Item.Path, node.GetUrl(context)),
+                    _ => new RuleDiagnostics(Diagnosis.Info, "found", null, node?.Item.Path, node.GetUrl(context))
                 }
-                : (Diagnosis.Warning, "missing contributing file");
+                : new RuleDiagnostics(Diagnosis.Warning, "missing contributing file");
         }
     }
 }

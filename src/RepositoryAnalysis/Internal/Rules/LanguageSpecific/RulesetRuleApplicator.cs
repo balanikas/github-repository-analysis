@@ -14,36 +14,32 @@ internal class RulesetRuleApplicator : IRuleApplicator
     private Rule Apply(
         AnalysisContext context)
     {
-        var nodes = context.GitTree.FilesRecursive(x => x.HasExtension(".ruleset"));
-        var details = nodes.Any()
-            ? $@"
-Found these rulesets:
+        var diagnostics = GetDiagnosis();
+
+        RuleDiagnostics GetDiagnosis()
+        {
+            var nodes = context.GitTree.FilesRecursive(x => x.HasExtension(".ruleset"));
+
+            if (nodes.Any())
+            {
+                var details = $@"
+Found rulesets:
 <br/>
 {string.Join("<br/>", nodes.Select(x => x.GetUrl(context)))}
-"
-            : "";
-        var (diagnosis, note) = GetDiagnosis(nodes);
-        return new Rule
+";
+                return new RuleDiagnostics(Diagnosis.Warning, $"found {nodes.Count} .ruleset files", details);
+            }
+
+            return new RuleDiagnostics(Diagnosis.Info, "did not find ruleset files");
+        }
+
+        return Rule.Create(this, diagnostics, new Explanation
         {
-            Name = RuleName,
-            Category = Category,
-            Note = note,
-            Diagnosis = diagnosis,
-            Explanation = new Explanation
-            {
-                Details = details,
-                Text = @"
+            Text = @"
 Ruleset configuration files for static code analysis are being deprecated in favor of more modern tools, 
 like EditorConfig and dotnet analyzers.",
-                AboutUrl = "https://learn.microsoft.com/en-us/visualstudio/code-quality/analyzers-faq?view=vs-2022",
-                AboutHeader = "about dotnet analyzers"
-            }
-        };
-
-        (Diagnosis, string) GetDiagnosis(
-            IReadOnlyList<GitTree.Node> e) =>
-            e.Any()
-                ? (Diagnosis.Warning, $"found {e.Count} .ruleset files")
-                : (Diagnosis.Info, "did not find ruleset files");
+            AboutUrl = "https://learn.microsoft.com/en-us/visualstudio/code-quality/analyzers-faq?view=vs-2022",
+            AboutHeader = "about dotnet analyzers"
+        });
     }
 }

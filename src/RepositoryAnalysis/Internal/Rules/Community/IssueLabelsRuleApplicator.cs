@@ -15,30 +15,21 @@ internal class IssueLabelsRuleApplicator : IRuleApplicator
     private Rule Apply(
         AnalysisContext context)
     {
-        var (diagnosis, note, details) = GetDiagnosis();
-
-        return new Rule
+        var diagnostics = GetDiagnosis();
+        return Rule.Create(this, diagnostics, new Explanation
         {
-            Name = RuleName,
-            Category = Category,
-            Note = note,
-            Diagnosis = diagnosis,
-            Explanation = new Explanation
-            {
-                Details = details,
-                Text = @"
+            Text = @"
 Issue labels let you categorize your work on GitHub, where development happens.
 You may wish to turn issues off for your repository if you do not accept contributions or bug reports.
 ",
-                AboutUrl = "https://docs.github.com/en/issues/using-labels-and-milestones-to-track-work/managing-labels",
-                AboutHeader = "about issue labels"
-            }
-        };
+            AboutUrl = "https://docs.github.com/en/issues/using-labels-and-milestones-to-track-work/managing-labels",
+            AboutHeader = "about issue labels"
+        });
 
-        (Diagnosis, string, string) GetDiagnosis()
+        RuleDiagnostics GetDiagnosis()
         {
-            if (!context.Repo.HasIssuesEnabled) return (Diagnosis.NotApplicable, "feature is disabled", "");
-            if (context.Repo.Issues.Edges is null) return (Diagnosis.NotApplicable, "no open issues", "");
+            if (!context.Repo.HasIssuesEnabled) return new RuleDiagnostics(Diagnosis.NotApplicable, "feature is disabled");
+            if (context.Repo.Issues.Edges is null) return new RuleDiagnostics(Diagnosis.NotApplicable, "no open issues");
 
             var nodes = context.Repo.Issues.Edges
                 .Where(x => x.Node is not null)
@@ -48,17 +39,17 @@ You may wish to turn issues off for your repository if you do not accept contrib
                 .Where(x => x.Labels is not null && x.Labels.TotalCount == 0)
                 .ToArray();
 
-            if (nodesWithoutLabels.Length <= 0) return (Diagnosis.Info, "issues are enabled and all open issues are labeled", "");
+            if (nodesWithoutLabels.Length <= 0) return new RuleDiagnostics(Diagnosis.Info, "issues are enabled and all open issues are labeled");
 
             var percent = (int)Math.Round((double)(100 * nodesWithoutLabels.Length) / nodes.Length);
             var details = $"""
 Sample of unlabeled issues: <br/>{string.Join("<br/>", nodesWithoutLabels.Take(5).Select(x => GetUrl(x, context)))}
 """;
-            return (Diagnosis.Warning, $"found {percent}% of {nodes.Length} issues issues unlabeled", details);
+            return new RuleDiagnostics(Diagnosis.Warning, $"found {percent}% of {nodes.Length} issues issues unlabeled", details);
         }
     }
 
-    private string? GetUrl(
+    private string GetUrl(
         IGetRepo_Repository_Issues_Edges_Node node,
         AnalysisContext context) =>
         Shared.CreateLink(Path.Combine(context.Repo.Url.ToString(), "issues", node.Number.ToString()), "issue " + node.Number);

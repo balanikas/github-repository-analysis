@@ -49,4 +49,6 @@ internal class AnalysisContext
             ? new[] { $"Repository contains {GitTree.Count} files and is too large. Some rules might not function properly" }
             : Array.Empty<string>();
     }
+
+    public string GetCommunityUrl() => Path.Combine(Repo.Url.ToString(), "community");
 }

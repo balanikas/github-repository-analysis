@@ -11,31 +11,12 @@ internal class GitIgnoreRuleApplicator : IRuleApplicator
     public async Task<Rule> ApplyAsync(
         AnalysisContext context)
     {
-        var node = context.GitTree.SingleFileOrDefault(x => x.PathEquals(".gitignore"));
-        var (diagnosis, note, details) = await GetDiagnosis(node);
-        return new Rule
-        {
-            Name = RuleName,
-            Category = Category,
-            Note = note,
-            Diagnosis = diagnosis,
-            Explanation = new Explanation
-            {
-                Details = details,
-                Text = @"
-You can create a .gitignore file in your repository's root directory to tell Git which files and directories to ignore when you make a commit. 
-To share the ignore rules with other users who clone the repository, commit the .gitignore file in to your repository.
-",
-                AboutUrl = "https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files",
-                AboutHeader = "about git ignore"
-            },
-            ResourceName = node?.Item.Path, ResourceUrl = node.GetUrl(context)
-        };
+        var diagnostics = await GetDiagnosis();
 
-        async Task<(Diagnosis, string, string)> GetDiagnosis(
-            GitTree.Node? e)
+        async Task<RuleDiagnostics> GetDiagnosis()
         {
-            if (e is null) return (Diagnosis.Error, "missing", "");
+            var e = context.GitTree.SingleFileOrDefault(x => x.PathEquals(".gitignore"));
+            if (e is null) return new RuleDiagnostics(Diagnosis.Error, "missing", "");
 
             var fileContent = await context.GetFile(".gitignore");
             var ignore = new Ignore.Ignore();
@@ -60,8 +41,18 @@ Showing first {visualCount} files:
                 : "";
 
             return ignoredFiles.Any()
-                ? (Diagnosis.Warning, "found but contains violations", details)
-                : (Diagnosis.Info, "found and without any violations", details);
+                ? new RuleDiagnostics(Diagnosis.Warning, "found but contains violations", details, e.Item.Path, e.GetUrl(context))
+                : new RuleDiagnostics(Diagnosis.Info, "found and without any violations", details, e.Item.Path, e.GetUrl(context));
         }
+
+        return Rule.Create(this, diagnostics, new Explanation
+        {
+            Text = @"
+You can create a .gitignore file in your repository's root directory to tell Git which files and directories to ignore when you make a commit. 
+To share the ignore rules with other users who clone the repository, commit the .gitignore file in to your repository.
+",
+            AboutUrl = "https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files",
+            AboutHeader = "about git ignore"
+        });
     }
 }

@@ -44,10 +44,10 @@
                 <CardHeaderContent>
                     <MudText Typo="Typo.body2">@((MarkupString)context.Item.Explanation.Text)</MudText>
 
-                    @if (context.Item.Explanation.Details is not null)
+                    @if (context.Item.Details is not null)
                     {
                         <br/>
-                        <MudText Style="background-color: lightgrey" Color="Color.Surface" Typo="Typo.body2">@((MarkupString)context.Item.Explanation.Details)</MudText>
+                        <MudText Style="background-color: lightgrey" Color="Color.Surface" Typo="Typo.body2">@((MarkupString)context.Item.Details)</MudText>
                     }
                     <br/>
                     @if (context.Item.Explanation.AboutUrl is not null)

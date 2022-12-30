@@ -14,28 +14,18 @@ internal class DiscussionsRuleApplicator : IRuleApplicator
     private Rule Apply(
         AnalysisContext context)
     {
-        var (diagnosis, note) = GetDiagnosis();
-        return new Rule
+        var diagnostics = context.Repo.HasDiscussionsEnabled
+            ? new RuleDiagnostics(Diagnosis.Info, "feature is enabled")
+            : new RuleDiagnostics(Diagnosis.Info, "feature is disabled");
+
+        return Rule.Create(this, diagnostics, new Explanation
         {
-            Name = RuleName,
-            Category = Category,
-            Note = note,
-            Diagnosis = diagnosis,
-            Explanation = new Explanation
-            {
-                Details = null,
-                Text = @"
+            Text = @"
 Use discussions to ask and answer questions, share information, make announcements, and conduct or participate in a conversation about a project on GitHub.
 With GitHub Discussions, the community for your project can create and participate in conversations within the project's repository or organization. 
 Discussions empower a project's maintainers, contributors, and visitors to gather and accomplish the following goals in a central location, without third-party tools.",
-                AboutUrl = "https://docs.github.com/en/discussions/collaborating-with-your-community-using-discussions/about-discussions",
-                AboutHeader = "about discussions"
-            }
-        };
-
-        (Diagnosis, string) GetDiagnosis() =>
-            context.Repo.HasDiscussionsEnabled
-                ? (Diagnosis.Info, "feature is enabled")
-                : (Diagnosis.Info, "feature is disabled");
+            AboutUrl = "https://docs.github.com/en/discussions/collaborating-with-your-community-using-discussions/about-discussions",
+            AboutHeader = "about discussions"
+        });
     }
 }

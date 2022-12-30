@@ -14,30 +14,19 @@ internal class DescriptionRuleApplicator : IRuleApplicator
     private Rule Apply(
         AnalysisContext context)
     {
-        var (diagnosis, note) = GetDiagnosis();
+        var diagnostics = context.Repo.Description is not null
+            ? new RuleDiagnostics(Diagnosis.Info, "found")
+            : new RuleDiagnostics(Diagnosis.Warning, "missing");
 
-        return new Rule
+        return Rule.Create(this, diagnostics, new Explanation
         {
-            Name = RuleName,
-            Category = Category,
-            Note = note,
-            Diagnosis = diagnosis,
-            Explanation = new Explanation
-            {
-                Details = null,
-                Text = @"
+            Text = @"
 A repository description helps users to understand what the repository is about.
 It can be edited in the About section.",
-                AboutUrl = "https://docs.github.com/en/get-started/quickstart/create-a-repo",
-                AboutHeader = "this guide on how to create a repository",
-                GuidanceUrl = diagnosis == Diagnosis.Warning ? Path.Combine(context.Repo.Url.ToString(), "community") : null,
-                GuidanceHeader = "Community Standards"
-            }
-        };
-
-        (Diagnosis, string) GetDiagnosis() =>
-            context.Repo.Description is not null
-                ? (Diagnosis.Info, "found")
-                : (Diagnosis.Warning, "missing");
+            AboutUrl = "https://docs.github.com/en/get-started/quickstart/create-a-repo",
+            AboutHeader = "this guide on how to create a repository",
+            GuidanceUrl = diagnostics.Diagnosis == Diagnosis.Warning ? Path.Combine(context.Repo.Url.ToString(), "community") : null,
+            GuidanceHeader = "Community Standards"
+        });
     }
 }

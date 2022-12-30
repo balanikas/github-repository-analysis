@@ -1,4 +1,3 @@
-using RepositoryAnalysis.Internal.GraphQL;
 using RepositoryAnalysis.Model;
 
 namespace RepositoryAnalysis.Internal.Rules.Community;
@@ -15,35 +14,24 @@ internal class CodeOfConductRuleApplicator : IRuleApplicator
     private Rule Apply(
         AnalysisContext context)
     {
-        var entry = context.Repo.CodeOfConduct;
+        var diagnostics = GetDiagnosis();
 
-        var (diagnosis, note) = GetDiagnosis(entry);
-        return new Rule
+        RuleDiagnostics GetDiagnosis() =>
+            context.Repo.CodeOfConduct is not null
+                ? new RuleDiagnostics(Diagnosis.Info, "found", null, context.Repo.CodeOfConduct.Name, context.Repo.CodeOfConduct.Url?.ToString())
+                : new RuleDiagnostics(Diagnosis.Warning, "missing code of conduct file");
+
+        return Rule.Create(this, diagnostics, new Explanation
         {
-            Name = RuleName,
-            Category = Category,
-            Note = note,
-            Diagnosis = diagnosis,
-            Explanation = new Explanation
-            {
-                Details = null,
-                Text = @"
+            Text = @"
 Adopt a code of conduct to define community standards, signal a welcoming and inclusive project, and outline procedures for handling abuse.
 A code of conduct defines standards for how to engage in a community. It signals an inclusive environment that respects all contributions. 
 It also outlines procedures for addressing problems between members of your project's community. ",
-                AboutUrl =
-                    "https://docs.github.com/en/communities/setting-up-your-project-for-healthy-contributions/adding-a-code-of-conduct-to-your-project",
-                AboutHeader = "about code of conduct",
-                GuidanceUrl = diagnosis == Diagnosis.Warning ? Path.Combine(context.Repo.Url.ToString(), "community") : null,
-                GuidanceHeader = "Community Standards"
-            },
-            ResourceName = entry?.Name, ResourceUrl = entry?.Url?.ToString()
-        };
-
-        (Diagnosis, string) GetDiagnosis(
-            IGetRepo_Repository_CodeOfConduct? e) =>
-            e is not null
-                ? (Diagnosis.Info, "found")
-                : (Diagnosis.Warning, "missing code of conduct file");
+            AboutUrl =
+                "https://docs.github.com/en/communities/setting-up-your-project-for-healthy-contributions/adding-a-code-of-conduct-to-your-project",
+            AboutHeader = "about code of conduct",
+            GuidanceUrl = diagnostics.Diagnosis == Diagnosis.Warning ? context.GetCommunityUrl() : null,
+            GuidanceHeader = "Community Standards"
+        });
     }
 }

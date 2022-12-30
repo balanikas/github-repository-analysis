@@ -1,4 +1,3 @@
-using RepositoryAnalysis.Internal.GraphQL;
 using RepositoryAnalysis.Model;
 
 namespace RepositoryAnalysis.Internal.Rules.Community;
@@ -15,34 +14,20 @@ internal class LicenseRuleApplicator : IRuleApplicator
     private Rule Apply(
         AnalysisContext context)
     {
-        var license = context.Repo.LicenseInfo;
-        var (diagnosis, note) = GetDiagnosis(license);
+        var diagnostics = context.Repo.LicenseInfo is not null
+            ? new RuleDiagnostics(Diagnosis.Info, "found", null, context.Repo.LicenseInfo.Name, context.Repo.LicenseInfo.Url?.ToString())
+            : new RuleDiagnostics(Diagnosis.Error, "missing");
 
-        (Diagnosis, string) GetDiagnosis(
-            IGetRepo_Repository_LicenseInfo? e) =>
-            e is not null
-                ? (Diagnosis.Info, "found")
-                : (Diagnosis.Error, "missing");
-
-        return new Rule
+        return Rule.Create(this, diagnostics, new Explanation
         {
-            Name = RuleName,
-            Category = Category,
-            Note = note,
-            Diagnosis = diagnosis,
-            Explanation = new Explanation
-            {
-                Details = null,
-                Text = @"
+            Text = @"
 Public repositories on GitHub are often used to share open source software. 
 For your repository to truly be open source, you'll need to license it so that others are free to use, change, and distribute the software.",
-                AboutUrl =
-                    "https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/licensing-a-repository",
-                AboutHeader = "about open source licensing",
-                GuidanceUrl = diagnosis == Diagnosis.Error ? Path.Combine(context.Repo.Url.ToString(), "community") : null,
-                GuidanceHeader = "Community Standards"
-            },
-            ResourceName = license?.Name, ResourceUrl = license?.Url?.ToString()
-        };
+            AboutUrl =
+                "https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/licensing-a-repository",
+            AboutHeader = "about open source licensing",
+            GuidanceUrl = diagnostics.Diagnosis == Diagnosis.Error ? Path.Combine(context.Repo.Url.ToString(), "community") : null,
+            GuidanceHeader = "Community Standards"
+        });
     }
 }

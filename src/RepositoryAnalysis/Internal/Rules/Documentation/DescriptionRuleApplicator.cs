@@ -25,7 +25,7 @@ A repository description helps users to understand what the repository is about.
 It can be edited in the About section.",
             AboutUrl = "https://docs.github.com/en/get-started/quickstart/create-a-repo",
             AboutHeader = "this guide on how to create a repository",
-            GuidanceUrl = diagnostics.Diagnosis == Diagnosis.Warning ? Path.Combine(context.Repo.Url.ToString(), "community") : null,
+            GuidanceUrl = diagnostics.Diagnosis == Diagnosis.Warning ? context.GetCommunityUrl() : null,
             GuidanceHeader = "Community Standards"
         });
     }

@@ -23,7 +23,7 @@ You may wish to turn issues off for your repository if you do not accept contrib
 ",
             AboutUrl = "https://docs.github.com/en/issues/tracking-your-work-with-issues/about-issues",
             AboutHeader = "about issues",
-            GuidanceUrl = diagnostics.Diagnosis == Diagnosis.Warning ? Path.Combine(context.Repo.Url.ToString(), "community") : null,
+            GuidanceUrl = diagnostics.Diagnosis == Diagnosis.Warning ? context.GetCommunityUrl() : null,
             GuidanceHeader = "Community Standards"
         });
 

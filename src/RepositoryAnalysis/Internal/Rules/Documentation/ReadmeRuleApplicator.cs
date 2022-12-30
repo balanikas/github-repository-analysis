@@ -30,7 +30,7 @@ A repository should contain a readme file, to tell other people why your project
             AboutUrl =
                 "https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-readmes",
             AboutHeader = "about readmes",
-            GuidanceUrl = diagnostics.Diagnosis == Diagnosis.Error ? Path.Combine(context.Repo.Url.ToString(), "community") : null,
+            GuidanceUrl = diagnostics.Diagnosis == Diagnosis.Error ? context.GetCommunityUrl() : null,
             GuidanceHeader = "Community Standards"
         });
     }

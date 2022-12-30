@@ -4,7 +4,7 @@ Service that provides analysis and guidance for public github repositories.
 #### Status
 [![build and test](https://github.com/balanikas/github-repository-analysis/actions/workflows/deploy.yml/badge.svg)](https://github.com/balanikas/github-repository-analysis/actions/workflows/deploy.yml)
 [![CodeQL](https://github.com/balanikas/github-repository-analysis/actions/workflows/codeql.yml/badge.svg)](https://github.com/balanikas/github-repository-analysis/actions/workflows/codeql.yml)
-![Website](https://img.shields.io/website?down_message=offline&up_message=online&url=https://githubrepositoryanalysis.com/)
+![Website](https://img.shields.io/website?down_message=offline&label=service&up_message=online&url=https%3A%2F%2Fgithubrepositoryanalysis.com%2F)
 
 #### Quality
 [![SonarCloud](https://sonarcloud.io/images/project_badges/sonarcloud-white.svg)](https://sonarcloud.io/summary/new_code?id=balanikas_github-repository-analysis)

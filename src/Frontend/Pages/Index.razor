@@ -54,7 +54,10 @@
         <Overview Data="Analysis.OverView"></Overview>
     }
     <br/>
-    <ResultsTable Rules="_rules"></ResultsTable>
+    @if (_rules.Any())
+    {
+        <ResultsTable Rules="_rules"></ResultsTable>
+    }
 </MudContainer>
 
 @code {

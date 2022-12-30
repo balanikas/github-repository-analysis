@@ -1,4 +1,5 @@
 using Octokit;
+using RepositoryAnalysis.Model;
 
 namespace RepositoryAnalysis.Internal;
 
@@ -9,6 +10,13 @@ internal static class NodeExtensions
         AnalysisContext context) =>
         node is not null
             ? Path.Combine(context.Repo.Url.ToString(), node.Item.Type.ToString(), context.Repo.DefaultBranchRef!.Name, node.Item.Path)
+            : null;
+
+    public static Link? GetLink(
+        this GitTree.Node? node,
+        AnalysisContext context) =>
+        node is not null
+            ? new(node.Item.Path, Path.Combine(context.Repo.Url.ToString(), node.Item.Type.ToString(), context.Repo.DefaultBranchRef!.Name, node.Item.Path))
             : null;
 
     public static bool HasExtension(

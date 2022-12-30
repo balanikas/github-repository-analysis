@@ -16,7 +16,7 @@ internal class GitIgnoreRuleApplicator : IRuleApplicator
         async Task<RuleDiagnostics> GetDiagnosis()
         {
             var e = context.GitTree.SingleFileOrDefault(x => x.PathEquals(".gitignore"));
-            if (e is null) return new RuleDiagnostics(Diagnosis.Error, "missing", "");
+            if (e is null) return new(Diagnosis.Error, "missing", "");
 
             var fileContent = await context.GetFile(".gitignore");
             var ignore = new Ignore.Ignore();
@@ -41,18 +41,17 @@ Showing first {visualCount} files:
                 : "";
 
             return ignoredFiles.Any()
-                ? new RuleDiagnostics(Diagnosis.Warning, "found but contains violations", details, e.Item.Path, e.GetUrl(context))
-                : new RuleDiagnostics(Diagnosis.Info, "found and without any violations", details, e.Item.Path, e.GetUrl(context));
+                ? new(Diagnosis.Warning, "found but contains violations", details, e.GetLink(context))
+                : new RuleDiagnostics(Diagnosis.Info, "found and without any violations", details, e.GetLink(context));
         }
 
-        return Rule.Create(this, diagnostics, new Explanation
+        return Rule.Create(this, diagnostics, new()
         {
             Text = @"
 You can create a .gitignore file in your repository's root directory to tell Git which files and directories to ignore when you make a commit. 
 To share the ignore rules with other users who clone the repository, commit the .gitignore file in to your repository.
 ",
-            AboutUrl = "https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files",
-            AboutHeader = "about git ignore"
+            AboutLink = new("about git ignore", "https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files")
         });
     }
 }

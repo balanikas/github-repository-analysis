@@ -17,9 +17,9 @@ internal class GitHubRestClient
         ILogger<GitHubGraphQlClient> logger)
     {
         _logger = logger;
-        _client = new GitHubClient(new ProductHeaderValue("github-repository-analysis"))
+        _client = new(new ProductHeaderValue("github-repository-analysis"))
         {
-            Credentials = new Credentials(Environment.GetEnvironmentVariable("GitHub__Token"))
+            Credentials = new(Environment.GetEnvironmentVariable("GitHub__Token"))
         };
     }
 
@@ -36,7 +36,7 @@ internal class GitHubRestClient
         catch (ApiException e)
         {
             _logger.LogError(e, "Error fetching git ignore template for language {Language}", language);
-            return (GetTemplateName(language), new Ignore.Ignore());
+            return (GetTemplateName(language), new());
         }
 
         var rules = template.Source.Split("\n");

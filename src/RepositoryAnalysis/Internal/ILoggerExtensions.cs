@@ -16,6 +16,6 @@ internal static class ILoggerExtensions
     private record RuleLog
     {
         public Diagnosis Diagnosis { get; set; }
-        public string Name { get; set; }
+        public string? Name { get; set; }
     }
 }

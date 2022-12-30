@@ -15,19 +15,18 @@ internal class SecurityPolicyRuleApplicator : IRuleApplicator
         AnalysisContext context)
     {
         var diagnostics = context.Repo.IsSecurityPolicyEnabled is not null && context.Repo.IsSecurityPolicyEnabled.Value
-            ? new RuleDiagnostics(Diagnosis.Info, "found security policy", null, "security policy", context.Repo.SecurityPolicyUrl?.ToString())
-            : new RuleDiagnostics(Diagnosis.Warning, "no security policy found");
+            ? new(Diagnosis.Info, "found security policy", null, new("security policy", context.Repo.SecurityPolicyUrl?.ToString() ?? string.Empty))
+            : new RuleDiagnostics(Diagnosis.Warning, "missing security policy file");
 
-        return Rule.Create(this, diagnostics, new Explanation
+        return Rule.Create(this, diagnostics, new()
         {
             Text = @"
 You can give instructions for how to report a security vulnerability in your project by adding a security policy to your repository.
 ",
-            AboutUrl =
-                "https://docs.github.com/en/code-security/getting-started/adding-a-security-policy-to-your-repository#about-security-policies",
-            AboutHeader = "about security policies",
-            GuidanceUrl = "https://docs.github.com/en/code-security/getting-started/adding-a-security-policy-to-your-repository",
-            GuidanceHeader = "how to add a security policy"
+            AboutLink = new("about security policies",
+                "https://docs.github.com/en/code-security/getting-started/adding-a-security-policy-to-your-repository#about-security-policies"),
+            GuidanceLink = new("how to add a security policy",
+                "https://docs.github.com/en/code-security/getting-started/adding-a-security-policy-to-your-repository")
         });
     }
 }

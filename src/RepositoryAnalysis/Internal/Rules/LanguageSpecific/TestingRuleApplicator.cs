@@ -25,7 +25,7 @@ Detected {projects.Length} test projects.
 Detected {files.Length} test files.
 ";
             return !projects.Any() || !files.Any()
-                ? new RuleDiagnostics(Diagnosis.Warning, "found issues", details)
+                ? new(Diagnosis.Warning, "found issues", details)
                 : new RuleDiagnostics(Diagnosis.Info, "found", details);
         }
 
@@ -43,13 +43,12 @@ Detected {files.Length} test files.
             };
         }
 
-        return Rule.Create(this, diagnostics, new Explanation
+        return Rule.Create(this, diagnostics, new()
         {
             Text = @"
 Tests increase the quality of software. 
 ",
-            AboutUrl = "https://learn.microsoft.com/en-us/dotnet/core/testing/",
-            AboutHeader = "testing in dotnet"
+            AboutLink = new("testing in dotnet", "https://learn.microsoft.com/en-us/dotnet/core/testing/")
         });
     }
 }

@@ -47,13 +47,13 @@ Found {warnings.Count} issues.
 <br/>
 {string.Join("<br/>", warnings)}
 ";
-                return new RuleDiagnostics(Diagnosis.Warning, $"found {warnings.Count} potential solution structure issues", details);
+                return new(Diagnosis.Warning, $"found {warnings.Count} potential solution structure issues", details);
             }
 
-            return new RuleDiagnostics(Diagnosis.Info, "did not find any issues");
+            return new(Diagnosis.Info, "did not find any issues");
         }
 
-        return Rule.Create(this, diagnostics, new Explanation
+        return Rule.Create(this, diagnostics, new()
         {
             Text = @"
 It is good practice to follow standard solution structure conventions. "

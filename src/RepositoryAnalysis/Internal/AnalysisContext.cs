@@ -1,11 +1,12 @@
 using RepositoryAnalysis.Internal.GraphQL;
+using RepositoryAnalysis.Model;
 
 namespace RepositoryAnalysis.Internal;
 
 internal class AnalysisContext
 {
-    private string _name;
-    private string _owner;
+    private string _name = null!;
+    private string _owner = null!;
 
     public AnalysisContext(
         GitTree gitTree,
@@ -21,12 +22,12 @@ internal class AnalysisContext
     {
         GraphQlClient = graphQlClient;
         RestClient = restClient;
-        GitTree = new GitTree();
+        GitTree = new();
     }
 
-    public GitHubGraphQlClient GraphQlClient { get; }
-    public GitHubRestClient RestClient { get; }
-    public IGetRepo_Repository Repo { get; private set; }
+    public GitHubGraphQlClient GraphQlClient { get; } = null!;
+    public GitHubRestClient RestClient { get; } = null!;
+    public IGetRepo_Repository Repo { get; private set; } = null!;
     public GitTree GitTree { get; private set; }
 
     public async Task Build(
@@ -50,5 +51,5 @@ internal class AnalysisContext
             : Array.Empty<string>();
     }
 
-    public string GetCommunityUrl() => Path.Combine(Repo.Url.ToString(), "community");
+    public Link GetCommunityLink() => new("Community Standards", Path.Combine(Repo.Url.ToString(), "community"));
 }

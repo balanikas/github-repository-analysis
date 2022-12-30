@@ -17,31 +17,18 @@ internal class PullRequestsRuleApplicator : IRuleApplicator
     {
         var diagnostics = GetDiagnosis(context.Repo.PullRequests.Nodes);
 
-        return Rule.Create(this, diagnostics, new Explanation
-        {
-            Text = @"
-Pull requests let you tell others about changes you've pushed to a branch in a repository on GitHub. 
-Once a pull request is opened, you can discuss and review the potential changes with collaborators and add follow-up commits before your changes are merged into the base branch.",
-            AboutUrl =
-                "https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests",
-            AboutHeader = "about pull requests",
-            GuidanceUrl =
-                "https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/reviewing-changes-in-pull-requests/about-pull-request-reviews",
-            GuidanceHeader = "how to work effectively with pull requests"
-        });
-
         RuleDiagnostics GetDiagnosis(
             IReadOnlyList<IGetRepo_Repository_PullRequests_Nodes?>? nodes)
         {
-            if (nodes is null || !nodes.Any()) return new RuleDiagnostics(Diagnosis.Info, "no open pull requests found");
+            if (nodes is null || !nodes.Any()) return new(Diagnosis.Info, "no open pull requests found");
 
-            var creationDates = nodes.Select(x => x.CreatedAt).OrderBy(x => x.DateTime);
+            var creationDates = nodes.Select(x => x!.CreatedAt).OrderBy(x => x.DateTime);
             var oldestCreationDate = creationDates.First();
             var foundStale = oldestCreationDate <= new DateTimeOffset(DateTime.UtcNow.AddDays(-90));
-            var avgCreationDate = DateTimeOffset.FromUnixTimeSeconds((long)nodes.Average(x => x.CreatedAt.ToUnixTimeSeconds()));
+            var avgCreationDate = DateTimeOffset.FromUnixTimeSeconds((long)nodes.Average(x => x!.CreatedAt.ToUnixTimeSeconds()));
             var foundHighAverage = avgCreationDate <= new DateTimeOffset(DateTime.UtcNow.AddDays(-30));
             if (!foundStale && !foundHighAverage)
-                return new RuleDiagnostics(Diagnosis.Info,
+                return new(Diagnosis.Info,
                     $"found {nodes.Count} open pull requests");
 
             var details = "Found stale open pull requests.<br/>";
@@ -55,8 +42,19 @@ Oldest one was created {(DateTime.UtcNow - oldestCreationDate).Days} days ago.
 Pull requests have been open on average for {(DateTime.UtcNow - avgCreationDate).Days} days.
 """;
 
-            return new RuleDiagnostics(Diagnosis.Warning, "found stale pull requests", details, "stale pull requests",
-                Path.Combine(context.Repo.Url.ToString(), "pulls?q=is%3Apr+is%3Aopen+sort%3Acreated-asc"));
+            return new(Diagnosis.Warning, "found stale pull requests", details, new("stale pull requests",
+                Path.Combine(context.Repo.Url.ToString(), "pulls?q=is%3Apr+is%3Aopen+sort%3Acreated-asc")));
         }
+
+        return Rule.Create(this, diagnostics, new()
+        {
+            Text = @"
+Pull requests let you tell others about changes you've pushed to a branch in a repository on GitHub. 
+Once a pull request is opened, you can discuss and review the potential changes with collaborators and add follow-up commits before your changes are merged into the base branch.",
+            AboutLink = new("about pull requests",
+                "https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests"),
+            GuidanceLink = new("how to work effectively with pull requests",
+                "https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/reviewing-changes-in-pull-requests/about-pull-request-reviews")
+        });
     }
 }

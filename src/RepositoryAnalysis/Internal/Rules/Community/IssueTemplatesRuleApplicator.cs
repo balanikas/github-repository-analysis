@@ -15,17 +15,6 @@ internal class IssueTemplatesRuleApplicator : IRuleApplicator
         AnalysisContext context)
     {
         var diagnostics = GetDiagnosis();
-        return Rule.Create(this, diagnostics, new Explanation
-        {
-            Text = @"
-Issues let you track your work on GitHub, where development happens.
-You may wish to turn issues off for your repository if you do not accept contributions or bug reports.
-",
-            AboutUrl = "https://docs.github.com/en/issues/tracking-your-work-with-issues/about-issues",
-            AboutHeader = "about issues",
-            GuidanceUrl = diagnostics.Diagnosis == Diagnosis.Warning ? context.GetCommunityUrl() : null,
-            GuidanceHeader = "Community Standards"
-        });
 
         RuleDiagnostics GetDiagnosis()
         {
@@ -34,14 +23,24 @@ You may wish to turn issues off for your repository if you do not accept contrib
                 {
                     var names = context.Repo.IssueTemplates.Select(x => x.Name);
                     var templates = "Templates found: <br/>" + string.Join("<br/>", names);
-                    return new RuleDiagnostics(Diagnosis.Info, $"issues are enabled and found {context.Repo.IssueTemplates.Count} issue templates", templates);
+                    return new(Diagnosis.Info, $"issues are enabled and found {context.Repo.IssueTemplates.Count} issue templates", templates);
                 }
                 else
                 {
-                    return new RuleDiagnostics(Diagnosis.Warning, "issues are enabled but missing issue templates");
+                    return new(Diagnosis.Warning, "issues are enabled but missing issue templates");
                 }
 
-            return new RuleDiagnostics(Diagnosis.NotApplicable, "feature is disabled");
+            return new(Diagnosis.NotApplicable, "feature is disabled");
         }
+
+        return Rule.Create(this, diagnostics, new()
+        {
+            Text = @"
+Issues let you track your work on GitHub, where development happens.
+You may wish to turn issues off for your repository if you do not accept contributions or bug reports.
+",
+            AboutLink = new("about issues", "https://docs.github.com/en/issues/tracking-your-work-with-issues/about-issues"),
+            GuidanceLink = diagnostics.Diagnosis == Diagnosis.Warning ? context.GetCommunityLink() : null
+        });
     }
 }

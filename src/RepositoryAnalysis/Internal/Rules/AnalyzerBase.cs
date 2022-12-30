@@ -43,7 +43,7 @@ internal abstract class AnalyzerBase : IAnalyzer
             {
                 Logger.LogError(e, "Failed to apply rule {Name}", ruleApplicator.RuleName);
 
-                appliedRules.Add(Rule.Create(ruleApplicator, RuleDiagnostics.CreateFailed(), new Explanation
+                appliedRules.Add(Rule.Create(ruleApplicator, RuleDiagnostics.CreateFailed(), new()
                 {
                     Text = "failed to apply this rule"
                 }));

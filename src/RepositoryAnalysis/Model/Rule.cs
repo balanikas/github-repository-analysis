@@ -10,8 +10,8 @@ public record Rule(
     public required string Name { get; init; }
     public required Explanation Explanation { get; init; }
     public required RuleCategory Category { get; init; }
-    public string? ResourceName => Diagnostics.ResourceName;
-    public string? ResourceUrl => Diagnostics.ResourceUrl;
+    public Link? ResourceLink => Diagnostics.Resource;
+
     public Diagnosis Diagnosis => Diagnostics.Diagnosis;
     public string Note => Diagnostics.Note;
     public string? Details => Diagnostics.Details;
@@ -20,12 +20,11 @@ public record Rule(
         Rule? other) =>
         other is not null && Id == other.Id;
 
-
     internal static Rule Create(
         IRuleApplicator ruleApplicator,
         RuleDiagnostics diagnostics,
         Explanation explanation) =>
-        new Rule(diagnostics)
+        new(diagnostics)
         {
             Category = ruleApplicator.Category,
             Name = ruleApplicator.RuleName,

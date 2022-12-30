@@ -15,18 +15,16 @@ internal class DescriptionRuleApplicator : IRuleApplicator
         AnalysisContext context)
     {
         var diagnostics = context.Repo.Description is not null
-            ? new RuleDiagnostics(Diagnosis.Info, "found")
+            ? new(Diagnosis.Info, "found")
             : new RuleDiagnostics(Diagnosis.Warning, "missing");
 
-        return Rule.Create(this, diagnostics, new Explanation
+        return Rule.Create(this, diagnostics, new()
         {
             Text = @"
 A repository description helps users to understand what the repository is about.
 It can be edited in the About section.",
-            AboutUrl = "https://docs.github.com/en/get-started/quickstart/create-a-repo",
-            AboutHeader = "this guide on how to create a repository",
-            GuidanceUrl = diagnostics.Diagnosis == Diagnosis.Warning ? context.GetCommunityUrl() : null,
-            GuidanceHeader = "Community Standards"
+            AboutLink = new("this guide on how to create a repository", "https://docs.github.com/en/get-started/quickstart/create-a-repo"),
+            GuidanceLink = diagnostics.Diagnosis == Diagnosis.Warning ? context.GetCommunityLink() : null
         });
     }
 }

@@ -32,9 +32,9 @@
             </CellTemplate>
         </Column>
         <Column T="Rule" Field="Note" Title="note" Sortable="false"/>
-        <Column T="Rule" Field="ResourceUrl" Title="link" Sortable="false">
+        <Column T="Rule" Field="ResourceLink" Title="link" Sortable="false">
             <CellTemplate>
-                <MudLink Typo="Typo.body2" Target="_blank" Href="@context.Item.ResourceUrl">@context.Item.ResourceName</MudLink>
+                <MudLink Typo="Typo.body2" Target="_blank" Href="@context.Item.ResourceLink?.Url">@context.Item.ResourceLink?.Header</MudLink>
             </CellTemplate>
         </Column>
     </Columns>
@@ -50,19 +50,19 @@
                         <MudText Style="background-color: lightgrey" Color="Color.Surface" Typo="Typo.body2">@((MarkupString)context.Item.Details)</MudText>
                     }
                     <br/>
-                    @if (context.Item.Explanation.AboutUrl is not null)
+                    @if (context.Item.Explanation.AboutLink is not null)
                     {
                         <MudPaper Class="d-flex align-content-start flex-wrap flex-grow-1 gap-2" Elevation="0">
                             <MudText Typo="Typo.body2">For more information, see</MudText>
-                            <MudLink Typo="Typo.body2" Target="_blank" Href="@context.Item.Explanation.AboutUrl">@context.Item.Explanation.AboutHeader</MudLink>
+                            <MudLink Typo="Typo.body2" Target="_blank" Href="@context.Item.Explanation.AboutLink.Url">@context.Item.Explanation.AboutLink.Header</MudLink>
                         </MudPaper>
                     }
 
-                    @if (context.Item.Explanation.GuidanceUrl is not null)
+                    @if (context.Item.Explanation.GuidanceLink is not null)
                     {
                         <MudPaper Class="d-flex align-content-start flex-wrap flex-grow-1 gap-2" Elevation="0">
                             <MudText Typo="Typo.body2">For guidance, see</MudText>
-                            <MudLink Typo="Typo.body2" Target="_blank" Href="@context.Item.Explanation.GuidanceUrl">@context.Item.Explanation.GuidanceHeader</MudLink>
+                            <MudLink Typo="Typo.body2" Target="_blank" Href="@context.Item.Explanation.GuidanceLink.Url">@context.Item.Explanation.GuidanceLink.Header</MudLink>
                         </MudPaper>
                     }
                 </CardHeaderContent>

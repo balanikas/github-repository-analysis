@@ -14,12 +14,10 @@ public class IssueLabelsTests
     {
         var tree = new GitTree(new("", "", Array.Empty<TreeItem>(), false));
 
-        AssertionOptions.AssertEquivalencyUsing(options => options
-            .ComparingByMembers<Rule>());
         var result = await new IssueLabelsRuleApplicator().ApplyAsync(new(tree, repo));
         result.Should().NotBeNull();
         result.Should().BeEquivalentTo(expected,
-            o => o.Excluding(x => x.Diagnostics.Details).Excluding(x => x.Details).Excluding(x => x.Explanation));
+            o => o.Excluding(x => x.Diagnostics.Details).Excluding(x => x.Details).Excluding(x => x.Explanation).ComparingByMembers<Rule>());
     }
 
     public static IEnumerable<object?[]> Data() =>

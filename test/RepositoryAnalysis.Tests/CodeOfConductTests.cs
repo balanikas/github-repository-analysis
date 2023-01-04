@@ -22,7 +22,7 @@ public class CodeOfConductTests
             .Returns(coc);
         var result = await new CodeOfConductRuleApplicator().ApplyAsync(new(tree, repo.Object));
         result.Should().NotBeNull();
-        result.Should().BeEquivalentTo(expected, o => o.Excluding(x => x.Explanation).Excluding(x => x.Diagnostics.Details));
+        result.Should().BeEquivalentTo(expected, o => o.Excluding(x => x.Explanation).Excluding(x => x.Details));
     }
 
     public static IEnumerable<object?[]> Data() =>

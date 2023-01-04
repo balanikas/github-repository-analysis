@@ -6,7 +6,7 @@
         <Column T="Rule" Field="Category" Title="category"/>
         <Column T="Rule" Field="Diagnosis" Title="diagnosis">
             <CellTemplate>
-                @switch (context.Item.Diagnostics.Diagnosis)
+                @switch (context.Item.Diagnosis)
                 {
                     case Diagnosis.Warning:
                         <MudTooltip Text="an action can be taken to improve the repo" Arrow="true" Placement="Placement.Top">
@@ -34,7 +34,7 @@
         <Column T="Rule" Field="Note" Title="note" Sortable="false"/>
         <Column T="Rule" Field="ResourceLink" Title="link" Sortable="false">
             <CellTemplate>
-                <MudLink Typo="Typo.body2" Target="_blank" Href="@context.Item.Diagnostics.Resource?.Url">@context.Item.Diagnostics.Resource?.Header</MudLink>
+                <MudLink Typo="Typo.body2" Target="_blank" Href="@context.Item.ResourceLink?.Url">@context.Item.ResourceLink?.Header</MudLink>
             </CellTemplate>
         </Column>
     </Columns>
@@ -44,10 +44,10 @@
                 <CardHeaderContent>
                     <MudText Typo="Typo.body2">@((MarkupString)context.Item.Explanation.Text)</MudText>
 
-                    @if (context.Item.Diagnostics.Details is not null)
+                    @if (context.Item.Details is not null)
                     {
                         <br/>
-                        <MudText Style="background-color: lightgrey" Color="Color.Surface" Typo="Typo.body2">@((MarkupString)context.Item.Diagnostics.Details)</MudText>
+                        <MudText Style="background-color: lightgrey" Color="Color.Surface" Typo="Typo.body2">@((MarkupString)context.Item.Details)</MudText>
                     }
                     <br/>
                     @if (context.Item.Explanation.AboutLink is not null)

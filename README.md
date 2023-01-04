@@ -1,23 +1,30 @@
-# github-repository-analysis
-Analysis of public github repositories
+# Github Repository Analysis
+Service that provides analysis and guidance for public github repositories. 
 
+#### Status
 [![build and test](https://github.com/balanikas/github-repository-analysis/actions/workflows/deploy.yml/badge.svg)](https://github.com/balanikas/github-repository-analysis/actions/workflows/deploy.yml)
 [![CodeQL](https://github.com/balanikas/github-repository-analysis/actions/workflows/codeql.yml/badge.svg)](https://github.com/balanikas/github-repository-analysis/actions/workflows/codeql.yml)
+![Website](https://img.shields.io/website?down_message=offline&label=service&up_message=online&url=https%3A%2F%2Fgithubrepositoryanalysis.com%2F)
 
-![Website](https://img.shields.io/website?down_message=offline&up_message=online&url=https%3A%2F%2Frd5iaiwd3y.us-west-2.awsapprunner.com%2F)
+#### Quality
+[![SonarCloud](https://sonarcloud.io/images/project_badges/sonarcloud-white.svg)](https://sonarcloud.io/summary/new_code?id=balanikas_github-repository-analysis)
 
-https://githubrepositoryanalysis.com/
-
-
-https://user-images.githubusercontent.com/2317329/207807236-684bf53d-96c3-4c2c-ac73-c6d5389ab1fa.mov
-
-
-
-
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=balanikas_github-repository-analysis&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=balanikas_github-repository-analysis)
+[![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=balanikas_github-repository-analysis&metric=duplicated_lines_density)](https://sonarcloud.io/summary/new_code?id=balanikas_github-repository-analysis)
+[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=balanikas_github-repository-analysis&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=balanikas_github-repository-analysis)
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=balanikas_github-repository-analysis&metric=bugs)](https://sonarcloud.io/summary/new_code?id=balanikas_github-repository-analysis)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=balanikas_github-repository-analysis&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=balanikas_github-repository-analysis)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=balanikas_github-repository-analysis&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=balanikas_github-repository-analysis)
+[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=balanikas_github-repository-analysis&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=balanikas_github-repository-analysis)
+[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=balanikas_github-repository-analysis&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=balanikas_github-repository-analysis)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=balanikas_github-repository-analysis&metric=coverage)](https://sonarcloud.io/summary/new_code?id=balanikas_github-repository-analysis)
+[![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=balanikas_github-repository-analysis&metric=sqale_index)](https://sonarcloud.io/summary/new_code?id=balanikas_github-repository-analysis)
 
 ## How it works
 Given a repository, the system will fetch all publicly available data for that repository,
 evaluate it based on a set of rules, and present the results together with additional guidance.
+
+https://user-images.githubusercontent.com/2317329/207807236-684bf53d-96c3-4c2c-ac73-c6d5389ab1fa.mov
 
 ## How to add a new rule
 Lets add a rule that detects whether a readme file exists at the repository root.

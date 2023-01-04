@@ -10,10 +10,6 @@ public record Rule(
     public required string Name { get; init; }
     public required Explanation Explanation { get; init; }
     public required RuleCategory Category { get; init; }
-    public Link? ResourceLink => Diagnostics.Resource;
-    public Diagnosis Diagnosis => Diagnostics.Diagnosis;
-    public string Note => Diagnostics.Note;
-    public string? Details => Diagnostics.Details;
 
     public virtual bool Equals(
         Rule? other) =>

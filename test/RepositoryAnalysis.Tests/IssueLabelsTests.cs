@@ -17,7 +17,7 @@ public class IssueLabelsTests
         var result = await new IssueLabelsRuleApplicator().ApplyAsync(new(tree, repo));
         result.Should().NotBeNull();
         result.Should().BeEquivalentTo(expected,
-            o => o.Excluding(x => x.Diagnostics.Details).Excluding(x => x.Details).Excluding(x => x.Explanation).ComparingByMembers<Rule>());
+            o => o.Excluding(x => x.Diagnostics.Details).Excluding(x => x.Diagnostics.Details).Excluding(x => x.Explanation).ComparingByMembers<Rule>());
     }
 
     public static IEnumerable<object?[]> Data() =>

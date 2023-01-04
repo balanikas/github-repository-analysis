@@ -15,7 +15,7 @@ public class SecurityPolicyRuleTests
         var tree = new GitTree(new("", "", Array.Empty<TreeItem>(), false));
         var result = await new SecurityPolicyRuleApplicator().ApplyAsync(new(tree, repo));
         result.Should().BeEquivalentTo(expected,
-            o => o.Excluding(x => x.Diagnostics.Details).Excluding(x => x.Details).Excluding(x => x.Explanation).ComparingByMembers<Rule>());
+            o => o.Excluding(x => x.Diagnostics.Details).Excluding(x => x.Diagnostics.Details).Excluding(x => x.Explanation).ComparingByMembers<Rule>());
     }
 
     public static IEnumerable<object?[]> Data() =>

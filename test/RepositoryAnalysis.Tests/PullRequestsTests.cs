@@ -21,7 +21,7 @@ public class PullRequestsTests
         repo.Setup(x => x.PullRequests).Returns(prs);
 
         var result = await new PullRequestsRuleApplicator().ApplyAsync(new(tree, repo.Object));
-        result.Diagnosis.Should().Be(diagnosis);
+        result.Diagnostics.Diagnosis.Should().Be(diagnosis);
     }
 
     public static IEnumerable<object[]> Data() =>

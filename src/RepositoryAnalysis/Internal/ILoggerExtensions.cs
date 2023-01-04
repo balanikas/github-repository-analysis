@@ -9,7 +9,7 @@ internal static class ILoggerExtensions
         this ILogger<T> logger,
         IEnumerable<Rule> rules)
     {
-        var logs = rules.Select(rule => new RuleLog { Name = rule.Name, Diagnosis = rule.Diagnosis });
+        var logs = rules.Select(rule => new RuleLog { Name = rule.Name, Diagnosis = rule.Diagnostics.Diagnosis });
         logger.LogInformation("Analysis of rules {Rules}", logs);
     }
 

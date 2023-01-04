@@ -63,7 +63,7 @@ internal class AnalysisService : IAnalysisService
         try
         {
             await Task.WhenAll(tasks);
-            allRules = tasks.SelectMany(x => x.Result).Where(x => x.Diagnosis != Diagnosis.NotApplicable).OrderBy(x => x.Diagnosis).ToArray();
+            allRules = tasks.SelectMany(x => x.Result).Where(x => x.Diagnostics.Diagnosis != Diagnosis.NotApplicable).OrderBy(x => x.Diagnostics.Diagnosis).ToArray();
             _logger.LogRules(allRules);
         }
         catch (Exception e)

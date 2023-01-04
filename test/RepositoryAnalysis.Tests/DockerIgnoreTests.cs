@@ -17,7 +17,7 @@ public class DockerIgnoreTests
         repo.Setup(x => x.DefaultBranchRef)
             .Returns(new GetRepo_Repository_DefaultBranchRef_Ref("", null, null));
         var result = await new DockerIgnoreRuleApplicator().ApplyAsync(new(tree, repo.Object));
-        result.Diagnosis.Should().Be(diagnosis);
+        result.Diagnostics.Diagnosis.Should().Be(diagnosis);
     }
 
     public static IEnumerable<object[]> Data() =>

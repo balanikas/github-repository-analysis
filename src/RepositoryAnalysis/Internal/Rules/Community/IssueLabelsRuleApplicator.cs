@@ -20,7 +20,7 @@ internal class IssueLabelsRuleApplicator : IRuleApplicator
         RuleDiagnostics GetDiagnosis()
         {
             if (!context.Repo.HasIssuesEnabled) return new(Diagnosis.NotApplicable, "feature is disabled");
-            if (context.Repo.Issues.Edges is null) return new(Diagnosis.NotApplicable, "no open issues");
+            if (context.Repo.Issues.Edges is null || !context.Repo.Issues.Edges.Any()) return new(Diagnosis.NotApplicable, "no open issues");
 
             var nodes = context.Repo.Issues.Edges
                 .Select(x => x!.Node!)
@@ -35,7 +35,7 @@ internal class IssueLabelsRuleApplicator : IRuleApplicator
             var details = $"""
 Sample of unlabeled issues: <br/>{string.Join("<br/>", nodesWithoutLabels.Take(5).Select(x => GetUrl(x, context)))}
 """;
-            return new(Diagnosis.Warning, $"found {percent}% of {nodes.Length} issues issues unlabeled", details);
+            return new(Diagnosis.Warning, $"found {percent}% of {nodes.Length} issues unlabeled", details);
         }
 
         return Rule.Create(this, diagnostics, new()

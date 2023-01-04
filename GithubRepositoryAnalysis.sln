@@ -11,6 +11,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionFolder", "SolutionF
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepositoryAnalysis.Tests", "test\RepositoryAnalysis.Tests\RepositoryAnalysis.Tests.csproj", "{4DBE7A21-2EF4-475D-A453-89A1160F9903}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepositoryAnalysis.IntegrationTests", "tests\RepositoryAnalysis.IntegrationTests\RepositoryAnalysis.IntegrationTests.csproj", "{488A6963-3417-4CBC-A084-2F498D521C14}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,5 +31,9 @@ Global
 		{4DBE7A21-2EF4-475D-A453-89A1160F9903}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4DBE7A21-2EF4-475D-A453-89A1160F9903}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4DBE7A21-2EF4-475D-A453-89A1160F9903}.Release|Any CPU.Build.0 = Release|Any CPU
+		{488A6963-3417-4CBC-A084-2F498D521C14}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{488A6963-3417-4CBC-A084-2F498D521C14}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{488A6963-3417-4CBC-A084-2F498D521C14}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{488A6963-3417-4CBC-A084-2F498D521C14}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

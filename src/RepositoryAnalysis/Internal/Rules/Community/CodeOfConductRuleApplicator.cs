@@ -14,13 +14,10 @@ internal class CodeOfConductRuleApplicator : IRuleApplicator
     private Rule Apply(
         AnalysisContext context)
     {
-        var diagnostics = GetDiagnosis();
-
-        RuleDiagnostics GetDiagnosis() =>
-            context.Repo.CodeOfConduct is not null
-                ? new(Diagnosis.Info, "found", null,
-                    new(context.Repo.CodeOfConduct.Name, context.Repo.CodeOfConduct.Url!.ToString()))
-                : new RuleDiagnostics(Diagnosis.Warning, "missing code of conduct file");
+        var diagnostics = context.Repo.CodeOfConduct is not null
+            ? new(Diagnosis.Info, "found", null,
+                new(context.Repo.CodeOfConduct.Name, context.Repo.CodeOfConduct.Url!.ToString()))
+            : new RuleDiagnostics(Diagnosis.Warning, "missing code of conduct file");
 
         return Rule.Create(this, diagnostics, new()
         {

@@ -11,7 +11,6 @@ public record Rule(
     public required Explanation Explanation { get; init; }
     public required RuleCategory Category { get; init; }
     public Link? ResourceLink => Diagnostics.Resource;
-
     public Diagnosis Diagnosis => Diagnostics.Diagnosis;
     public string Note => Diagnostics.Note;
     public string? Details => Diagnostics.Details;
@@ -19,6 +18,8 @@ public record Rule(
     public virtual bool Equals(
         Rule? other) =>
         other is not null && Id == other.Id;
+
+    public override int GetHashCode() => Id.GetHashCode();
 
     internal static Rule Create(
         IRuleApplicator ruleApplicator,
@@ -38,6 +39,4 @@ public record Rule(
         builder.Append($"{nameof(Category)} = {Category}");
         return true;
     }
-
-    public override int GetHashCode() => Id.GetHashCode();
 }

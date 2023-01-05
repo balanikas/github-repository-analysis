@@ -40,8 +40,7 @@ internal class AnalysisContext
         _name = name;
     }
 
-    public async Task<string> GetFile(
-        string fileName) =>
+    public async Task<string> GetFile(string fileName) =>
         await GraphQlClient.GetTextContent(_owner, _name, Repo.DefaultBranchRef!.Name, fileName);
 
     public IReadOnlyList<string> GetIssues()

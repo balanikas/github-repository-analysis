@@ -29,8 +29,7 @@ internal class AnalysisService : IAnalysisService
         _analyzers = analyzers;
     }
 
-    public async Task<RepoAnalysis> GetAnalysis(
-        string url)
+    public async Task<RepoAnalysis> GetAnalysis(string url)
     {
         using var _ = LogContext.PushProperty("RepositoryUrl", url);
         _logger.LogInformation("Starting analysis.");
@@ -84,8 +83,7 @@ internal class AnalysisService : IAnalysisService
         return _cache.Add(owner, name, analysis);
     }
 
-    private (string, string) ExtractUrlParts(
-        string url)
+    private (string, string) ExtractUrlParts(string url)
     {
         if (!Uri.TryCreate(url, UriKind.Absolute, out var uri))
         {

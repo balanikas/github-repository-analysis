@@ -74,7 +74,6 @@ internal static class NodeExtensions
         return values.Any(value => parent != null && parent.EndsWith(value, StringComparison.OrdinalIgnoreCase));
     }
 
-    public static bool IsTree(
-        this GitTree.Node node) =>
+    public static bool IsTree(this GitTree.Node node) =>
         node.Item.Type == TreeType.Tree;
 }

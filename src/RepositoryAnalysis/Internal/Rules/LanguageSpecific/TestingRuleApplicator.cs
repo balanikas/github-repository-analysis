@@ -8,11 +8,9 @@ internal class TestingRuleApplicator : IRuleApplicator
     public RuleCategory Category => RuleCategory.LanguageSpecific;
     public Language Language => Language.CSharp;
 
-    public async Task<Rule> ApplyAsync(
-        AnalysisContext context) => await Task.FromResult(Apply(context));
+    public async Task<Rule> ApplyAsync(AnalysisContext context) => await Task.FromResult(Apply(context));
 
-    private Rule Apply(
-        AnalysisContext context)
+    private Rule Apply(AnalysisContext context)
     {
         var diagnostics = GetDiagnosis();
 
@@ -29,12 +27,10 @@ Detected {files.Length} test files.
                 : new RuleDiagnostics(Diagnosis.Info, "found", details);
         }
 
-        bool IsTestProject(
-            GitTree.Node x) =>
+        bool IsTestProject(GitTree.Node x) =>
             x.PathEndsWith(".csproj") && x.ParentPathEndsWith("test", "tests", "spec", "specs");
 
-        bool IsTestFile(
-            GitTree.Node x)
+        bool IsTestFile(GitTree.Node x)
         {
             return x.PathEndsWith(".cs") switch
             {

@@ -8,11 +8,9 @@ internal class RulesetRuleApplicator : IRuleApplicator
     public RuleCategory Category => RuleCategory.LanguageSpecific;
     public Language Language => Language.CSharp;
 
-    public async Task<Rule> ApplyAsync(
-        AnalysisContext context) => await Task.FromResult(Apply(context));
+    public async Task<Rule> ApplyAsync(AnalysisContext context) => await Task.FromResult(Apply(context));
 
-    private Rule Apply(
-        AnalysisContext context)
+    private Rule Apply(AnalysisContext context)
     {
         var diagnostics = GetDiagnosis();
 

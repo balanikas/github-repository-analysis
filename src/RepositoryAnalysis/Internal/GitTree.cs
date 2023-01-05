@@ -6,8 +6,7 @@ internal class GitTree
 {
     public GitTree() => Root = new(new("", "", TreeType.Tree, 0, "", ""));
 
-    public GitTree(
-        TreeResponse treeResponse)
+    public GitTree(TreeResponse treeResponse)
     {
         Root = new(new("", "", TreeType.Tree, 0, "", ""));
         Truncated = treeResponse.Truncated;
@@ -20,16 +19,13 @@ internal class GitTree
     public bool Truncated { get; }
     public Node Root { get; }
 
-    public Node? SingleFileOrDefault(
-        Func<Node, bool> predicate) =>
+    public Node? SingleFileOrDefault(Func<Node, bool> predicate) =>
         Root.Children.SingleOrDefault(x => x.Item.Type.Value == TreeType.Blob && predicate(x));
 
-    public Node? FirstFileOrDefault(
-        Func<Node, bool> predicate) =>
+    public Node? FirstFileOrDefault(Func<Node, bool> predicate) =>
         Root.Children.FirstOrDefault(x => x.Item.Type.Value == TreeType.Blob && predicate(x));
 
-    public Node? SingleFileOrDefaultRecursive(
-        Func<Node, bool> predicate) =>
+    public Node? SingleFileOrDefaultRecursive(Func<Node, bool> predicate) =>
         SingleFileOrDefaultRecursive(Root.Children, predicate, GetRecommendedSearchDepth());
 
     public Node? SingleFileOrDefaultRecursive(
@@ -48,8 +44,7 @@ internal class GitTree
             .SingleOrDefault(found => found is not null);
     }
 
-    public Node? FirstFileOrDefaultRecursive(
-        Func<Node, bool> predicate) =>
+    public Node? FirstFileOrDefaultRecursive(Func<Node, bool> predicate) =>
         FirstFileOrDefaultRecursive(Root.Children, predicate, GetRecommendedSearchDepth());
 
     public Node? FirstFileOrDefaultRecursive(
@@ -68,8 +63,7 @@ internal class GitTree
             .FirstOrDefault(found => found is not null);
     }
 
-    public IReadOnlyList<Node> FilesRecursive(
-        Func<Node, bool> predicate) =>
+    public IReadOnlyList<Node> FilesRecursive(Func<Node, bool> predicate) =>
         FilesRecursive(Root.Children, predicate, GetRecommendedSearchDepth());
 
     public IReadOnlyList<Node> FilesRecursive(
@@ -149,8 +143,7 @@ internal class GitTree
 
     public class Node
     {
-        public Node(
-            TreeItem item) => Item = item;
+        public Node(TreeItem item) => Item = item;
 
         public TreeItem Item { get; }
         public List<Node> Children { get; } = new();

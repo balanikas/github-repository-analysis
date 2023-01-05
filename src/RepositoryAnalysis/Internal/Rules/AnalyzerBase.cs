@@ -21,8 +21,7 @@ internal abstract class AnalyzerBase : IAnalyzer
 
     public RuleCategory Category { get; }
 
-    public virtual async Task<IReadOnlyList<Rule>> Analyze(
-        AnalysisContext context) =>
+    public virtual async Task<IReadOnlyList<Rule>> Analyze(AnalysisContext context) =>
         await Analyze(context, Repository.GetRulesByCategory(Category));
 
     protected async Task<IReadOnlyList<Rule>> Analyze(

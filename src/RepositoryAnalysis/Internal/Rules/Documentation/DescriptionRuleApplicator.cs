@@ -8,11 +8,9 @@ internal class DescriptionRuleApplicator : IRuleApplicator
     public RuleCategory Category => RuleCategory.Documentation;
     public Language Language => Language.None;
 
-    public async Task<Rule> ApplyAsync(
-        AnalysisContext context) => await Task.FromResult(Apply(context));
+    public async Task<Rule> ApplyAsync(AnalysisContext context) => await Task.FromResult(Apply(context));
 
-    private Rule Apply(
-        AnalysisContext context)
+    private Rule Apply(AnalysisContext context)
     {
         var diagnostics = context.Repo.Description is not null
             ? new(Diagnosis.Info, "found")

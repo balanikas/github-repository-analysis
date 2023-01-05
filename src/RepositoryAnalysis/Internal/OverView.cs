@@ -2,8 +2,7 @@ namespace RepositoryAnalysis.Internal;
 
 internal class OverView
 {
-    public Model.OverView Analyze(
-        AnalysisContext context) =>
+    public Model.OverView Analyze(AnalysisContext context) =>
         new()
         {
             Description = context.Repo.Description,

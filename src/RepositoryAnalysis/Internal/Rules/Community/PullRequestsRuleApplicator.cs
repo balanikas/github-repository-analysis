@@ -9,16 +9,13 @@ internal class PullRequestsRuleApplicator : IRuleApplicator
     public RuleCategory Category => RuleCategory.Community;
     public Language Language => Language.None;
 
-    public async Task<Rule> ApplyAsync(
-        AnalysisContext context) => await Task.FromResult(Apply(context));
+    public async Task<Rule> ApplyAsync(AnalysisContext context) => await Task.FromResult(Apply(context));
 
-    private Rule Apply(
-        AnalysisContext context)
+    private Rule Apply(AnalysisContext context)
     {
         var diagnostics = GetDiagnosis(context.Repo.PullRequests.Nodes);
 
-        RuleDiagnostics GetDiagnosis(
-            IReadOnlyList<IGetRepo_Repository_PullRequests_Nodes?>? nodes)
+        RuleDiagnostics GetDiagnosis(IReadOnlyList<IGetRepo_Repository_PullRequests_Nodes?>? nodes)
         {
             if (nodes is null || !nodes.Any()) return new(Diagnosis.Info, "no open pull requests found");
 

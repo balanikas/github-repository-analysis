@@ -8,11 +8,9 @@ internal class LicenseRuleApplicator : IRuleApplicator
     public RuleCategory Category => RuleCategory.Community;
     public Language Language => Language.None;
 
-    public async Task<Rule> ApplyAsync(
-        AnalysisContext context) => await Task.FromResult(Apply(context));
+    public async Task<Rule> ApplyAsync(AnalysisContext context) => await Task.FromResult(Apply(context));
 
-    private Rule Apply(
-        AnalysisContext context)
+    private Rule Apply(AnalysisContext context)
     {
         var diagnostics = context.Repo.LicenseInfo is not null
             ? new(Diagnosis.Info, "found", null, new(context.Repo.LicenseInfo.Name, context.Repo.LicenseInfo.Url?.ToString() ?? string.Empty))

@@ -8,11 +8,9 @@ internal class LargeFilesRuleApplicator : IRuleApplicator
     public RuleCategory Category => RuleCategory.Quality;
     public Language Language => Language.None;
 
-    public async Task<Rule> ApplyAsync(
-        AnalysisContext context) => await Task.FromResult(Apply(context));
+    public async Task<Rule> ApplyAsync(AnalysisContext context) => await Task.FromResult(Apply(context));
 
-    private Rule Apply(
-        AnalysisContext context)
+    private Rule Apply(AnalysisContext context)
     {
         var nodes = context.GitTree.FilesRecursive(x => x.Item.Size > 100_000_000);
         var showExamples = "";

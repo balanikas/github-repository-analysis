@@ -8,8 +8,7 @@ public class BasicTests
 {
     private readonly WebApplicationFactory<Program> _factory;
 
-    public BasicTests(
-        WebApplicationFactory<Program> factory)
+    public BasicTests(WebApplicationFactory<Program> factory)
     {
         _factory = factory;
         Environment.SetEnvironmentVariable("GitHub__Token", "");

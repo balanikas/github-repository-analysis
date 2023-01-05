@@ -8,11 +8,9 @@ internal class TopicsRuleApplicator : IRuleApplicator
     public RuleCategory Category => RuleCategory.Documentation;
     public Language Language => Language.None;
 
-    public async Task<Rule> ApplyAsync(
-        AnalysisContext context) => await Task.FromResult(Apply(context));
+    public async Task<Rule> ApplyAsync(AnalysisContext context) => await Task.FromResult(Apply(context));
 
-    private Rule Apply(
-        AnalysisContext context)
+    private Rule Apply(AnalysisContext context)
     {
         var diagnostics = context.Repo.RepositoryTopics.TotalCount > 0
             ? new(Diagnosis.Info, $"found {context.Repo.RepositoryTopics.TotalCount} topics")

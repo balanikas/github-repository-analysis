@@ -15,7 +15,6 @@ internal class AmazonSecretsManagerConfigurationSource : IConfigurationSource
         _secretName = secretName;
     }
 
-    public IConfigurationProvider Build(
-        IConfigurationBuilder builder) =>
+    public IConfigurationProvider Build(IConfigurationBuilder builder) =>
         new AmazonSecretsManagerConfigurationProvider(_region, _secretName);
 }

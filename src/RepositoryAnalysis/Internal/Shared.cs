@@ -4,8 +4,7 @@ namespace RepositoryAnalysis.Internal;
 
 internal static class Shared
 {
-    public static Language ParseLanguage(
-        string? language)
+    public static Language ParseLanguage(string? language)
     {
         if (Enum.TryParse<Language>(language, true, out var lang)) return lang;
 
@@ -31,8 +30,7 @@ internal static class Shared
         string name) =>
         $@"<u><strong><a target=""_blank"" href=""{url}"">{name}</a></strong></u>";
 
-    public static string TimeAgo(
-        DateTime? dateTime)
+    public static string TimeAgo(DateTime? dateTime)
     {
         if (dateTime is null) return "";
 

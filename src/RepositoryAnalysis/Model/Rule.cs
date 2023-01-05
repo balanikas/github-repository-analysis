@@ -3,8 +3,7 @@ using RepositoryAnalysis.Internal.Rules;
 
 namespace RepositoryAnalysis.Model;
 
-public record Rule(
-    RuleDiagnostics Diagnostics)
+public record Rule(RuleDiagnostics Diagnostics)
 {
     private Guid Id { get; } = Guid.NewGuid();
     public required string Name { get; init; }
@@ -15,8 +14,7 @@ public record Rule(
     public string Note => Diagnostics.Note;
     public string? Details => Diagnostics.Details;
 
-    public virtual bool Equals(
-        Rule? other) =>
+    public virtual bool Equals(Rule? other) =>
         other is not null && Id == other.Id;
 
     public override int GetHashCode() => Id.GetHashCode();
@@ -32,8 +30,7 @@ public record Rule(
             Explanation = explanation
         };
 
-    protected virtual bool PrintMembers(
-        StringBuilder builder)
+    protected virtual bool PrintMembers(StringBuilder builder)
     {
         builder.Append($"{nameof(Name)} = {Name}");
         builder.Append($"{nameof(Category)} = {Category}");

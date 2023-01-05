@@ -8,8 +8,7 @@ internal class GitIgnoreRuleApplicator : IRuleApplicator
     public RuleCategory Category => RuleCategory.Quality;
     public Language Language => Language.None;
 
-    public async Task<Rule> ApplyAsync(
-        AnalysisContext context)
+    public async Task<Rule> ApplyAsync(AnalysisContext context)
     {
         var diagnostics = await GetDiagnosis();
 

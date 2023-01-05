@@ -8,14 +8,11 @@ internal class ReadmeRuleApplicator : IRuleApplicator
     public RuleCategory Category => RuleCategory.Documentation;
     public Language Language => Language.None;
 
-    public async Task<Rule> ApplyAsync(
-        AnalysisContext context) => await Task.FromResult(Apply(context));
+    public async Task<Rule> ApplyAsync(AnalysisContext context) => await Task.FromResult(Apply(context));
 
-    private Rule Apply(
-        AnalysisContext context)
+    private Rule Apply(AnalysisContext context)
     {
-        bool IsReadme(
-            GitTree.Node x) =>
+        bool IsReadme(GitTree.Node x) =>
             x.HasFileName("readme", "readme.md", "readme.txt", "readme.rst");
 
         var rootFile = context.GitTree.FirstFileOrDefault(IsReadme);

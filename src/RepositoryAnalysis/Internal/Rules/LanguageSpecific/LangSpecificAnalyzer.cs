@@ -12,8 +12,7 @@ internal class LangSpecificAnalyzer : AnalyzerBase
     {
     }
 
-    public override async Task<IReadOnlyList<Rule>> Analyze(
-        AnalysisContext context)
+    public override async Task<IReadOnlyList<Rule>> Analyze(AnalysisContext context)
     {
         var parsedLang = Shared.ParseLanguage(context.Repo.PrimaryLanguage?.Name);
         if (parsedLang is Language.None) return new List<Rule>();

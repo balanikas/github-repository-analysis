@@ -58,7 +58,6 @@ public class ReadmeRuleTests
             }
         };
 
-    private static GitTree CreateTree(
-        params (string, TreeType, int)[] items) =>
+    private static GitTree CreateTree(params (string, TreeType, int)[] items) =>
         new(new("", "", items.Select(x => new TreeItem(x.Item1, "", x.Item2, x.Item3, "", "")).ToArray(), false));
 }

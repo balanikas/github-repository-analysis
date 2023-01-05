@@ -4,6 +4,5 @@ namespace RepositoryAnalysis;
 
 public interface IAnalysisService
 {
-    Task<RepoAnalysis> GetAnalysis(
-        string url);
+    Task<RepoAnalysis> GetAnalysis(string url);
 }

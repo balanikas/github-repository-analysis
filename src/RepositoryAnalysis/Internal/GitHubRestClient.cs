@@ -23,8 +23,7 @@ internal class GitHubRestClient
         };
     }
 
-    public async Task<(string, Ignore.Ignore)> GetGitIgnoreRules(
-        string language)
+    public async Task<(string, Ignore.Ignore)> GetGitIgnoreRules(string language)
     {
         if (CachedTemplates.TryGetValue(language, out var value)) return (GetTemplateName(language), value);
 
@@ -45,8 +44,7 @@ internal class GitHubRestClient
         return (GetTemplateName(language), CachedTemplates.GetOrAdd(language, ignore));
     }
 
-    private static string GetTemplateName(
-        string language)
+    private static string GetTemplateName(string language)
     {
         return language.ToLower() switch
         {

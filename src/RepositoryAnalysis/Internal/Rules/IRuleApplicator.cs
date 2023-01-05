@@ -8,6 +8,5 @@ internal interface IRuleApplicator
     RuleCategory Category { get; }
     Language Language { get; }
 
-    Task<Rule> ApplyAsync(
-        AnalysisContext context);
+    Task<Rule> ApplyAsync(AnalysisContext context);
 }

@@ -6,11 +6,9 @@ internal class RulesRepository
 {
     private readonly IReadOnlyList<IRuleApplicator> _rules;
 
-    public RulesRepository(
-        IEnumerable<IRuleApplicator> rules) => _rules = rules.ToArray();
+    public RulesRepository(IEnumerable<IRuleApplicator> rules) => _rules = rules.ToArray();
 
-    public IReadOnlyList<IRuleApplicator> GetRulesByCategory(
-        RuleCategory category) =>
+    public IReadOnlyList<IRuleApplicator> GetRulesByCategory(RuleCategory category) =>
         _rules.Where(x => x.Category == category).ToArray();
 
     public IReadOnlyList<IRuleApplicator> GetRulesByCategoryAndLanguage(

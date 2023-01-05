@@ -8,11 +8,9 @@ internal class SecurityPolicyRuleApplicator : IRuleApplicator
     public RuleCategory Category => RuleCategory.Security;
     public Language Language => Language.None;
 
-    public async Task<Rule> ApplyAsync(
-        AnalysisContext context) => await Task.FromResult(Apply(context));
+    public async Task<Rule> ApplyAsync(AnalysisContext context) => await Task.FromResult(Apply(context));
 
-    private Rule Apply(
-        AnalysisContext context)
+    private Rule Apply(AnalysisContext context)
     {
         var diagnostics = context.Repo.IsSecurityPolicyEnabled is not null && context.Repo.IsSecurityPolicyEnabled.Value
             ? new(Diagnosis.Info, "found security policy", null, new("security policy", context.Repo.SecurityPolicyUrl?.ToString() ?? string.Empty))

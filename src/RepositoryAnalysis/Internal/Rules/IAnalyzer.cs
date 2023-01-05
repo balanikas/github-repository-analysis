@@ -6,6 +6,5 @@ internal interface IAnalyzer
 {
     public RuleCategory Category { get; }
 
-    Task<IReadOnlyList<Rule>> Analyze(
-        AnalysisContext context);
+    Task<IReadOnlyList<Rule>> Analyze(AnalysisContext context);
 }

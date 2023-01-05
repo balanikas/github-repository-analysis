@@ -18,6 +18,11 @@ internal class SecurityPolicyRuleApplicator : IRuleApplicator
             ? new(Diagnosis.Info, "found security policy", null, new("security policy", context.Repo.SecurityPolicyUrl?.ToString() ?? string.Empty))
             : new RuleDiagnostics(Diagnosis.Warning, "missing security policy file");
 
+        var guidance = diagnostics.Diagnosis == Diagnosis.Warning
+            ? new Link("how to add a security policy",
+                Path.Combine(context.Repo.Url.ToString(), "security/policy"))
+            : null;
+
         return Rule.Create(this, diagnostics, new()
         {
             Text = @"
@@ -25,8 +30,7 @@ You can give instructions for how to report a security vulnerability in your pro
 ",
             AboutLink = new("about security policies",
                 "https://docs.github.com/en/code-security/getting-started/adding-a-security-policy-to-your-repository#about-security-policies"),
-            GuidanceLink = new("how to add a security policy",
-                "https://docs.github.com/en/code-security/getting-started/adding-a-security-policy-to-your-repository")
+            GuidanceLink = guidance
         });
     }
 }

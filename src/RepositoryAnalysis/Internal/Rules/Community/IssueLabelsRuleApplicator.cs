@@ -51,5 +51,5 @@ You may wish to turn issues off for your repository if you do not accept contrib
     private string GetUrl(
         IGetRepo_Repository_Issues_Edges_Node node,
         AnalysisContext context) =>
-        Shared.CreateLink(Path.Combine(context.Repo.Url.ToString(), "issues", node.Number.ToString()), "issue " + node.Number);
+        Shared.CreateEmbeddedLink(Path.Combine(context.Repo.Url.ToString(), "issues", node.Number.ToString()), "issue " + node.Number);
 }

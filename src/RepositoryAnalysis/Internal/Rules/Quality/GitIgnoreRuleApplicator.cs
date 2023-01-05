@@ -33,7 +33,7 @@ internal class GitIgnoreRuleApplicator : IRuleApplicator
             var details = ignoredFiles.Any()
                 ? $@"
 According to the gitignore rules at the root of this repo,
-these files should not exist in the repo. See {Shared.CreateLink("https://github.com/github/gitignore", "Recommended Ignore Files")}
+these files should not exist in the repo. See {Shared.CreateEmbeddedLink("https://github.com/github/gitignore", "Recommended Ignore Files")}
 <br/>
 Showing first {visualCount} files:
 <br/>

@@ -26,7 +26,7 @@ internal static class Shared
         return $@"<strong><a target=""_blank"" href=""{url}"">{name}</a></strong>";
     }
 
-    public static string CreateLink(
+    public static string CreateEmbeddedLink(
         string url,
         string name) =>
         $@"<u><strong><a target=""_blank"" href=""{url}"">{name}</a></strong></u>";

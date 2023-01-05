@@ -26,10 +26,10 @@ internal class SolutionStructureRuleApplicator : IRuleApplicator
                     nodes) =>
                 {
                     if (nodes.Any(x => x.HasExtension(".cs")))
-                        warnings.Add($"detected source files next to the solution file {Shared.CreateLink(node.GetUrl(context)!, node.Item.Path)}");
+                        warnings.Add($"detected source files next to the solution file {Shared.CreateEmbeddedLink(node.GetUrl(context)!, node.Item.Path)}");
 
                     if (nodes.Any(x => x.HasExtension(".csproj")))
-                        warnings.Add($"detected project files next to the solution file {Shared.CreateLink(node.GetUrl(context)!, node.Item.Path)}");
+                        warnings.Add($"detected project files next to the solution file {Shared.CreateEmbeddedLink(node.GetUrl(context)!, node.Item.Path)}");
                 });
 
             var csFile = context.GitTree.FirstFileOrDefault(x => x.HasExtension(".cs"));

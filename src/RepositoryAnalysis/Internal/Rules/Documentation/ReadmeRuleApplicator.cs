@@ -14,14 +14,27 @@ internal class ReadmeRuleApplicator : IRuleApplicator
     private Rule Apply(
         AnalysisContext context)
     {
-        var node = context.GitTree.FirstFileOrDefault(x => x.PathEquals("readme", "readme.md", "readme.txt", "readme.rst"));
-        var diagnostics = node is not null
-            ? node.Item.Size switch
+        bool IsReadme(
+            GitTree.Node x) =>
+            x.HasFileName("readme", "readme.md", "readme.txt", "readme.rst");
+
+        var rootFile = context.GitTree.FirstFileOrDefault(IsReadme);
+        var nonRootFiles = context.GitTree.FilesRecursive(IsReadme);
+
+        var details =
+            nonRootFiles.Count == 1
+                ? ""
+                : nonRootFiles.Count > 100
+                    ? $"First 100 readme files <br/> {nonRootFiles.GetEmbeddedLinksAsString(context)}"
+                    : $"All readme files <br/> {nonRootFiles.GetEmbeddedLinksAsString(context)}";
+
+        var diagnostics = rootFile is not null
+            ? rootFile.Item.Size switch
             {
-                < 200 => new(Diagnosis.Warning, "readme is too short", null, node.GetLink(context)),
-                _ => new(Diagnosis.Info, "found", null, node.GetLink(context))
+                < 500 => new(Diagnosis.Warning, "root readme is too short (less than 500 chars long)", details, rootFile.GetLink(context)),
+                _ => new(Diagnosis.Info, "found root readme root", details, rootFile.GetLink(context))
             }
-            : new RuleDiagnostics(Diagnosis.Error, "missing");
+            : new RuleDiagnostics(Diagnosis.Error, "missing root readme", details);
 
         return Rule.Create(this, diagnostics, new()
         {

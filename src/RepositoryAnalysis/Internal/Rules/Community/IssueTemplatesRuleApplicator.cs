@@ -22,7 +22,7 @@ internal class IssueTemplatesRuleApplicator : IRuleApplicator
                 if (context.Repo.IssueTemplates != null && context.Repo.IssueTemplates.Any())
                 {
                     var names = context.Repo.IssueTemplates.Select(x => x.Name);
-                    var templates = "Templates found: <br/>" + string.Join("<br/>", names);
+                    var templates = $"Templates found: <br/>{string.Join("<br/>", names)}";
                     return new(Diagnosis.Info, $"issues are enabled and found {context.Repo.IssueTemplates.Count} issue templates", templates);
                 }
                 else

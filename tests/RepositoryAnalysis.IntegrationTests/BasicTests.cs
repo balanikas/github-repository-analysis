@@ -1,7 +1,4 @@
-﻿using FluentAssertions;
-using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.Extensions.DependencyInjection;
-using RepositoryAnalysis.Model;
+﻿using Microsoft.AspNetCore.Mvc.Testing;
 using Xunit;
 
 namespace RepositoryAnalysis.IntegrationTests;

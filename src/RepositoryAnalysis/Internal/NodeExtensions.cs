@@ -19,6 +19,27 @@ internal static class NodeExtensions
             ? new(node.Item.Path, Path.Combine(context.Repo.Url.ToString(), node.Item.Type.ToString(), context.Repo.DefaultBranchRef!.Name, node.Item.Path))
             : null;
 
+    public static string GetEmbeddedLink(
+        this GitTree.Node? node,
+        AnalysisContext context) =>
+        node is not null
+            ? Shared.CreateEmbeddedLink(
+                Path.Combine(context.Repo.Url.ToString(), node.Item.Type.ToString(), context.Repo.DefaultBranchRef!.Name, node.Item.Path),
+                node.Item.Path)
+            : "";
+
+    public static IReadOnlyList<string> GetEmbeddedLinks(
+        this IReadOnlyList<GitTree.Node>? nodes,
+        AnalysisContext context) =>
+        nodes is not null
+            ? nodes.Select(x => x.GetEmbeddedLink(context)).ToList()
+            : Array.Empty<string>();
+
+    public static string GetEmbeddedLinksAsString(
+        this IReadOnlyList<GitTree.Node>? nodes,
+        AnalysisContext context) =>
+        string.Join("<br/>", nodes.GetEmbeddedLinks(context));
+
     public static bool HasExtension(
         this GitTree.Node node,
         params string[] values) =>

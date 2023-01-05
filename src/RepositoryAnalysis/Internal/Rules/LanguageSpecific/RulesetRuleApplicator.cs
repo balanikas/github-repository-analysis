@@ -25,18 +25,18 @@ Found rulesets:
 <br/>
 {string.Join("<br/>", nodes.Select(x => x.GetUrl(context)))}
 ";
-                return new(Diagnosis.Warning, $"found {nodes.Count} .ruleset files", details);
+                return new RuleDiagnostics(Diagnosis.Warning, $"found {nodes.Count} .ruleset files", details);
             }
 
-            return new(Diagnosis.Info, "did not find ruleset files");
+            return new RuleDiagnostics(Diagnosis.Info, "did not find ruleset files");
         }
 
-        return Rule.Create(this, diagnostics, new()
+        return Rule.Create(this, diagnostics, new Explanation
         {
             Text = @"
 Ruleset configuration files for static code analysis are being deprecated in favor of more modern tools, 
 like EditorConfig and dotnet analyzers.",
-            AboutLink = new("about dotnet analyzers", "https://learn.microsoft.com/en-us/visualstudio/code-quality/analyzers-faq?view=vs-2022")
+            AboutLink = new Link("about dotnet analyzers", "https://learn.microsoft.com/en-us/visualstudio/code-quality/analyzers-faq?view=vs-2022")
         });
     }
 }

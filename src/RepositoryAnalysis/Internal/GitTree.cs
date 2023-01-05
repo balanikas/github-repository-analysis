@@ -4,15 +4,15 @@ namespace RepositoryAnalysis.Internal;
 
 internal class GitTree
 {
-    public GitTree() => Root = new(new("", "", TreeType.Tree, 0, "", ""));
+    public GitTree() => Root = new Node(new TreeItem("", "", TreeType.Tree, 0, "", ""));
 
     public GitTree(TreeResponse treeResponse)
     {
-        Root = new(new("", "", TreeType.Tree, 0, "", ""));
+        Root = new Node(new TreeItem("", "", TreeType.Tree, 0, "", ""));
         Truncated = treeResponse.Truncated;
         Count = treeResponse.Tree.Count;
         var index = 0;
-        Walk(Root, treeResponse.Tree, ref index, new());
+        Walk(Root, treeResponse.Tree, ref index, new Stack<string>());
     }
 
     public int Count { get; }
@@ -130,7 +130,7 @@ internal class GitTree
             currentIndex++;
             if (item.Type.Value == TreeType.Blob)
             {
-                root.Children.Add(new(item));
+                root.Children.Add(new Node(item));
             }
             else if (item.Type.Value == TreeType.Tree)
             {

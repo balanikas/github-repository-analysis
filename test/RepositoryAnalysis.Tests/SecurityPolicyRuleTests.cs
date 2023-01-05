@@ -1,5 +1,6 @@
 using Moq;
 using RepositoryAnalysis.Internal.GraphQL;
+using RepositoryAnalysis.Internal.Rules;
 using RepositoryAnalysis.Internal.Rules.Security;
 
 namespace Repository.Tests;
@@ -12,8 +13,8 @@ public class SecurityPolicyRuleTests
         IGetRepo_Repository repo,
         Rule expected)
     {
-        var tree = new GitTree(new("", "", Array.Empty<TreeItem>(), false));
-        var result = await new SecurityPolicyRuleApplicator().ApplyAsync(new(tree, repo));
+        var tree = new GitTree(new TreeResponse("", "", Array.Empty<TreeItem>(), false));
+        var result = await new SecurityPolicyRuleApplicator().ApplyAsync(new AnalysisContext(tree, repo));
         result.Should().BeEquivalentTo(expected,
             o => o.Excluding(x => x.Diagnostics.Details).Excluding(x => x.Details).Excluding(x => x.Explanation).ComparingByMembers<Rule>());
     }
@@ -24,7 +25,7 @@ public class SecurityPolicyRuleTests
             new object?[]
             {
                 WithPolicyDisabled().Object,
-                new Rule(new(Diagnosis.Warning, "missing security policy file"))
+                new Rule(new RuleDiagnostics(Diagnosis.Warning, "missing security policy file"))
                 {
                     Category = RuleCategory.Security,
                     Name = "security policy",
@@ -34,7 +35,7 @@ public class SecurityPolicyRuleTests
             new object?[]
             {
                 WithPolicyEnabled().Object,
-                new Rule(new(Diagnosis.Info, "found security policy", null, new("security policy", "http://test.com/url")))
+                new Rule(new RuleDiagnostics(Diagnosis.Info, "found security policy", null, new Link("security policy", "http://test.com/url")))
                 {
                     Category = RuleCategory.Security,
                     Name = "security policy",

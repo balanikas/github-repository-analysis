@@ -13,7 +13,8 @@ internal class SecurityPolicyRuleApplicator : IRuleApplicator
     private Rule Apply(AnalysisContext context)
     {
         var diagnostics = context.Repo.IsSecurityPolicyEnabled is not null && context.Repo.IsSecurityPolicyEnabled.Value
-            ? new(Diagnosis.Info, "found security policy", null, new("security policy", context.Repo.SecurityPolicyUrl?.ToString() ?? string.Empty))
+            ? new RuleDiagnostics(Diagnosis.Info, "found security policy", null,
+                new Link("security policy", context.Repo.SecurityPolicyUrl?.ToString() ?? string.Empty))
             : new RuleDiagnostics(Diagnosis.Warning, "missing security policy file");
 
         var guidance = diagnostics.Diagnosis == Diagnosis.Warning
@@ -21,12 +22,12 @@ internal class SecurityPolicyRuleApplicator : IRuleApplicator
                 Path.Combine(context.Repo.Url.ToString(), "security/policy"))
             : null;
 
-        return Rule.Create(this, diagnostics, new()
+        return Rule.Create(this, diagnostics, new Explanation
         {
             Text = @"
 You can give instructions for how to report a security vulnerability in your project by adding a security policy to your repository.
 ",
-            AboutLink = new("about security policies",
+            AboutLink = new Link("about security policies",
                 "https://docs.github.com/en/code-security/getting-started/adding-a-security-policy-to-your-repository#about-security-policies"),
             GuidanceLink = guidance
         });

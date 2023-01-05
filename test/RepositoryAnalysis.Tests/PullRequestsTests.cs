@@ -12,7 +12,7 @@ public class PullRequestsTests
         Diagnosis diagnosis,
         GetRepo_Repository_PullRequests_PullRequestConnection prs)
     {
-        var tree = new GitTree(new("", "", Array.Empty<TreeItem>(), false));
+        var tree = new GitTree(new TreeResponse("", "", Array.Empty<TreeItem>(), false));
         var repo = new Mock<IGetRepo_Repository>();
         repo.Setup(x => x.Url)
             .Returns(new Uri("http://dummy.com"));
@@ -20,7 +20,7 @@ public class PullRequestsTests
             .Returns(new GetRepo_Repository_DefaultBranchRef_Ref("", null, null));
         repo.Setup(x => x.PullRequests).Returns(prs);
 
-        var result = await new PullRequestsRuleApplicator().ApplyAsync(new(tree, repo.Object));
+        var result = await new PullRequestsRuleApplicator().ApplyAsync(new AnalysisContext(tree, repo.Object));
         result.Diagnosis.Should().Be(diagnosis);
     }
 

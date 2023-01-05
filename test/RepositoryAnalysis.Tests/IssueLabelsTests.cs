@@ -1,5 +1,6 @@
 using Moq;
 using RepositoryAnalysis.Internal.GraphQL;
+using RepositoryAnalysis.Internal.Rules;
 using RepositoryAnalysis.Internal.Rules.Community;
 
 namespace Repository.Tests;
@@ -12,9 +13,9 @@ public class IssueLabelsTests
         IGetRepo_Repository repo,
         Rule expected)
     {
-        var tree = new GitTree(new("", "", Array.Empty<TreeItem>(), false));
+        var tree = new GitTree(new TreeResponse("", "", Array.Empty<TreeItem>(), false));
 
-        var result = await new IssueLabelsRuleApplicator().ApplyAsync(new(tree, repo));
+        var result = await new IssueLabelsRuleApplicator().ApplyAsync(new AnalysisContext(tree, repo));
         result.Should().NotBeNull();
         result.Should().BeEquivalentTo(expected,
             o => o.Excluding(x => x.Diagnostics.Details).Excluding(x => x.Details).Excluding(x => x.Explanation).ComparingByMembers<Rule>());
@@ -26,7 +27,7 @@ public class IssueLabelsTests
             new object?[]
             {
                 WithIssueLabels().Object,
-                new Rule(new(Diagnosis.Info, "issues are enabled and all open issues are labeled"))
+                new Rule(new RuleDiagnostics(Diagnosis.Info, "issues are enabled and all open issues are labeled"))
                 {
                     Category = RuleCategory.Community,
                     Name = "issue labels",
@@ -36,7 +37,7 @@ public class IssueLabelsTests
             new object?[]
             {
                 WithIssuesDisabled().Object,
-                new Rule(new(Diagnosis.NotApplicable, "feature is disabled"))
+                new Rule(new RuleDiagnostics(Diagnosis.NotApplicable, "feature is disabled"))
                 {
                     Category = RuleCategory.Community,
                     Name = "issue labels",
@@ -46,7 +47,7 @@ public class IssueLabelsTests
             new object?[]
             {
                 WithNoIssues().Object,
-                new Rule(new(Diagnosis.NotApplicable, "no open issues"))
+                new Rule(new RuleDiagnostics(Diagnosis.NotApplicable, "no open issues"))
                 {
                     Category = RuleCategory.Community,
                     Name = "issue labels",
@@ -56,7 +57,7 @@ public class IssueLabelsTests
             new object?[]
             {
                 WithNoLabels().Object,
-                new Rule(new(Diagnosis.Warning, "found 100% of 1 issues unlabeled"))
+                new Rule(new RuleDiagnostics(Diagnosis.Warning, "found 100% of 1 issues unlabeled"))
                 {
                     Category = RuleCategory.Community,
                     Name = "issue labels",
@@ -75,7 +76,7 @@ public class IssueLabelsTests
             {
                 new GetRepo_Repository_Issues_Edges_IssueEdge(
                     new GetRepo_Repository_Issues_Edges_Node_Issue(
-                        new GetRepo_Repository_Issues_Edges_Node_Labels_LabelConnection(3), 123, new()))
+                        new GetRepo_Repository_Issues_Edges_Node_Labels_LabelConnection(3), 123, new DateTimeOffset()))
             }));
 
         return repo;
@@ -91,7 +92,7 @@ public class IssueLabelsTests
             {
                 new GetRepo_Repository_Issues_Edges_IssueEdge(
                     new GetRepo_Repository_Issues_Edges_Node_Issue(
-                        new GetRepo_Repository_Issues_Edges_Node_Labels_LabelConnection(0), 123, new()))
+                        new GetRepo_Repository_Issues_Edges_Node_Labels_LabelConnection(0), 123, new DateTimeOffset()))
             }));
 
         return repo;

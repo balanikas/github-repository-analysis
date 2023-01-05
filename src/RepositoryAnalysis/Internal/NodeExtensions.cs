@@ -16,7 +16,8 @@ internal static class NodeExtensions
         this GitTree.Node? node,
         AnalysisContext context) =>
         node is not null
-            ? new(node.Item.Path, Path.Combine(context.Repo.Url.ToString(), node.Item.Type.ToString(), context.Repo.DefaultBranchRef!.Name, node.Item.Path))
+            ? new Link(node.Item.Path,
+                Path.Combine(context.Repo.Url.ToString(), node.Item.Type.ToString(), context.Repo.DefaultBranchRef!.Name, node.Item.Path))
             : null;
 
     public static string GetEmbeddedLink(

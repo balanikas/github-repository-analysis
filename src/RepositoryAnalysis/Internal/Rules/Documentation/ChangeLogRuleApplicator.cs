@@ -23,13 +23,13 @@ internal class ChangeLogRuleApplicator : IRuleApplicator
             var release = context.Repo.Releases.Edges?.SingleOrDefault()?.Node;
 
             if (node is not null)
-                return new(Diagnosis.Info, "found", null, node.GetLink(context));
+                return new RuleDiagnostics(Diagnosis.Info, "found", null, node.GetLink(context));
             return release is not null
-                ? new(Diagnosis.Info, "found", null, new(release.Name!, release.Url.ToString()))
+                ? new RuleDiagnostics(Diagnosis.Info, "found", null, new Link(release.Name!, release.Url.ToString()))
                 : new RuleDiagnostics(Diagnosis.Warning, "missing");
         }
 
-        return Rule.Create(this, diagnostics, new()
+        return Rule.Create(this, diagnostics, new Explanation
         {
             Text = @"
 A changelog is a kind of summary of all your changes. 

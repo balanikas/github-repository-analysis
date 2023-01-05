@@ -13,15 +13,15 @@ internal class DescriptionRuleApplicator : IRuleApplicator
     private Rule Apply(AnalysisContext context)
     {
         var diagnostics = context.Repo.Description is not null
-            ? new(Diagnosis.Info, "found")
+            ? new RuleDiagnostics(Diagnosis.Info, "found")
             : new RuleDiagnostics(Diagnosis.Warning, "missing");
 
-        return Rule.Create(this, diagnostics, new()
+        return Rule.Create(this, diagnostics, new Explanation
         {
             Text = @"
 A repository description helps users to understand what the repository is about.
 It can be edited in the About section.",
-            AboutLink = new("this guide on how to create a repository", "https://docs.github.com/en/get-started/quickstart/create-a-repo"),
+            AboutLink = new Link("this guide on how to create a repository", "https://docs.github.com/en/get-started/quickstart/create-a-repo"),
             GuidanceLink = diagnostics.Diagnosis == Diagnosis.Warning ? context.GetCommunityLink() : null
         });
     }

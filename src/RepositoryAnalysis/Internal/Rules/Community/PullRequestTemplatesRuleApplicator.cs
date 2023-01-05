@@ -20,21 +20,21 @@ internal class PullRequestTemplatesRuleApplicator : IRuleApplicator
             {
                 var names = context.Repo.PullRequestTemplates.Select(x => x.Filename);
                 var templates = "Templates found: <br/>" + string.Join("<br/>", names);
-                return new(Diagnosis.Info,
+                return new RuleDiagnostics(Diagnosis.Info,
                     $"found {context.Repo.PullRequestTemplates.Count} pull request templates", templates);
             }
 
-            return new(Diagnosis.Warning, "missing pull request templates");
+            return new RuleDiagnostics(Diagnosis.Warning, "missing pull request templates");
         }
 
-        return Rule.Create(this, diagnostics, new()
+        return Rule.Create(this, diagnostics, new Explanation
         {
             Text = @"
 Pull requests let you tell others about changes you've pushed to a branch in a repository on GitHub. 
 Once a pull request is opened, you can discuss and review the potential changes with collaborators and add follow-up commits before your changes are merged into the base branch.",
-            AboutLink = new("about pull requests",
+            AboutLink = new Link("about pull requests",
                 "https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests"),
-            GuidanceLink = new("how to add a pull request template",
+            GuidanceLink = new Link("how to add a pull request template",
                 "https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/creating-a-pull-request-template-for-your-repository")
         });
     }

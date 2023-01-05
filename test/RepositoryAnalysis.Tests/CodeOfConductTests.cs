@@ -1,5 +1,6 @@
 using Moq;
 using RepositoryAnalysis.Internal.GraphQL;
+using RepositoryAnalysis.Internal.Rules;
 using RepositoryAnalysis.Internal.Rules.Community;
 
 namespace Repository.Tests;
@@ -12,7 +13,7 @@ public class CodeOfConductTests
         GetRepo_Repository_CodeOfConduct_CodeOfConduct? coc,
         Rule expected)
     {
-        var tree = new GitTree(new("", "", Array.Empty<TreeItem>(), false));
+        var tree = new GitTree(new TreeResponse("", "", Array.Empty<TreeItem>(), false));
         var repo = new Mock<IGetRepo_Repository>();
         repo.Setup(x => x.Url)
             .Returns(new Uri("http://dummy.com"));
@@ -20,7 +21,7 @@ public class CodeOfConductTests
             .Returns(new GetRepo_Repository_DefaultBranchRef_Ref("", null, null));
         repo.Setup(x => x.CodeOfConduct)
             .Returns(coc);
-        var result = await new CodeOfConductRuleApplicator().ApplyAsync(new(tree, repo.Object));
+        var result = await new CodeOfConductRuleApplicator().ApplyAsync(new AnalysisContext(tree, repo.Object));
         result.Should().NotBeNull();
         result.Should().BeEquivalentTo(expected, o => o.Excluding(x => x.Explanation).Excluding(x => x.Details));
     }
@@ -30,8 +31,8 @@ public class CodeOfConductTests
         {
             new object?[]
             {
-                new GetRepo_Repository_CodeOfConduct_CodeOfConduct(new("http://a.b"), "coc"),
-                new Rule(new(Diagnosis.Info, "found", null, new("coc", "http://a.b/")))
+                new GetRepo_Repository_CodeOfConduct_CodeOfConduct(new Uri("http://a.b"), "coc"),
+                new Rule(new RuleDiagnostics(Diagnosis.Info, "found", null, new Link("coc", "http://a.b/")))
                 {
                     Category = RuleCategory.Community,
                     Name = "code of conduct",
@@ -41,7 +42,7 @@ public class CodeOfConductTests
             new object?[]
             {
                 null,
-                new Rule(new(Diagnosis.Warning, "missing code of conduct file"))
+                new Rule(new RuleDiagnostics(Diagnosis.Warning, "missing code of conduct file"))
                 {
                     Category = RuleCategory.Community,
                     Name = "code of conduct",

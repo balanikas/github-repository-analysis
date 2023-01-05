@@ -28,16 +28,16 @@ internal class ReadmeRuleApplicator : IRuleApplicator
         var diagnostics = rootFile is not null
             ? rootFile.Item.Size switch
             {
-                < 500 => new(Diagnosis.Warning, "root readme is too short (less than 500 chars long)", details, rootFile.GetLink(context)),
-                _ => new(Diagnosis.Info, "found root readme root", details, rootFile.GetLink(context))
+                < 500 => new RuleDiagnostics(Diagnosis.Warning, "root readme is too short (less than 500 chars long)", details, rootFile.GetLink(context)),
+                _ => new RuleDiagnostics(Diagnosis.Info, "found root readme root", details, rootFile.GetLink(context))
             }
             : new RuleDiagnostics(Diagnosis.Error, "missing root readme", details);
 
-        return Rule.Create(this, diagnostics, new()
+        return Rule.Create(this, diagnostics, new Explanation
         {
             Text = @"
 A repository should contain a readme file, to tell other people why your project is useful, what they can do with your project, and how they can use it.",
-            AboutLink = new("about readmes",
+            AboutLink = new Link("about readmes",
                 "https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-readmes"),
             GuidanceLink = diagnostics.Diagnosis == Diagnosis.Error ? context.GetCommunityLink() : null
         });

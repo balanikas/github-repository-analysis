@@ -57,6 +57,7 @@ resharper_keep_existing_declaration_parens_arrangement = false
 resharper_local_function_body = expression_body
 resharper_max_formal_parameters_on_line = 1
 resharper_method_or_operator_body = expression_body
+resharper_object_creation_when_type_not_evident = explicitly_typed
 resharper_show_autodetect_configure_formatting_tip = false
 resharper_use_indent_from_vs = false
 resharper_wrap_parameters_style = wrap_if_long

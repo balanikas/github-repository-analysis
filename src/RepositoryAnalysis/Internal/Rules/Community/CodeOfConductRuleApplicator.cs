@@ -13,17 +13,17 @@ internal class CodeOfConductRuleApplicator : IRuleApplicator
     private Rule Apply(AnalysisContext context)
     {
         var diagnostics = context.Repo.CodeOfConduct is not null
-            ? new(Diagnosis.Info, "found", null,
-                new(context.Repo.CodeOfConduct.Name, context.Repo.CodeOfConduct.Url!.ToString()))
+            ? new RuleDiagnostics(Diagnosis.Info, "found", null,
+                new Link(context.Repo.CodeOfConduct.Name, context.Repo.CodeOfConduct.Url!.ToString()))
             : new RuleDiagnostics(Diagnosis.Warning, "missing code of conduct file");
 
-        return Rule.Create(this, diagnostics, new()
+        return Rule.Create(this, diagnostics, new Explanation
         {
             Text = @"
 Adopt a code of conduct to define community standards, signal a welcoming and inclusive project, and outline procedures for handling abuse.
 A code of conduct defines standards for how to engage in a community. It signals an inclusive environment that respects all contributions. 
 It also outlines procedures for addressing problems between members of your project's community. ",
-            AboutLink = new("about code of conduct",
+            AboutLink = new Link("about code of conduct",
                 "https://docs.github.com/en/communities/setting-up-your-project-for-healthy-contributions/adding-a-code-of-conduct-to-your-project"),
             GuidanceLink = diagnostics.Diagnosis == Diagnosis.Warning ? context.GetCommunityLink() : null
         });

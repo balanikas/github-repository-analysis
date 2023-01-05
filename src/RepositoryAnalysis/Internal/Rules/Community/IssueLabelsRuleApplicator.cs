@@ -17,8 +17,8 @@ internal class IssueLabelsRuleApplicator : IRuleApplicator
 
         RuleDiagnostics GetDiagnosis()
         {
-            if (!context.Repo.HasIssuesEnabled) return new(Diagnosis.NotApplicable, "feature is disabled");
-            if (context.Repo.Issues.Edges is null || !context.Repo.Issues.Edges.Any()) return new(Diagnosis.NotApplicable, "no open issues");
+            if (!context.Repo.HasIssuesEnabled) return new RuleDiagnostics(Diagnosis.NotApplicable, "feature is disabled");
+            if (context.Repo.Issues.Edges is null || !context.Repo.Issues.Edges.Any()) return new RuleDiagnostics(Diagnosis.NotApplicable, "no open issues");
 
             var nodes = context.Repo.Issues.Edges
                 .Select(x => x!.Node!)
@@ -27,22 +27,22 @@ internal class IssueLabelsRuleApplicator : IRuleApplicator
                 .Where(x => x.Labels is not null && x.Labels.TotalCount == 0)
                 .ToArray();
 
-            if (nodesWithoutLabels.Length <= 0) return new(Diagnosis.Info, "issues are enabled and all open issues are labeled");
+            if (nodesWithoutLabels.Length <= 0) return new RuleDiagnostics(Diagnosis.Info, "issues are enabled and all open issues are labeled");
 
             var percent = (int)Math.Round((double)(100 * nodesWithoutLabels.Length) / nodes.Length);
             var details = $"""
 Sample of unlabeled issues: <br/>{string.Join("<br/>", nodesWithoutLabels.Take(5).Select(x => GetUrl(x, context)))}
 """;
-            return new(Diagnosis.Warning, $"found {percent}% of {nodes.Length} issues unlabeled", details);
+            return new RuleDiagnostics(Diagnosis.Warning, $"found {percent}% of {nodes.Length} issues unlabeled", details);
         }
 
-        return Rule.Create(this, diagnostics, new()
+        return Rule.Create(this, diagnostics, new Explanation
         {
             Text = @"
 Issue labels let you categorize your work on GitHub, where development happens.
 You may wish to turn issues off for your repository if you do not accept contributions or bug reports.
 ",
-            AboutLink = new("about issue labels", "https://docs.github.com/en/issues/using-labels-and-milestones-to-track-work/managing-labels")
+            AboutLink = new Link("about issue labels", "https://docs.github.com/en/issues/using-labels-and-milestones-to-track-work/managing-labels")
         });
     }
 

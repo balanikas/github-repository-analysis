@@ -37,7 +37,7 @@ public static class DependencyInjectionExtensions
             .AddGithubClient()
             .ConfigureHttpClient(client =>
             {
-                client.BaseAddress = new("https://api.github.com/graphql");
+                client.BaseAddress = new Uri("https://api.github.com/graphql");
                 client.DefaultRequestHeaders
                     .Add("Authorization", "Bearer " + Environment.GetEnvironmentVariable("GitHub__Token"));
             });

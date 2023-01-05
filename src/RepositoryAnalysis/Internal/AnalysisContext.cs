@@ -22,7 +22,7 @@ internal class AnalysisContext
     {
         GraphQlClient = graphQlClient;
         RestClient = restClient;
-        GitTree = new();
+        GitTree = new GitTree();
     }
 
     public GitHubGraphQlClient GraphQlClient { get; } = null!;

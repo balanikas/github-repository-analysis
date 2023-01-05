@@ -29,16 +29,16 @@ internal class CitationRuleApplicator : IRuleApplicator
             var node = context.GitTree.FirstFileOrDefault(
                 x => citationFileNames.Contains(x.Item.Path, StringComparer.OrdinalIgnoreCase));
             return node is not null
-                ? new(Diagnosis.Info, "found")
+                ? new RuleDiagnostics(Diagnosis.Info, "found")
                 : new RuleDiagnostics(Diagnosis.Warning, "missing citation file");
         }
 
-        return Rule.Create(this, diagnostics, new()
+        return Rule.Create(this, diagnostics, new Explanation
         {
             Text = @"
 You can add a CITATION file to your repository to help users correctly cite your software.
 ",
-            AboutLink = new("about citation files",
+            AboutLink = new Link("about citation files",
                 "https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-citation-files")
         });
     }

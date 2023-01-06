@@ -6,6 +6,10 @@ using Serilog.Events;
 using Serilog.Formatting.Compact;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddResponseCompression(options =>
+{
+    options.EnableForHttps = true;
+});
 
 StaticWebAssetsLoader.UseStaticWebAssets(builder.Environment, builder.Configuration);
 
@@ -45,6 +49,7 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+app.UseResponseCompression();
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();

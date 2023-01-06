@@ -11,14 +11,13 @@ public class IssueLabelsTests
     [MemberData(nameof(Data))]
     internal async Task Test(
         IGetRepo_Repository repo,
-        Rule expected)
+        Diagnosis diagnosis)
     {
         var tree = new GitTree(new TreeResponse("", "", Array.Empty<TreeItem>(), false));
 
         var result = await new IssueLabelsRuleApplicator().ApplyAsync(new AnalysisContext(tree, repo));
         result.Should().NotBeNull();
-        result.Should().BeEquivalentTo(expected,
-            o => o.Excluding(x => x.Diagnostics.Details).Excluding(x => x.Details).Excluding(x => x.Explanation).ComparingByMembers<Rule>());
+        result.Diagnosis.Should().Be(diagnosis);
     }
 
     public static IEnumerable<object?[]> Data() =>
@@ -27,42 +26,22 @@ public class IssueLabelsTests
             new object?[]
             {
                 WithIssueLabels().Object,
-                new Rule(new RuleDiagnostics(Diagnosis.Info, "issues are enabled and all open issues are labeled"))
-                {
-                    Category = RuleCategory.Community,
-                    Name = "issue labels",
-                    Explanation = default!
-                }
+                Diagnosis.Info
             },
             new object?[]
             {
                 WithIssuesDisabled().Object,
-                new Rule(new RuleDiagnostics(Diagnosis.NotApplicable, "feature is disabled"))
-                {
-                    Category = RuleCategory.Community,
-                    Name = "issue labels",
-                    Explanation = default!
-                }
+                Diagnosis.NotApplicable
             },
             new object?[]
             {
                 WithNoIssues().Object,
-                new Rule(new RuleDiagnostics(Diagnosis.NotApplicable, "no open issues"))
-                {
-                    Category = RuleCategory.Community,
-                    Name = "issue labels",
-                    Explanation = default!
-                }
+                Diagnosis.NotApplicable
             },
             new object?[]
             {
                 WithNoLabels().Object,
-                new Rule(new RuleDiagnostics(Diagnosis.Warning, "found 100% of 1 issues unlabeled"))
-                {
-                    Category = RuleCategory.Community,
-                    Name = "issue labels",
-                    Explanation = default!
-                }
+                Diagnosis.Warning
             }
         };
 

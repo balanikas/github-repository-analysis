@@ -1,5 +1,14 @@
 query GetRepo($name: String!, $owner: String!) {
     repository(name: $name, owner: $owner) {
+        discussions(first: 100, orderBy: {field: UPDATED_AT, direction: DESC}) {
+            edges {
+                node {
+                    number
+                    answerChosenAt
+                }
+            }
+            totalCount
+        }
         isSecurityPolicyEnabled
         securityPolicyUrl
         hasVulnerabilityAlertsEnabled

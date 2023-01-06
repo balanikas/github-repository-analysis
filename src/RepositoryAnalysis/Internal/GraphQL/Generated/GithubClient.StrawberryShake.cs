@@ -15,9 +15,9 @@ namespace Microsoft.Extensions.DependencyInjection
                 return new ClientServiceProvider(global::Microsoft.Extensions.DependencyInjection.ServiceCollectionContainerBuilderExtensions.BuildServiceProvider(serviceCollection));
             });
             global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddSingleton(services, sp => new global::RepositoryAnalysis.Internal.GraphQL.State.GithubClientStoreAccessor(global::Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<global::StrawberryShake.IOperationStore>(global::Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<ClientServiceProvider>(sp)), global::Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<global::StrawberryShake.IEntityStore>(global::Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<ClientServiceProvider>(sp)), global::Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<global::StrawberryShake.IEntityIdSerializer>(global::Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<ClientServiceProvider>(sp)), global::Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<global::System.Collections.Generic.IEnumerable<global::StrawberryShake.IOperationRequestFactory>>(global::Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<ClientServiceProvider>(sp)), global::Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<global::System.Collections.Generic.IEnumerable<global::StrawberryShake.IOperationResultDataFactory>>(global::Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<ClientServiceProvider>(sp))));
-            global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddSingleton(services, sp => global::Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<global::RepositoryAnalysis.Internal.GraphQL.GetRepoQuery>(global::Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<ClientServiceProvider>(sp)));
             global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddSingleton(services, sp => global::Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<global::RepositoryAnalysis.Internal.GraphQL.GetAgeQuery>(global::Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<ClientServiceProvider>(sp)));
             global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddSingleton(services, sp => global::Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<global::RepositoryAnalysis.Internal.GraphQL.GetFileQuery>(global::Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<ClientServiceProvider>(sp)));
+            global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddSingleton(services, sp => global::Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<global::RepositoryAnalysis.Internal.GraphQL.GetRepoQuery>(global::Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<ClientServiceProvider>(sp)));
             global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddSingleton(services, sp => global::Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<global::RepositoryAnalysis.Internal.GraphQL.GithubClient>(global::Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<ClientServiceProvider>(sp)));
             global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddSingleton(services, sp => global::Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<global::RepositoryAnalysis.Internal.GraphQL.IGithubClient>(global::Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<ClientServiceProvider>(sp)));
             return new global::StrawberryShake.ClientBuilder<global::RepositoryAnalysis.Internal.GraphQL.State.GithubClientStoreAccessor>("GithubClient", services, serviceCollection);
@@ -32,6 +32,12 @@ namespace Microsoft.Extensions.DependencyInjection
                 var clientFactory = global::Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<global::System.Net.Http.IHttpClientFactory>(parentServices);
                 return new global::StrawberryShake.Transport.Http.HttpConnection(() => clientFactory.CreateClient("GithubClient"));
             });
+            global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddSingleton<global::StrawberryShake.IEntityMapper<global::RepositoryAnalysis.Internal.GraphQL.State.RepositoryEntity, global::RepositoryAnalysis.Internal.GraphQL.GetAge_Repository_Repository>, global::RepositoryAnalysis.Internal.GraphQL.State.GetAge_Repository_RepositoryFromRepositoryEntityMapper>(services);
+            global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddSingleton<global::StrawberryShake.IEntityMapper<global::RepositoryAnalysis.Internal.GraphQL.State.RepositoryEntity, global::RepositoryAnalysis.Internal.GraphQL.GetFile_Repository_Repository>, global::RepositoryAnalysis.Internal.GraphQL.State.GetFile_Repository_RepositoryFromRepositoryEntityMapper>(services);
+            global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddSingleton<global::StrawberryShake.IEntityMapper<global::RepositoryAnalysis.Internal.GraphQL.State.BlobEntity, global::RepositoryAnalysis.Internal.GraphQL.GetFile_Repository_File_Blob>, global::RepositoryAnalysis.Internal.GraphQL.State.GetFile_Repository_File_BlobFromBlobEntityMapper>(services);
+            global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddSingleton<global::StrawberryShake.IEntityMapper<global::RepositoryAnalysis.Internal.GraphQL.State.CommitEntity, global::RepositoryAnalysis.Internal.GraphQL.GetFile_Repository_File_Commit>, global::RepositoryAnalysis.Internal.GraphQL.State.GetFile_Repository_File_CommitFromCommitEntityMapper>(services);
+            global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddSingleton<global::StrawberryShake.IEntityMapper<global::RepositoryAnalysis.Internal.GraphQL.State.TagEntity, global::RepositoryAnalysis.Internal.GraphQL.GetFile_Repository_File_Tag>, global::RepositoryAnalysis.Internal.GraphQL.State.GetFile_Repository_File_TagFromTagEntityMapper>(services);
+            global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddSingleton<global::StrawberryShake.IEntityMapper<global::RepositoryAnalysis.Internal.GraphQL.State.TreeEntity, global::RepositoryAnalysis.Internal.GraphQL.GetFile_Repository_File_Tree>, global::RepositoryAnalysis.Internal.GraphQL.State.GetFile_Repository_File_TreeFromTreeEntityMapper>(services);
             global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddSingleton<global::StrawberryShake.IEntityMapper<global::RepositoryAnalysis.Internal.GraphQL.State.RepositoryEntity, global::RepositoryAnalysis.Internal.GraphQL.GetRepo_Repository_Repository>, global::RepositoryAnalysis.Internal.GraphQL.State.GetRepo_Repository_RepositoryFromRepositoryEntityMapper>(services);
             global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddSingleton<global::StrawberryShake.IEntityMapper<global::RepositoryAnalysis.Internal.GraphQL.State.CodeOfConductEntity, global::RepositoryAnalysis.Internal.GraphQL.GetRepo_Repository_CodeOfConduct_CodeOfConduct>, global::RepositoryAnalysis.Internal.GraphQL.State.GetRepo_Repository_CodeOfConduct_CodeOfConductFromCodeOfConductEntityMapper>(services);
             global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddSingleton<global::StrawberryShake.IEntityMapper<global::RepositoryAnalysis.Internal.GraphQL.State.RefEntity, global::RepositoryAnalysis.Internal.GraphQL.GetRepo_Repository_DefaultBranchRef_Ref>, global::RepositoryAnalysis.Internal.GraphQL.State.GetRepo_Repository_DefaultBranchRef_RefFromRefEntityMapper>(services);
@@ -43,14 +49,9 @@ namespace Microsoft.Extensions.DependencyInjection
             global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddSingleton<global::StrawberryShake.IEntityMapper<global::RepositoryAnalysis.Internal.GraphQL.State.TreeEntity, global::RepositoryAnalysis.Internal.GraphQL.GetRepo_Repository_DefaultBranchRef_Target_Tree>, global::RepositoryAnalysis.Internal.GraphQL.State.GetRepo_Repository_DefaultBranchRef_Target_TreeFromTreeEntityMapper>(services);
             global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddSingleton<global::StrawberryShake.IEntityMapper<global::RepositoryAnalysis.Internal.GraphQL.State.BranchProtectionRuleEntity, global::RepositoryAnalysis.Internal.GraphQL.GetRepo_Repository_DefaultBranchRef_BranchProtectionRule_BranchProtectionRule>, global::RepositoryAnalysis.Internal.GraphQL.State.GetRepo_Repository_DefaultBranchRef_BranchProtectionRule_BranchProtectionRuleFromBranchProtectionRuleEntityMapper>(services);
             global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddSingleton<global::StrawberryShake.IEntityMapper<global::RepositoryAnalysis.Internal.GraphQL.State.PullRequestEntity, global::RepositoryAnalysis.Internal.GraphQL.GetRepo_Repository_PullRequests_Nodes_PullRequest>, global::RepositoryAnalysis.Internal.GraphQL.State.GetRepo_Repository_PullRequests_Nodes_PullRequestFromPullRequestEntityMapper>(services);
+            global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddSingleton<global::StrawberryShake.IEntityMapper<global::RepositoryAnalysis.Internal.GraphQL.State.DiscussionEntity, global::RepositoryAnalysis.Internal.GraphQL.GetRepo_Repository_Discussions_Edges_Node_Discussion>, global::RepositoryAnalysis.Internal.GraphQL.State.GetRepo_Repository_Discussions_Edges_Node_DiscussionFromDiscussionEntityMapper>(services);
             global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddSingleton<global::StrawberryShake.IEntityMapper<global::RepositoryAnalysis.Internal.GraphQL.State.ReleaseEntity, global::RepositoryAnalysis.Internal.GraphQL.GetRepo_Repository_Releases_Edges_Node_Release>, global::RepositoryAnalysis.Internal.GraphQL.State.GetRepo_Repository_Releases_Edges_Node_ReleaseFromReleaseEntityMapper>(services);
             global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddSingleton<global::StrawberryShake.IEntityMapper<global::RepositoryAnalysis.Internal.GraphQL.State.IssueEntity, global::RepositoryAnalysis.Internal.GraphQL.GetRepo_Repository_Issues_Edges_Node_Issue>, global::RepositoryAnalysis.Internal.GraphQL.State.GetRepo_Repository_Issues_Edges_Node_IssueFromIssueEntityMapper>(services);
-            global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddSingleton<global::StrawberryShake.IEntityMapper<global::RepositoryAnalysis.Internal.GraphQL.State.RepositoryEntity, global::RepositoryAnalysis.Internal.GraphQL.GetAge_Repository_Repository>, global::RepositoryAnalysis.Internal.GraphQL.State.GetAge_Repository_RepositoryFromRepositoryEntityMapper>(services);
-            global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddSingleton<global::StrawberryShake.IEntityMapper<global::RepositoryAnalysis.Internal.GraphQL.State.RepositoryEntity, global::RepositoryAnalysis.Internal.GraphQL.GetFile_Repository_Repository>, global::RepositoryAnalysis.Internal.GraphQL.State.GetFile_Repository_RepositoryFromRepositoryEntityMapper>(services);
-            global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddSingleton<global::StrawberryShake.IEntityMapper<global::RepositoryAnalysis.Internal.GraphQL.State.BlobEntity, global::RepositoryAnalysis.Internal.GraphQL.GetFile_Repository_File_Blob>, global::RepositoryAnalysis.Internal.GraphQL.State.GetFile_Repository_File_BlobFromBlobEntityMapper>(services);
-            global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddSingleton<global::StrawberryShake.IEntityMapper<global::RepositoryAnalysis.Internal.GraphQL.State.CommitEntity, global::RepositoryAnalysis.Internal.GraphQL.GetFile_Repository_File_Commit>, global::RepositoryAnalysis.Internal.GraphQL.State.GetFile_Repository_File_CommitFromCommitEntityMapper>(services);
-            global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddSingleton<global::StrawberryShake.IEntityMapper<global::RepositoryAnalysis.Internal.GraphQL.State.TagEntity, global::RepositoryAnalysis.Internal.GraphQL.GetFile_Repository_File_Tag>, global::RepositoryAnalysis.Internal.GraphQL.State.GetFile_Repository_File_TagFromTagEntityMapper>(services);
-            global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddSingleton<global::StrawberryShake.IEntityMapper<global::RepositoryAnalysis.Internal.GraphQL.State.TreeEntity, global::RepositoryAnalysis.Internal.GraphQL.GetFile_Repository_File_Tree>, global::RepositoryAnalysis.Internal.GraphQL.State.GetFile_Repository_File_TreeFromTreeEntityMapper>(services);
             global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddSingleton<global::StrawberryShake.Serialization.ISerializer, global::StrawberryShake.Serialization.StringSerializer>(services);
             global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddSingleton<global::StrawberryShake.Serialization.ISerializer, global::StrawberryShake.Serialization.BooleanSerializer>(services);
             global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddSingleton<global::StrawberryShake.Serialization.ISerializer, global::StrawberryShake.Serialization.ByteSerializer>(services);
@@ -69,13 +70,6 @@ namespace Microsoft.Extensions.DependencyInjection
             global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddSingleton<global::StrawberryShake.Serialization.ISerializer, global::StrawberryShake.Serialization.JsonSerializer>(services);
             global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddSingleton<global::StrawberryShake.Serialization.ISerializer>(services, new global::StrawberryShake.Serialization.UrlSerializer("URI"));
             global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddSingleton<global::StrawberryShake.Serialization.ISerializerResolver>(services, sp => new global::StrawberryShake.Serialization.SerializerResolver(global::System.Linq.Enumerable.Concat(global::Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<global::System.Collections.Generic.IEnumerable<global::StrawberryShake.Serialization.ISerializer>>(parentServices), global::Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<global::System.Collections.Generic.IEnumerable<global::StrawberryShake.Serialization.ISerializer>>(sp))));
-            global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddSingleton<global::StrawberryShake.IOperationResultDataFactory<global::RepositoryAnalysis.Internal.GraphQL.IGetRepoResult>, global::RepositoryAnalysis.Internal.GraphQL.State.GetRepoResultFactory>(services);
-            global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddSingleton<global::StrawberryShake.IOperationResultDataFactory>(services, sp => global::Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<global::StrawberryShake.IOperationResultDataFactory<global::RepositoryAnalysis.Internal.GraphQL.IGetRepoResult>>(sp));
-            global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddSingleton<global::StrawberryShake.IOperationRequestFactory>(services, sp => global::Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<global::RepositoryAnalysis.Internal.GraphQL.IGetRepoQuery>(sp));
-            global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddSingleton<global::StrawberryShake.IOperationResultBuilder<global::System.Text.Json.JsonDocument, global::RepositoryAnalysis.Internal.GraphQL.IGetRepoResult>, global::RepositoryAnalysis.Internal.GraphQL.State.GetRepoBuilder>(services);
-            global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddSingleton<global::StrawberryShake.IOperationExecutor<global::RepositoryAnalysis.Internal.GraphQL.IGetRepoResult>>(services, sp => new global::StrawberryShake.OperationExecutor<global::System.Text.Json.JsonDocument, global::RepositoryAnalysis.Internal.GraphQL.IGetRepoResult>(global::Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<global::StrawberryShake.Transport.Http.IHttpConnection>(sp), () => global::Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<global::StrawberryShake.IOperationResultBuilder<global::System.Text.Json.JsonDocument, global::RepositoryAnalysis.Internal.GraphQL.IGetRepoResult>>(sp), global::Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<global::StrawberryShake.IOperationStore>(sp), strategy));
-            global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddSingleton<global::RepositoryAnalysis.Internal.GraphQL.GetRepoQuery>(services);
-            global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddSingleton<global::RepositoryAnalysis.Internal.GraphQL.IGetRepoQuery>(services, sp => global::Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<global::RepositoryAnalysis.Internal.GraphQL.GetRepoQuery>(sp));
             global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddSingleton<global::StrawberryShake.IOperationResultDataFactory<global::RepositoryAnalysis.Internal.GraphQL.IGetAgeResult>, global::RepositoryAnalysis.Internal.GraphQL.State.GetAgeResultFactory>(services);
             global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddSingleton<global::StrawberryShake.IOperationResultDataFactory>(services, sp => global::Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<global::StrawberryShake.IOperationResultDataFactory<global::RepositoryAnalysis.Internal.GraphQL.IGetAgeResult>>(sp));
             global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddSingleton<global::StrawberryShake.IOperationRequestFactory>(services, sp => global::Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<global::RepositoryAnalysis.Internal.GraphQL.IGetAgeQuery>(sp));
@@ -90,6 +84,13 @@ namespace Microsoft.Extensions.DependencyInjection
             global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddSingleton<global::StrawberryShake.IOperationExecutor<global::RepositoryAnalysis.Internal.GraphQL.IGetFileResult>>(services, sp => new global::StrawberryShake.OperationExecutor<global::System.Text.Json.JsonDocument, global::RepositoryAnalysis.Internal.GraphQL.IGetFileResult>(global::Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<global::StrawberryShake.Transport.Http.IHttpConnection>(sp), () => global::Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<global::StrawberryShake.IOperationResultBuilder<global::System.Text.Json.JsonDocument, global::RepositoryAnalysis.Internal.GraphQL.IGetFileResult>>(sp), global::Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<global::StrawberryShake.IOperationStore>(sp), strategy));
             global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddSingleton<global::RepositoryAnalysis.Internal.GraphQL.GetFileQuery>(services);
             global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddSingleton<global::RepositoryAnalysis.Internal.GraphQL.IGetFileQuery>(services, sp => global::Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<global::RepositoryAnalysis.Internal.GraphQL.GetFileQuery>(sp));
+            global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddSingleton<global::StrawberryShake.IOperationResultDataFactory<global::RepositoryAnalysis.Internal.GraphQL.IGetRepoResult>, global::RepositoryAnalysis.Internal.GraphQL.State.GetRepoResultFactory>(services);
+            global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddSingleton<global::StrawberryShake.IOperationResultDataFactory>(services, sp => global::Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<global::StrawberryShake.IOperationResultDataFactory<global::RepositoryAnalysis.Internal.GraphQL.IGetRepoResult>>(sp));
+            global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddSingleton<global::StrawberryShake.IOperationRequestFactory>(services, sp => global::Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<global::RepositoryAnalysis.Internal.GraphQL.IGetRepoQuery>(sp));
+            global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddSingleton<global::StrawberryShake.IOperationResultBuilder<global::System.Text.Json.JsonDocument, global::RepositoryAnalysis.Internal.GraphQL.IGetRepoResult>, global::RepositoryAnalysis.Internal.GraphQL.State.GetRepoBuilder>(services);
+            global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddSingleton<global::StrawberryShake.IOperationExecutor<global::RepositoryAnalysis.Internal.GraphQL.IGetRepoResult>>(services, sp => new global::StrawberryShake.OperationExecutor<global::System.Text.Json.JsonDocument, global::RepositoryAnalysis.Internal.GraphQL.IGetRepoResult>(global::Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<global::StrawberryShake.Transport.Http.IHttpConnection>(sp), () => global::Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<global::StrawberryShake.IOperationResultBuilder<global::System.Text.Json.JsonDocument, global::RepositoryAnalysis.Internal.GraphQL.IGetRepoResult>>(sp), global::Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<global::StrawberryShake.IOperationStore>(sp), strategy));
+            global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddSingleton<global::RepositoryAnalysis.Internal.GraphQL.GetRepoQuery>(services);
+            global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddSingleton<global::RepositoryAnalysis.Internal.GraphQL.IGetRepoQuery>(services, sp => global::Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<global::RepositoryAnalysis.Internal.GraphQL.GetRepoQuery>(sp));
             global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddSingleton<global::StrawberryShake.IEntityIdSerializer, global::RepositoryAnalysis.Internal.GraphQL.State.GithubClientEntityIdFactory>(services);
             global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddSingleton<global::RepositoryAnalysis.Internal.GraphQL.GithubClient>(services);
             global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddSingleton<global::RepositoryAnalysis.Internal.GraphQL.IGithubClient>(services, sp => global::Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<global::RepositoryAnalysis.Internal.GraphQL.GithubClient>(sp));
@@ -122,6 +123,661 @@ namespace Microsoft.Extensions.DependencyInjection
 
 namespace RepositoryAnalysis.Internal.GraphQL
 {
+    /// <summary>
+    /// The query root of GitHub's GraphQL interface.
+    /// </summary>
+    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.15.2.0")]
+    public partial class GetAgeResult : global::System.IEquatable<GetAgeResult>, IGetAgeResult
+    {
+        public GetAgeResult(global::RepositoryAnalysis.Internal.GraphQL.IGetAge_Repository? repository)
+        {
+            Repository = repository;
+        }
+
+        /// <summary>
+        /// Lookup a given repository by the owner and repository name.
+        /// </summary>
+        public global::RepositoryAnalysis.Internal.GraphQL.IGetAge_Repository? Repository { get; }
+
+        public virtual global::System.Boolean Equals(GetAgeResult? other)
+        {
+            if (ReferenceEquals(null, other))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, other))
+            {
+                return true;
+            }
+
+            if (other.GetType() != GetType())
+            {
+                return false;
+            }
+
+            return (((Repository is null && other.Repository is null) || Repository != null && Repository.Equals(other.Repository)));
+        }
+
+        public override global::System.Boolean Equals(global::System.Object? obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj.GetType() != GetType())
+            {
+                return false;
+            }
+
+            return Equals((GetAgeResult)obj);
+        }
+
+        public override global::System.Int32 GetHashCode()
+        {
+            unchecked
+            {
+                int hash = 5;
+                if (Repository != null)
+                {
+                    hash ^= 397 * Repository.GetHashCode();
+                }
+
+                return hash;
+            }
+        }
+    }
+
+    /// <summary>
+    /// A repository contains the content for a project.
+    /// </summary>
+    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.15.2.0")]
+    public partial class GetAge_Repository_Repository : global::System.IEquatable<GetAge_Repository_Repository>, IGetAge_Repository_Repository
+    {
+        public GetAge_Repository_Repository(global::System.DateTimeOffset updatedAt, global::System.DateTimeOffset? pushedAt)
+        {
+            UpdatedAt = updatedAt;
+            PushedAt = pushedAt;
+        }
+
+        /// <summary>
+        /// Identifies the date and time when the object was last updated.
+        /// </summary>
+        public global::System.DateTimeOffset UpdatedAt { get; }
+
+        /// <summary>
+        /// Identifies when the repository was last pushed to.
+        /// </summary>
+        public global::System.DateTimeOffset? PushedAt { get; }
+
+        public virtual global::System.Boolean Equals(GetAge_Repository_Repository? other)
+        {
+            if (ReferenceEquals(null, other))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, other))
+            {
+                return true;
+            }
+
+            if (other.GetType() != GetType())
+            {
+                return false;
+            }
+
+            return (UpdatedAt.Equals(other.UpdatedAt)) && ((PushedAt is null && other.PushedAt is null) || PushedAt != null && PushedAt.Equals(other.PushedAt));
+        }
+
+        public override global::System.Boolean Equals(global::System.Object? obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj.GetType() != GetType())
+            {
+                return false;
+            }
+
+            return Equals((GetAge_Repository_Repository)obj);
+        }
+
+        public override global::System.Int32 GetHashCode()
+        {
+            unchecked
+            {
+                int hash = 5;
+                hash ^= 397 * UpdatedAt.GetHashCode();
+                if (PushedAt != null)
+                {
+                    hash ^= 397 * PushedAt.GetHashCode();
+                }
+
+                return hash;
+            }
+        }
+    }
+
+    /// <summary>
+    /// The query root of GitHub's GraphQL interface.
+    /// </summary>
+    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.15.2.0")]
+    public partial interface IGetAgeResult
+    {
+        /// <summary>
+        /// Lookup a given repository by the owner and repository name.
+        /// </summary>
+        public global::RepositoryAnalysis.Internal.GraphQL.IGetAge_Repository? Repository { get; }
+    }
+
+    /// <summary>
+    /// A repository contains the content for a project.
+    /// </summary>
+    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.15.2.0")]
+    public partial interface IGetAge_Repository
+    {
+        /// <summary>
+        /// Identifies the date and time when the object was last updated.
+        /// </summary>
+        public global::System.DateTimeOffset UpdatedAt { get; }
+
+        /// <summary>
+        /// Identifies when the repository was last pushed to.
+        /// </summary>
+        public global::System.DateTimeOffset? PushedAt { get; }
+    }
+
+    /// <summary>
+    /// A repository contains the content for a project.
+    /// </summary>
+    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.15.2.0")]
+    public partial interface IGetAge_Repository_Repository : IGetAge_Repository
+    {
+    }
+
+    /// <summary>
+    /// The query root of GitHub's GraphQL interface.
+    /// </summary>
+    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.15.2.0")]
+    public partial class GetFileResult : global::System.IEquatable<GetFileResult>, IGetFileResult
+    {
+        public GetFileResult(global::RepositoryAnalysis.Internal.GraphQL.IGetFile_Repository? repository)
+        {
+            Repository = repository;
+        }
+
+        /// <summary>
+        /// Lookup a given repository by the owner and repository name.
+        /// </summary>
+        public global::RepositoryAnalysis.Internal.GraphQL.IGetFile_Repository? Repository { get; }
+
+        public virtual global::System.Boolean Equals(GetFileResult? other)
+        {
+            if (ReferenceEquals(null, other))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, other))
+            {
+                return true;
+            }
+
+            if (other.GetType() != GetType())
+            {
+                return false;
+            }
+
+            return (((Repository is null && other.Repository is null) || Repository != null && Repository.Equals(other.Repository)));
+        }
+
+        public override global::System.Boolean Equals(global::System.Object? obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj.GetType() != GetType())
+            {
+                return false;
+            }
+
+            return Equals((GetFileResult)obj);
+        }
+
+        public override global::System.Int32 GetHashCode()
+        {
+            unchecked
+            {
+                int hash = 5;
+                if (Repository != null)
+                {
+                    hash ^= 397 * Repository.GetHashCode();
+                }
+
+                return hash;
+            }
+        }
+    }
+
+    /// <summary>
+    /// A repository contains the content for a project.
+    /// </summary>
+    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.15.2.0")]
+    public partial class GetFile_Repository_Repository : global::System.IEquatable<GetFile_Repository_Repository>, IGetFile_Repository_Repository
+    {
+        public GetFile_Repository_Repository(global::RepositoryAnalysis.Internal.GraphQL.IGetFile_Repository_File? file)
+        {
+            File = file;
+        }
+
+        /// <summary>
+        /// A Git object in the repository
+        /// </summary>
+        public global::RepositoryAnalysis.Internal.GraphQL.IGetFile_Repository_File? File { get; }
+
+        public virtual global::System.Boolean Equals(GetFile_Repository_Repository? other)
+        {
+            if (ReferenceEquals(null, other))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, other))
+            {
+                return true;
+            }
+
+            if (other.GetType() != GetType())
+            {
+                return false;
+            }
+
+            return (((File is null && other.File is null) || File != null && File.Equals(other.File)));
+        }
+
+        public override global::System.Boolean Equals(global::System.Object? obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj.GetType() != GetType())
+            {
+                return false;
+            }
+
+            return Equals((GetFile_Repository_Repository)obj);
+        }
+
+        public override global::System.Int32 GetHashCode()
+        {
+            unchecked
+            {
+                int hash = 5;
+                if (File != null)
+                {
+                    hash ^= 397 * File.GetHashCode();
+                }
+
+                return hash;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Represents a Git blob.
+    /// </summary>
+    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.15.2.0")]
+    public partial class GetFile_Repository_File_Blob : global::System.IEquatable<GetFile_Repository_File_Blob>, IGetFile_Repository_File_Blob
+    {
+        public GetFile_Repository_File_Blob(global::System.String? text)
+        {
+            Text = text;
+        }
+
+        /// <summary>
+        /// UTF8 text data or null if the Blob is binary
+        /// </summary>
+        public global::System.String? Text { get; }
+
+        public virtual global::System.Boolean Equals(GetFile_Repository_File_Blob? other)
+        {
+            if (ReferenceEquals(null, other))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, other))
+            {
+                return true;
+            }
+
+            if (other.GetType() != GetType())
+            {
+                return false;
+            }
+
+            return (((Text is null && other.Text is null) || Text != null && Text.Equals(other.Text)));
+        }
+
+        public override global::System.Boolean Equals(global::System.Object? obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj.GetType() != GetType())
+            {
+                return false;
+            }
+
+            return Equals((GetFile_Repository_File_Blob)obj);
+        }
+
+        public override global::System.Int32 GetHashCode()
+        {
+            unchecked
+            {
+                int hash = 5;
+                if (Text != null)
+                {
+                    hash ^= 397 * Text.GetHashCode();
+                }
+
+                return hash;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Represents a Git commit.
+    /// </summary>
+    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.15.2.0")]
+    public partial class GetFile_Repository_File_Commit : global::System.IEquatable<GetFile_Repository_File_Commit>, IGetFile_Repository_File_Commit
+    {
+        public GetFile_Repository_File_Commit()
+        {
+        }
+
+        public virtual global::System.Boolean Equals(GetFile_Repository_File_Commit? other)
+        {
+            if (ReferenceEquals(null, other))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, other))
+            {
+                return true;
+            }
+
+            if (other.GetType() != GetType())
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        public override global::System.Boolean Equals(global::System.Object? obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj.GetType() != GetType())
+            {
+                return false;
+            }
+
+            return Equals((GetFile_Repository_File_Commit)obj);
+        }
+
+        public override global::System.Int32 GetHashCode()
+        {
+            unchecked
+            {
+                int hash = 5;
+                return hash;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Represents a Git tag.
+    /// </summary>
+    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.15.2.0")]
+    public partial class GetFile_Repository_File_Tag : global::System.IEquatable<GetFile_Repository_File_Tag>, IGetFile_Repository_File_Tag
+    {
+        public GetFile_Repository_File_Tag()
+        {
+        }
+
+        public virtual global::System.Boolean Equals(GetFile_Repository_File_Tag? other)
+        {
+            if (ReferenceEquals(null, other))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, other))
+            {
+                return true;
+            }
+
+            if (other.GetType() != GetType())
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        public override global::System.Boolean Equals(global::System.Object? obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj.GetType() != GetType())
+            {
+                return false;
+            }
+
+            return Equals((GetFile_Repository_File_Tag)obj);
+        }
+
+        public override global::System.Int32 GetHashCode()
+        {
+            unchecked
+            {
+                int hash = 5;
+                return hash;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Represents a Git tree.
+    /// </summary>
+    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.15.2.0")]
+    public partial class GetFile_Repository_File_Tree : global::System.IEquatable<GetFile_Repository_File_Tree>, IGetFile_Repository_File_Tree
+    {
+        public GetFile_Repository_File_Tree()
+        {
+        }
+
+        public virtual global::System.Boolean Equals(GetFile_Repository_File_Tree? other)
+        {
+            if (ReferenceEquals(null, other))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, other))
+            {
+                return true;
+            }
+
+            if (other.GetType() != GetType())
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        public override global::System.Boolean Equals(global::System.Object? obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj.GetType() != GetType())
+            {
+                return false;
+            }
+
+            return Equals((GetFile_Repository_File_Tree)obj);
+        }
+
+        public override global::System.Int32 GetHashCode()
+        {
+            unchecked
+            {
+                int hash = 5;
+                return hash;
+            }
+        }
+    }
+
+    /// <summary>
+    /// The query root of GitHub's GraphQL interface.
+    /// </summary>
+    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.15.2.0")]
+    public partial interface IGetFileResult
+    {
+        /// <summary>
+        /// Lookup a given repository by the owner and repository name.
+        /// </summary>
+        public global::RepositoryAnalysis.Internal.GraphQL.IGetFile_Repository? Repository { get; }
+    }
+
+    /// <summary>
+    /// A repository contains the content for a project.
+    /// </summary>
+    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.15.2.0")]
+    public partial interface IGetFile_Repository
+    {
+        /// <summary>
+        /// A Git object in the repository
+        /// </summary>
+        public global::RepositoryAnalysis.Internal.GraphQL.IGetFile_Repository_File? File { get; }
+    }
+
+    /// <summary>
+    /// A repository contains the content for a project.
+    /// </summary>
+    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.15.2.0")]
+    public partial interface IGetFile_Repository_Repository : IGetFile_Repository
+    {
+    }
+
+    /// <summary>
+    /// Represents a Git object.
+    /// </summary>
+    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.15.2.0")]
+    public partial interface IGetFile_Repository_File
+    {
+    }
+
+    /// <summary>
+    /// Represents a Git blob.
+    /// </summary>
+    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.15.2.0")]
+    public partial interface IGetFile_Repository_File_Blob : IGetFile_Repository_File
+    {
+        /// <summary>
+        /// UTF8 text data or null if the Blob is binary
+        /// </summary>
+        public global::System.String? Text { get; }
+    }
+
+    /// <summary>
+    /// Represents a Git commit.
+    /// </summary>
+    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.15.2.0")]
+    public partial interface IGetFile_Repository_File_Commit : IGetFile_Repository_File
+    {
+    }
+
+    /// <summary>
+    /// Represents a Git tag.
+    /// </summary>
+    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.15.2.0")]
+    public partial interface IGetFile_Repository_File_Tag : IGetFile_Repository_File
+    {
+    }
+
+    /// <summary>
+    /// Represents a Git tree.
+    /// </summary>
+    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.15.2.0")]
+    public partial interface IGetFile_Repository_File_Tree : IGetFile_Repository_File
+    {
+    }
+
     /// <summary>
     /// The query root of GitHub's GraphQL interface.
     /// </summary>
@@ -199,8 +855,9 @@ namespace RepositoryAnalysis.Internal.GraphQL
     [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.15.2.0")]
     public partial class GetRepo_Repository_Repository : global::System.IEquatable<GetRepo_Repository_Repository>, IGetRepo_Repository_Repository
     {
-        public GetRepo_Repository_Repository(global::System.Boolean? isSecurityPolicyEnabled, global::System.Uri? securityPolicyUrl, global::System.Boolean hasVulnerabilityAlertsEnabled, global::RepositoryAnalysis.Internal.GraphQL.IGetRepo_Repository_VulnerabilityAlerts? vulnerabilityAlerts, global::RepositoryAnalysis.Internal.GraphQL.IGetRepo_Repository_Releases releases, global::System.Int32? diskUsage, global::System.DateTimeOffset updatedAt, global::System.DateTimeOffset? pushedAt, global::RepositoryAnalysis.Internal.GraphQL.IGetRepo_Repository_RepositoryTopics repositoryTopics, global::RepositoryAnalysis.Internal.GraphQL.IGetRepo_Repository_CodeOfConduct? codeOfConduct, global::RepositoryAnalysis.Internal.GraphQL.IGetRepo_Repository_Codeowners? codeowners, global::RepositoryAnalysis.Internal.GraphQL.IGetRepo_Repository_DefaultBranchRef? defaultBranchRef, global::System.String? description, global::System.Boolean hasDiscussionsEnabled, global::System.Boolean hasIssuesEnabled, global::System.Boolean isArchived, global::System.Boolean isEmpty, global::System.Boolean isLocked, global::System.Collections.Generic.IReadOnlyList<global::RepositoryAnalysis.Internal.GraphQL.IGetRepo_Repository_IssueTemplates>? issueTemplates, global::RepositoryAnalysis.Internal.GraphQL.IGetRepo_Repository_LicenseInfo? licenseInfo, global::System.Uri openGraphImageUrl, global::RepositoryAnalysis.Internal.GraphQL.IGetRepo_Repository_PrimaryLanguage? primaryLanguage, global::System.Collections.Generic.IReadOnlyList<global::RepositoryAnalysis.Internal.GraphQL.IGetRepo_Repository_PullRequestTemplates>? pullRequestTemplates, global::System.Uri url, global::RepositoryAnalysis.Internal.GraphQL.IGetRepo_Repository_PullRequests pullRequests, global::RepositoryAnalysis.Internal.GraphQL.IGetRepo_Repository_Issues issues)
+        public GetRepo_Repository_Repository(global::RepositoryAnalysis.Internal.GraphQL.IGetRepo_Repository_Discussions discussions, global::System.Boolean? isSecurityPolicyEnabled, global::System.Uri? securityPolicyUrl, global::System.Boolean hasVulnerabilityAlertsEnabled, global::RepositoryAnalysis.Internal.GraphQL.IGetRepo_Repository_VulnerabilityAlerts? vulnerabilityAlerts, global::RepositoryAnalysis.Internal.GraphQL.IGetRepo_Repository_Releases releases, global::System.Int32? diskUsage, global::System.DateTimeOffset updatedAt, global::System.DateTimeOffset? pushedAt, global::RepositoryAnalysis.Internal.GraphQL.IGetRepo_Repository_RepositoryTopics repositoryTopics, global::RepositoryAnalysis.Internal.GraphQL.IGetRepo_Repository_CodeOfConduct? codeOfConduct, global::RepositoryAnalysis.Internal.GraphQL.IGetRepo_Repository_Codeowners? codeowners, global::RepositoryAnalysis.Internal.GraphQL.IGetRepo_Repository_DefaultBranchRef? defaultBranchRef, global::System.String? description, global::System.Boolean hasDiscussionsEnabled, global::System.Boolean hasIssuesEnabled, global::System.Boolean isArchived, global::System.Boolean isEmpty, global::System.Boolean isLocked, global::System.Collections.Generic.IReadOnlyList<global::RepositoryAnalysis.Internal.GraphQL.IGetRepo_Repository_IssueTemplates>? issueTemplates, global::RepositoryAnalysis.Internal.GraphQL.IGetRepo_Repository_LicenseInfo? licenseInfo, global::System.Uri openGraphImageUrl, global::RepositoryAnalysis.Internal.GraphQL.IGetRepo_Repository_PrimaryLanguage? primaryLanguage, global::System.Collections.Generic.IReadOnlyList<global::RepositoryAnalysis.Internal.GraphQL.IGetRepo_Repository_PullRequestTemplates>? pullRequestTemplates, global::System.Uri url, global::RepositoryAnalysis.Internal.GraphQL.IGetRepo_Repository_PullRequests pullRequests, global::RepositoryAnalysis.Internal.GraphQL.IGetRepo_Repository_Issues issues)
         {
+            Discussions = discussions;
             IsSecurityPolicyEnabled = isSecurityPolicyEnabled;
             SecurityPolicyUrl = securityPolicyUrl;
             HasVulnerabilityAlertsEnabled = hasVulnerabilityAlertsEnabled;
@@ -228,6 +885,11 @@ namespace RepositoryAnalysis.Internal.GraphQL
             PullRequests = pullRequests;
             Issues = issues;
         }
+
+        /// <summary>
+        /// A list of discussions that have been opened in the repository.
+        /// </summary>
+        public global::RepositoryAnalysis.Internal.GraphQL.IGetRepo_Repository_Discussions Discussions { get; }
 
         /// <summary>
         /// Returns true if this repository has a security policy
@@ -376,7 +1038,7 @@ namespace RepositoryAnalysis.Internal.GraphQL
                 return false;
             }
 
-            return (IsSecurityPolicyEnabled == other.IsSecurityPolicyEnabled) && ((SecurityPolicyUrl is null && other.SecurityPolicyUrl is null) || SecurityPolicyUrl != null && SecurityPolicyUrl.Equals(other.SecurityPolicyUrl)) && HasVulnerabilityAlertsEnabled == other.HasVulnerabilityAlertsEnabled && ((VulnerabilityAlerts is null && other.VulnerabilityAlerts is null) || VulnerabilityAlerts != null && VulnerabilityAlerts.Equals(other.VulnerabilityAlerts)) && Releases.Equals(other.Releases) && DiskUsage == other.DiskUsage && UpdatedAt.Equals(other.UpdatedAt) && ((PushedAt is null && other.PushedAt is null) || PushedAt != null && PushedAt.Equals(other.PushedAt)) && RepositoryTopics.Equals(other.RepositoryTopics) && ((CodeOfConduct is null && other.CodeOfConduct is null) || CodeOfConduct != null && CodeOfConduct.Equals(other.CodeOfConduct)) && ((Codeowners is null && other.Codeowners is null) || Codeowners != null && Codeowners.Equals(other.Codeowners)) && ((DefaultBranchRef is null && other.DefaultBranchRef is null) || DefaultBranchRef != null && DefaultBranchRef.Equals(other.DefaultBranchRef)) && ((Description is null && other.Description is null) || Description != null && Description.Equals(other.Description)) && HasDiscussionsEnabled == other.HasDiscussionsEnabled && HasIssuesEnabled == other.HasIssuesEnabled && IsArchived == other.IsArchived && IsEmpty == other.IsEmpty && IsLocked == other.IsLocked && global::StrawberryShake.Helper.ComparisonHelper.SequenceEqual(IssueTemplates, other.IssueTemplates) && ((LicenseInfo is null && other.LicenseInfo is null) || LicenseInfo != null && LicenseInfo.Equals(other.LicenseInfo)) && OpenGraphImageUrl.Equals(other.OpenGraphImageUrl) && ((PrimaryLanguage is null && other.PrimaryLanguage is null) || PrimaryLanguage != null && PrimaryLanguage.Equals(other.PrimaryLanguage)) && global::StrawberryShake.Helper.ComparisonHelper.SequenceEqual(PullRequestTemplates, other.PullRequestTemplates) && Url.Equals(other.Url) && PullRequests.Equals(other.PullRequests) && Issues.Equals(other.Issues);
+            return (Discussions.Equals(other.Discussions)) && IsSecurityPolicyEnabled == other.IsSecurityPolicyEnabled && ((SecurityPolicyUrl is null && other.SecurityPolicyUrl is null) || SecurityPolicyUrl != null && SecurityPolicyUrl.Equals(other.SecurityPolicyUrl)) && HasVulnerabilityAlertsEnabled == other.HasVulnerabilityAlertsEnabled && ((VulnerabilityAlerts is null && other.VulnerabilityAlerts is null) || VulnerabilityAlerts != null && VulnerabilityAlerts.Equals(other.VulnerabilityAlerts)) && Releases.Equals(other.Releases) && DiskUsage == other.DiskUsage && UpdatedAt.Equals(other.UpdatedAt) && ((PushedAt is null && other.PushedAt is null) || PushedAt != null && PushedAt.Equals(other.PushedAt)) && RepositoryTopics.Equals(other.RepositoryTopics) && ((CodeOfConduct is null && other.CodeOfConduct is null) || CodeOfConduct != null && CodeOfConduct.Equals(other.CodeOfConduct)) && ((Codeowners is null && other.Codeowners is null) || Codeowners != null && Codeowners.Equals(other.Codeowners)) && ((DefaultBranchRef is null && other.DefaultBranchRef is null) || DefaultBranchRef != null && DefaultBranchRef.Equals(other.DefaultBranchRef)) && ((Description is null && other.Description is null) || Description != null && Description.Equals(other.Description)) && HasDiscussionsEnabled == other.HasDiscussionsEnabled && HasIssuesEnabled == other.HasIssuesEnabled && IsArchived == other.IsArchived && IsEmpty == other.IsEmpty && IsLocked == other.IsLocked && global::StrawberryShake.Helper.ComparisonHelper.SequenceEqual(IssueTemplates, other.IssueTemplates) && ((LicenseInfo is null && other.LicenseInfo is null) || LicenseInfo != null && LicenseInfo.Equals(other.LicenseInfo)) && OpenGraphImageUrl.Equals(other.OpenGraphImageUrl) && ((PrimaryLanguage is null && other.PrimaryLanguage is null) || PrimaryLanguage != null && PrimaryLanguage.Equals(other.PrimaryLanguage)) && global::StrawberryShake.Helper.ComparisonHelper.SequenceEqual(PullRequestTemplates, other.PullRequestTemplates) && Url.Equals(other.Url) && PullRequests.Equals(other.PullRequests) && Issues.Equals(other.Issues);
         }
 
         public override global::System.Boolean Equals(global::System.Object? obj)
@@ -404,6 +1066,7 @@ namespace RepositoryAnalysis.Internal.GraphQL
             unchecked
             {
                 int hash = 5;
+                hash ^= 397 * Discussions.GetHashCode();
                 if (IsSecurityPolicyEnabled != null)
                 {
                     hash ^= 397 * IsSecurityPolicyEnabled.GetHashCode();
@@ -488,6 +1151,90 @@ namespace RepositoryAnalysis.Internal.GraphQL
                 hash ^= 397 * Url.GetHashCode();
                 hash ^= 397 * PullRequests.GetHashCode();
                 hash ^= 397 * Issues.GetHashCode();
+                return hash;
+            }
+        }
+    }
+
+    /// <summary>
+    /// The connection type for Discussion.
+    /// </summary>
+    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.15.2.0")]
+    public partial class GetRepo_Repository_Discussions_DiscussionConnection : global::System.IEquatable<GetRepo_Repository_Discussions_DiscussionConnection>, IGetRepo_Repository_Discussions_DiscussionConnection
+    {
+        public GetRepo_Repository_Discussions_DiscussionConnection(global::System.Collections.Generic.IReadOnlyList<global::RepositoryAnalysis.Internal.GraphQL.IGetRepo_Repository_Discussions_Edges?>? edges, global::System.Int32 totalCount)
+        {
+            Edges = edges;
+            TotalCount = totalCount;
+        }
+
+        /// <summary>
+        /// A list of edges.
+        /// </summary>
+        public global::System.Collections.Generic.IReadOnlyList<global::RepositoryAnalysis.Internal.GraphQL.IGetRepo_Repository_Discussions_Edges?>? Edges { get; }
+
+        /// <summary>
+        /// Identifies the total count of items in the connection.
+        /// </summary>
+        public global::System.Int32 TotalCount { get; }
+
+        public virtual global::System.Boolean Equals(GetRepo_Repository_Discussions_DiscussionConnection? other)
+        {
+            if (ReferenceEquals(null, other))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, other))
+            {
+                return true;
+            }
+
+            if (other.GetType() != GetType())
+            {
+                return false;
+            }
+
+            return (global::StrawberryShake.Helper.ComparisonHelper.SequenceEqual(Edges, other.Edges)) && TotalCount == other.TotalCount;
+        }
+
+        public override global::System.Boolean Equals(global::System.Object? obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj.GetType() != GetType())
+            {
+                return false;
+            }
+
+            return Equals((GetRepo_Repository_Discussions_DiscussionConnection)obj);
+        }
+
+        public override global::System.Int32 GetHashCode()
+        {
+            unchecked
+            {
+                int hash = 5;
+                if (Edges != null)
+                {
+                    foreach (var Edges_elm in Edges)
+                    {
+                        if (Edges_elm != null)
+                        {
+                            hash ^= 397 * Edges_elm.GetHashCode();
+                        }
+                    }
+                }
+
+                hash ^= 397 * TotalCount.GetHashCode();
                 return hash;
             }
         }
@@ -1401,6 +2148,77 @@ namespace RepositoryAnalysis.Internal.GraphQL
     /// An edge in a connection.
     /// </summary>
     [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.15.2.0")]
+    public partial class GetRepo_Repository_Discussions_Edges_DiscussionEdge : global::System.IEquatable<GetRepo_Repository_Discussions_Edges_DiscussionEdge>, IGetRepo_Repository_Discussions_Edges_DiscussionEdge
+    {
+        public GetRepo_Repository_Discussions_Edges_DiscussionEdge(global::RepositoryAnalysis.Internal.GraphQL.IGetRepo_Repository_Discussions_Edges_Node? node)
+        {
+            Node = node;
+        }
+
+        /// <summary>
+        /// The item at the end of the edge.
+        /// </summary>
+        public global::RepositoryAnalysis.Internal.GraphQL.IGetRepo_Repository_Discussions_Edges_Node? Node { get; }
+
+        public virtual global::System.Boolean Equals(GetRepo_Repository_Discussions_Edges_DiscussionEdge? other)
+        {
+            if (ReferenceEquals(null, other))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, other))
+            {
+                return true;
+            }
+
+            if (other.GetType() != GetType())
+            {
+                return false;
+            }
+
+            return (((Node is null && other.Node is null) || Node != null && Node.Equals(other.Node)));
+        }
+
+        public override global::System.Boolean Equals(global::System.Object? obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj.GetType() != GetType())
+            {
+                return false;
+            }
+
+            return Equals((GetRepo_Repository_Discussions_Edges_DiscussionEdge)obj);
+        }
+
+        public override global::System.Int32 GetHashCode()
+        {
+            unchecked
+            {
+                int hash = 5;
+                if (Node != null)
+                {
+                    hash ^= 397 * Node.GetHashCode();
+                }
+
+                return hash;
+            }
+        }
+    }
+
+    /// <summary>
+    /// An edge in a connection.
+    /// </summary>
+    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.15.2.0")]
     public partial class GetRepo_Repository_Releases_Edges_ReleaseEdge : global::System.IEquatable<GetRepo_Repository_Releases_Edges_ReleaseEdge>, IGetRepo_Repository_Releases_Edges_ReleaseEdge
     {
         public GetRepo_Repository_Releases_Edges_ReleaseEdge(global::RepositoryAnalysis.Internal.GraphQL.IGetRepo_Repository_Releases_Edges_Node? node)
@@ -2051,6 +2869,84 @@ namespace RepositoryAnalysis.Internal.GraphQL
     }
 
     /// <summary>
+    /// A discussion in a repository.
+    /// </summary>
+    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.15.2.0")]
+    public partial class GetRepo_Repository_Discussions_Edges_Node_Discussion : global::System.IEquatable<GetRepo_Repository_Discussions_Edges_Node_Discussion>, IGetRepo_Repository_Discussions_Edges_Node_Discussion
+    {
+        public GetRepo_Repository_Discussions_Edges_Node_Discussion(global::System.Int32 number, global::System.DateTimeOffset? answerChosenAt)
+        {
+            Number = number;
+            AnswerChosenAt = answerChosenAt;
+        }
+
+        /// <summary>
+        /// The number identifying this discussion within the repository.
+        /// </summary>
+        public global::System.Int32 Number { get; }
+
+        /// <summary>
+        /// The time when a user chose this discussion's answer, if answered.
+        /// </summary>
+        public global::System.DateTimeOffset? AnswerChosenAt { get; }
+
+        public virtual global::System.Boolean Equals(GetRepo_Repository_Discussions_Edges_Node_Discussion? other)
+        {
+            if (ReferenceEquals(null, other))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, other))
+            {
+                return true;
+            }
+
+            if (other.GetType() != GetType())
+            {
+                return false;
+            }
+
+            return (Number == other.Number) && ((AnswerChosenAt is null && other.AnswerChosenAt is null) || AnswerChosenAt != null && AnswerChosenAt.Equals(other.AnswerChosenAt));
+        }
+
+        public override global::System.Boolean Equals(global::System.Object? obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj.GetType() != GetType())
+            {
+                return false;
+            }
+
+            return Equals((GetRepo_Repository_Discussions_Edges_Node_Discussion)obj);
+        }
+
+        public override global::System.Int32 GetHashCode()
+        {
+            unchecked
+            {
+                int hash = 5;
+                hash ^= 397 * Number.GetHashCode();
+                if (AnswerChosenAt != null)
+                {
+                    hash ^= 397 * AnswerChosenAt.GetHashCode();
+                }
+
+                return hash;
+            }
+        }
+    }
+
+    /// <summary>
     /// A release contains the content for a release.
     /// </summary>
     [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.15.2.0")]
@@ -2299,6 +3195,11 @@ namespace RepositoryAnalysis.Internal.GraphQL
     public partial interface IGetRepo_Repository
     {
         /// <summary>
+        /// A list of discussions that have been opened in the repository.
+        /// </summary>
+        public global::RepositoryAnalysis.Internal.GraphQL.IGetRepo_Repository_Discussions Discussions { get; }
+
+        /// <summary>
         /// Returns true if this repository has a security policy
         /// </summary>
         public global::System.Boolean? IsSecurityPolicyEnabled { get; }
@@ -2434,6 +3335,31 @@ namespace RepositoryAnalysis.Internal.GraphQL
     /// </summary>
     [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.15.2.0")]
     public partial interface IGetRepo_Repository_Repository : IGetRepo_Repository
+    {
+    }
+
+    /// <summary>
+    /// The connection type for Discussion.
+    /// </summary>
+    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.15.2.0")]
+    public partial interface IGetRepo_Repository_Discussions
+    {
+        /// <summary>
+        /// A list of edges.
+        /// </summary>
+        public global::System.Collections.Generic.IReadOnlyList<global::RepositoryAnalysis.Internal.GraphQL.IGetRepo_Repository_Discussions_Edges?>? Edges { get; }
+
+        /// <summary>
+        /// Identifies the total count of items in the connection.
+        /// </summary>
+        public global::System.Int32 TotalCount { get; }
+    }
+
+    /// <summary>
+    /// The connection type for Discussion.
+    /// </summary>
+    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.15.2.0")]
+    public partial interface IGetRepo_Repository_Discussions_DiscussionConnection : IGetRepo_Repository_Discussions
     {
     }
 
@@ -2711,6 +3637,26 @@ namespace RepositoryAnalysis.Internal.GraphQL
     /// An edge in a connection.
     /// </summary>
     [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.15.2.0")]
+    public partial interface IGetRepo_Repository_Discussions_Edges
+    {
+        /// <summary>
+        /// The item at the end of the edge.
+        /// </summary>
+        public global::RepositoryAnalysis.Internal.GraphQL.IGetRepo_Repository_Discussions_Edges_Node? Node { get; }
+    }
+
+    /// <summary>
+    /// An edge in a connection.
+    /// </summary>
+    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.15.2.0")]
+    public partial interface IGetRepo_Repository_Discussions_Edges_DiscussionEdge : IGetRepo_Repository_Discussions_Edges
+    {
+    }
+
+    /// <summary>
+    /// An edge in a connection.
+    /// </summary>
+    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.15.2.0")]
     public partial interface IGetRepo_Repository_Releases_Edges
     {
         /// <summary>
@@ -2882,6 +3828,31 @@ namespace RepositoryAnalysis.Internal.GraphQL
     }
 
     /// <summary>
+    /// A discussion in a repository.
+    /// </summary>
+    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.15.2.0")]
+    public partial interface IGetRepo_Repository_Discussions_Edges_Node
+    {
+        /// <summary>
+        /// The number identifying this discussion within the repository.
+        /// </summary>
+        public global::System.Int32 Number { get; }
+
+        /// <summary>
+        /// The time when a user chose this discussion's answer, if answered.
+        /// </summary>
+        public global::System.DateTimeOffset? AnswerChosenAt { get; }
+    }
+
+    /// <summary>
+    /// A discussion in a repository.
+    /// </summary>
+    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.15.2.0")]
+    public partial interface IGetRepo_Repository_Discussions_Edges_Node_Discussion : IGetRepo_Repository_Discussions_Edges_Node
+    {
+    }
+
+    /// <summary>
     /// A release contains the content for a release.
     /// </summary>
     [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.15.2.0")]
@@ -2954,1211 +3925,6 @@ namespace RepositoryAnalysis.Internal.GraphQL
     [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.15.2.0")]
     public partial interface IGetRepo_Repository_Issues_Edges_Node_Labels_LabelConnection : IGetRepo_Repository_Issues_Edges_Node_Labels
     {
-    }
-
-    /// <summary>
-    /// The query root of GitHub's GraphQL interface.
-    /// </summary>
-    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.15.2.0")]
-    public partial class GetAgeResult : global::System.IEquatable<GetAgeResult>, IGetAgeResult
-    {
-        public GetAgeResult(global::RepositoryAnalysis.Internal.GraphQL.IGetAge_Repository? repository)
-        {
-            Repository = repository;
-        }
-
-        /// <summary>
-        /// Lookup a given repository by the owner and repository name.
-        /// </summary>
-        public global::RepositoryAnalysis.Internal.GraphQL.IGetAge_Repository? Repository { get; }
-
-        public virtual global::System.Boolean Equals(GetAgeResult? other)
-        {
-            if (ReferenceEquals(null, other))
-            {
-                return false;
-            }
-
-            if (ReferenceEquals(this, other))
-            {
-                return true;
-            }
-
-            if (other.GetType() != GetType())
-            {
-                return false;
-            }
-
-            return (((Repository is null && other.Repository is null) || Repository != null && Repository.Equals(other.Repository)));
-        }
-
-        public override global::System.Boolean Equals(global::System.Object? obj)
-        {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-
-            if (obj.GetType() != GetType())
-            {
-                return false;
-            }
-
-            return Equals((GetAgeResult)obj);
-        }
-
-        public override global::System.Int32 GetHashCode()
-        {
-            unchecked
-            {
-                int hash = 5;
-                if (Repository != null)
-                {
-                    hash ^= 397 * Repository.GetHashCode();
-                }
-
-                return hash;
-            }
-        }
-    }
-
-    /// <summary>
-    /// A repository contains the content for a project.
-    /// </summary>
-    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.15.2.0")]
-    public partial class GetAge_Repository_Repository : global::System.IEquatable<GetAge_Repository_Repository>, IGetAge_Repository_Repository
-    {
-        public GetAge_Repository_Repository(global::System.DateTimeOffset updatedAt, global::System.DateTimeOffset? pushedAt)
-        {
-            UpdatedAt = updatedAt;
-            PushedAt = pushedAt;
-        }
-
-        /// <summary>
-        /// Identifies the date and time when the object was last updated.
-        /// </summary>
-        public global::System.DateTimeOffset UpdatedAt { get; }
-
-        /// <summary>
-        /// Identifies when the repository was last pushed to.
-        /// </summary>
-        public global::System.DateTimeOffset? PushedAt { get; }
-
-        public virtual global::System.Boolean Equals(GetAge_Repository_Repository? other)
-        {
-            if (ReferenceEquals(null, other))
-            {
-                return false;
-            }
-
-            if (ReferenceEquals(this, other))
-            {
-                return true;
-            }
-
-            if (other.GetType() != GetType())
-            {
-                return false;
-            }
-
-            return (UpdatedAt.Equals(other.UpdatedAt)) && ((PushedAt is null && other.PushedAt is null) || PushedAt != null && PushedAt.Equals(other.PushedAt));
-        }
-
-        public override global::System.Boolean Equals(global::System.Object? obj)
-        {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-
-            if (obj.GetType() != GetType())
-            {
-                return false;
-            }
-
-            return Equals((GetAge_Repository_Repository)obj);
-        }
-
-        public override global::System.Int32 GetHashCode()
-        {
-            unchecked
-            {
-                int hash = 5;
-                hash ^= 397 * UpdatedAt.GetHashCode();
-                if (PushedAt != null)
-                {
-                    hash ^= 397 * PushedAt.GetHashCode();
-                }
-
-                return hash;
-            }
-        }
-    }
-
-    /// <summary>
-    /// The query root of GitHub's GraphQL interface.
-    /// </summary>
-    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.15.2.0")]
-    public partial interface IGetAgeResult
-    {
-        /// <summary>
-        /// Lookup a given repository by the owner and repository name.
-        /// </summary>
-        public global::RepositoryAnalysis.Internal.GraphQL.IGetAge_Repository? Repository { get; }
-    }
-
-    /// <summary>
-    /// A repository contains the content for a project.
-    /// </summary>
-    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.15.2.0")]
-    public partial interface IGetAge_Repository
-    {
-        /// <summary>
-        /// Identifies the date and time when the object was last updated.
-        /// </summary>
-        public global::System.DateTimeOffset UpdatedAt { get; }
-
-        /// <summary>
-        /// Identifies when the repository was last pushed to.
-        /// </summary>
-        public global::System.DateTimeOffset? PushedAt { get; }
-    }
-
-    /// <summary>
-    /// A repository contains the content for a project.
-    /// </summary>
-    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.15.2.0")]
-    public partial interface IGetAge_Repository_Repository : IGetAge_Repository
-    {
-    }
-
-    /// <summary>
-    /// The query root of GitHub's GraphQL interface.
-    /// </summary>
-    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.15.2.0")]
-    public partial class GetFileResult : global::System.IEquatable<GetFileResult>, IGetFileResult
-    {
-        public GetFileResult(global::RepositoryAnalysis.Internal.GraphQL.IGetFile_Repository? repository)
-        {
-            Repository = repository;
-        }
-
-        /// <summary>
-        /// Lookup a given repository by the owner and repository name.
-        /// </summary>
-        public global::RepositoryAnalysis.Internal.GraphQL.IGetFile_Repository? Repository { get; }
-
-        public virtual global::System.Boolean Equals(GetFileResult? other)
-        {
-            if (ReferenceEquals(null, other))
-            {
-                return false;
-            }
-
-            if (ReferenceEquals(this, other))
-            {
-                return true;
-            }
-
-            if (other.GetType() != GetType())
-            {
-                return false;
-            }
-
-            return (((Repository is null && other.Repository is null) || Repository != null && Repository.Equals(other.Repository)));
-        }
-
-        public override global::System.Boolean Equals(global::System.Object? obj)
-        {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-
-            if (obj.GetType() != GetType())
-            {
-                return false;
-            }
-
-            return Equals((GetFileResult)obj);
-        }
-
-        public override global::System.Int32 GetHashCode()
-        {
-            unchecked
-            {
-                int hash = 5;
-                if (Repository != null)
-                {
-                    hash ^= 397 * Repository.GetHashCode();
-                }
-
-                return hash;
-            }
-        }
-    }
-
-    /// <summary>
-    /// A repository contains the content for a project.
-    /// </summary>
-    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.15.2.0")]
-    public partial class GetFile_Repository_Repository : global::System.IEquatable<GetFile_Repository_Repository>, IGetFile_Repository_Repository
-    {
-        public GetFile_Repository_Repository(global::RepositoryAnalysis.Internal.GraphQL.IGetFile_Repository_File? file)
-        {
-            File = file;
-        }
-
-        /// <summary>
-        /// A Git object in the repository
-        /// </summary>
-        public global::RepositoryAnalysis.Internal.GraphQL.IGetFile_Repository_File? File { get; }
-
-        public virtual global::System.Boolean Equals(GetFile_Repository_Repository? other)
-        {
-            if (ReferenceEquals(null, other))
-            {
-                return false;
-            }
-
-            if (ReferenceEquals(this, other))
-            {
-                return true;
-            }
-
-            if (other.GetType() != GetType())
-            {
-                return false;
-            }
-
-            return (((File is null && other.File is null) || File != null && File.Equals(other.File)));
-        }
-
-        public override global::System.Boolean Equals(global::System.Object? obj)
-        {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-
-            if (obj.GetType() != GetType())
-            {
-                return false;
-            }
-
-            return Equals((GetFile_Repository_Repository)obj);
-        }
-
-        public override global::System.Int32 GetHashCode()
-        {
-            unchecked
-            {
-                int hash = 5;
-                if (File != null)
-                {
-                    hash ^= 397 * File.GetHashCode();
-                }
-
-                return hash;
-            }
-        }
-    }
-
-    /// <summary>
-    /// Represents a Git blob.
-    /// </summary>
-    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.15.2.0")]
-    public partial class GetFile_Repository_File_Blob : global::System.IEquatable<GetFile_Repository_File_Blob>, IGetFile_Repository_File_Blob
-    {
-        public GetFile_Repository_File_Blob(global::System.String? text)
-        {
-            Text = text;
-        }
-
-        /// <summary>
-        /// UTF8 text data or null if the Blob is binary
-        /// </summary>
-        public global::System.String? Text { get; }
-
-        public virtual global::System.Boolean Equals(GetFile_Repository_File_Blob? other)
-        {
-            if (ReferenceEquals(null, other))
-            {
-                return false;
-            }
-
-            if (ReferenceEquals(this, other))
-            {
-                return true;
-            }
-
-            if (other.GetType() != GetType())
-            {
-                return false;
-            }
-
-            return (((Text is null && other.Text is null) || Text != null && Text.Equals(other.Text)));
-        }
-
-        public override global::System.Boolean Equals(global::System.Object? obj)
-        {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-
-            if (obj.GetType() != GetType())
-            {
-                return false;
-            }
-
-            return Equals((GetFile_Repository_File_Blob)obj);
-        }
-
-        public override global::System.Int32 GetHashCode()
-        {
-            unchecked
-            {
-                int hash = 5;
-                if (Text != null)
-                {
-                    hash ^= 397 * Text.GetHashCode();
-                }
-
-                return hash;
-            }
-        }
-    }
-
-    /// <summary>
-    /// Represents a Git commit.
-    /// </summary>
-    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.15.2.0")]
-    public partial class GetFile_Repository_File_Commit : global::System.IEquatable<GetFile_Repository_File_Commit>, IGetFile_Repository_File_Commit
-    {
-        public GetFile_Repository_File_Commit()
-        {
-        }
-
-        public virtual global::System.Boolean Equals(GetFile_Repository_File_Commit? other)
-        {
-            if (ReferenceEquals(null, other))
-            {
-                return false;
-            }
-
-            if (ReferenceEquals(this, other))
-            {
-                return true;
-            }
-
-            if (other.GetType() != GetType())
-            {
-                return false;
-            }
-
-            return true;
-        }
-
-        public override global::System.Boolean Equals(global::System.Object? obj)
-        {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-
-            if (obj.GetType() != GetType())
-            {
-                return false;
-            }
-
-            return Equals((GetFile_Repository_File_Commit)obj);
-        }
-
-        public override global::System.Int32 GetHashCode()
-        {
-            unchecked
-            {
-                int hash = 5;
-                return hash;
-            }
-        }
-    }
-
-    /// <summary>
-    /// Represents a Git tag.
-    /// </summary>
-    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.15.2.0")]
-    public partial class GetFile_Repository_File_Tag : global::System.IEquatable<GetFile_Repository_File_Tag>, IGetFile_Repository_File_Tag
-    {
-        public GetFile_Repository_File_Tag()
-        {
-        }
-
-        public virtual global::System.Boolean Equals(GetFile_Repository_File_Tag? other)
-        {
-            if (ReferenceEquals(null, other))
-            {
-                return false;
-            }
-
-            if (ReferenceEquals(this, other))
-            {
-                return true;
-            }
-
-            if (other.GetType() != GetType())
-            {
-                return false;
-            }
-
-            return true;
-        }
-
-        public override global::System.Boolean Equals(global::System.Object? obj)
-        {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-
-            if (obj.GetType() != GetType())
-            {
-                return false;
-            }
-
-            return Equals((GetFile_Repository_File_Tag)obj);
-        }
-
-        public override global::System.Int32 GetHashCode()
-        {
-            unchecked
-            {
-                int hash = 5;
-                return hash;
-            }
-        }
-    }
-
-    /// <summary>
-    /// Represents a Git tree.
-    /// </summary>
-    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.15.2.0")]
-    public partial class GetFile_Repository_File_Tree : global::System.IEquatable<GetFile_Repository_File_Tree>, IGetFile_Repository_File_Tree
-    {
-        public GetFile_Repository_File_Tree()
-        {
-        }
-
-        public virtual global::System.Boolean Equals(GetFile_Repository_File_Tree? other)
-        {
-            if (ReferenceEquals(null, other))
-            {
-                return false;
-            }
-
-            if (ReferenceEquals(this, other))
-            {
-                return true;
-            }
-
-            if (other.GetType() != GetType())
-            {
-                return false;
-            }
-
-            return true;
-        }
-
-        public override global::System.Boolean Equals(global::System.Object? obj)
-        {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-
-            if (obj.GetType() != GetType())
-            {
-                return false;
-            }
-
-            return Equals((GetFile_Repository_File_Tree)obj);
-        }
-
-        public override global::System.Int32 GetHashCode()
-        {
-            unchecked
-            {
-                int hash = 5;
-                return hash;
-            }
-        }
-    }
-
-    /// <summary>
-    /// The query root of GitHub's GraphQL interface.
-    /// </summary>
-    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.15.2.0")]
-    public partial interface IGetFileResult
-    {
-        /// <summary>
-        /// Lookup a given repository by the owner and repository name.
-        /// </summary>
-        public global::RepositoryAnalysis.Internal.GraphQL.IGetFile_Repository? Repository { get; }
-    }
-
-    /// <summary>
-    /// A repository contains the content for a project.
-    /// </summary>
-    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.15.2.0")]
-    public partial interface IGetFile_Repository
-    {
-        /// <summary>
-        /// A Git object in the repository
-        /// </summary>
-        public global::RepositoryAnalysis.Internal.GraphQL.IGetFile_Repository_File? File { get; }
-    }
-
-    /// <summary>
-    /// A repository contains the content for a project.
-    /// </summary>
-    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.15.2.0")]
-    public partial interface IGetFile_Repository_Repository : IGetFile_Repository
-    {
-    }
-
-    /// <summary>
-    /// Represents a Git object.
-    /// </summary>
-    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.15.2.0")]
-    public partial interface IGetFile_Repository_File
-    {
-    }
-
-    /// <summary>
-    /// Represents a Git blob.
-    /// </summary>
-    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.15.2.0")]
-    public partial interface IGetFile_Repository_File_Blob : IGetFile_Repository_File
-    {
-        /// <summary>
-        /// UTF8 text data or null if the Blob is binary
-        /// </summary>
-        public global::System.String? Text { get; }
-    }
-
-    /// <summary>
-    /// Represents a Git commit.
-    /// </summary>
-    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.15.2.0")]
-    public partial interface IGetFile_Repository_File_Commit : IGetFile_Repository_File
-    {
-    }
-
-    /// <summary>
-    /// Represents a Git tag.
-    /// </summary>
-    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.15.2.0")]
-    public partial interface IGetFile_Repository_File_Tag : IGetFile_Repository_File
-    {
-    }
-
-    /// <summary>
-    /// Represents a Git tree.
-    /// </summary>
-    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.15.2.0")]
-    public partial interface IGetFile_Repository_File_Tree : IGetFile_Repository_File
-    {
-    }
-
-    /// <summary>
-    /// Represents the operation service of the GetRepo GraphQL operation
-    /// <code>
-    /// query GetRepo($name: String!, $owner: String!) {
-    ///   repository(name: $name, owner: $owner) {
-    ///     __typename
-    ///     isSecurityPolicyEnabled
-    ///     securityPolicyUrl
-    ///     hasVulnerabilityAlertsEnabled
-    ///     vulnerabilityAlerts {
-    ///       __typename
-    ///       totalCount
-    ///     }
-    ///     releases(first: 1) {
-    ///       __typename
-    ///       edges {
-    ///         __typename
-    ///         node {
-    ///           __typename
-    ///           name
-    ///           url
-    ///           ... on Release {
-    ///             id
-    ///           }
-    ///         }
-    ///       }
-    ///     }
-    ///     diskUsage
-    ///     updatedAt
-    ///     pushedAt
-    ///     repositoryTopics {
-    ///       __typename
-    ///       totalCount
-    ///     }
-    ///     codeOfConduct {
-    ///       __typename
-    ///       url
-    ///       name
-    ///       ... on CodeOfConduct {
-    ///         id
-    ///       }
-    ///     }
-    ///     codeowners {
-    ///       __typename
-    ///       errors {
-    ///         __typename
-    ///         kind
-    ///       }
-    ///     }
-    ///     defaultBranchRef {
-    ///       __typename
-    ///       name
-    ///       target {
-    ///         __typename
-    ///         commitResourcePath
-    ///         ... on Blob {
-    ///           id
-    ///         }
-    ///         ... on Commit {
-    ///           id
-    ///         }
-    ///         ... on Tag {
-    ///           id
-    ///         }
-    ///         ... on Tree {
-    ///           id
-    ///         }
-    ///       }
-    ///       branchProtectionRule {
-    ///         __typename
-    ///         allowsForcePushes
-    ///         dismissesStaleReviews
-    ///         lockBranch
-    ///         requiresApprovingReviews
-    ///         requiresConversationResolution
-    ///         requiresStatusChecks
-    ///         requiresStrictStatusChecks
-    ///         ... on BranchProtectionRule {
-    ///           id
-    ///         }
-    ///       }
-    ///       ... on Ref {
-    ///         id
-    ///       }
-    ///     }
-    ///     description
-    ///     hasDiscussionsEnabled
-    ///     hasIssuesEnabled
-    ///     isArchived
-    ///     isEmpty
-    ///     isLocked
-    ///     issueTemplates {
-    ///       __typename
-    ///       name
-    ///       filename
-    ///     }
-    ///     licenseInfo {
-    ///       __typename
-    ///       name
-    ///       url
-    ///       ... on License {
-    ///         id
-    ///       }
-    ///     }
-    ///     openGraphImageUrl
-    ///     primaryLanguage {
-    ///       __typename
-    ///       name
-    ///       color
-    ///       ... on Language {
-    ///         id
-    ///       }
-    ///     }
-    ///     pullRequestTemplates {
-    ///       __typename
-    ///       filename
-    ///     }
-    ///     url
-    ///     pullRequests(first: 10, states: OPEN) {
-    ///       __typename
-    ///       nodes {
-    ///         __typename
-    ///         createdAt
-    ///         ... on PullRequest {
-    ///           id
-    ///         }
-    ///       }
-    ///     }
-    ///     issues(first: 100, states: OPEN) {
-    ///       __typename
-    ///       edges {
-    ///         __typename
-    ///         node {
-    ///           __typename
-    ///           labels {
-    ///             __typename
-    ///             totalCount
-    ///           }
-    ///           number
-    ///           createdAt
-    ///           ... on Issue {
-    ///             id
-    ///           }
-    ///         }
-    ///       }
-    ///     }
-    ///     ... on Repository {
-    ///       id
-    ///     }
-    ///   }
-    /// }
-    /// </code>
-    /// </summary>
-    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.15.2.0")]
-    public partial class GetRepoQueryDocument : global::StrawberryShake.IDocument
-    {
-        private GetRepoQueryDocument()
-        {
-        }
-
-        public static GetRepoQueryDocument Instance { get; } = new GetRepoQueryDocument();
-        public global::StrawberryShake.OperationKind Kind => global::StrawberryShake.OperationKind.Query;
-        public global::System.ReadOnlySpan<global::System.Byte> Body => new global::System.Byte[]{0x71, 0x75, 0x65, 0x72, 0x79, 0x20, 0x47, 0x65, 0x74, 0x52, 0x65, 0x70, 0x6f, 0x28, 0x24, 0x6e, 0x61, 0x6d, 0x65, 0x3a, 0x20, 0x53, 0x74, 0x72, 0x69, 0x6e, 0x67, 0x21, 0x2c, 0x20, 0x24, 0x6f, 0x77, 0x6e, 0x65, 0x72, 0x3a, 0x20, 0x53, 0x74, 0x72, 0x69, 0x6e, 0x67, 0x21, 0x29, 0x20, 0x7b, 0x20, 0x72, 0x65, 0x70, 0x6f, 0x73, 0x69, 0x74, 0x6f, 0x72, 0x79, 0x28, 0x6e, 0x61, 0x6d, 0x65, 0x3a, 0x20, 0x24, 0x6e, 0x61, 0x6d, 0x65, 0x2c, 0x20, 0x6f, 0x77, 0x6e, 0x65, 0x72, 0x3a, 0x20, 0x24, 0x6f, 0x77, 0x6e, 0x65, 0x72, 0x29, 0x20, 0x7b, 0x20, 0x5f, 0x5f, 0x74, 0x79, 0x70, 0x65, 0x6e, 0x61, 0x6d, 0x65, 0x20, 0x69, 0x73, 0x53, 0x65, 0x63, 0x75, 0x72, 0x69, 0x74, 0x79, 0x50, 0x6f, 0x6c, 0x69, 0x63, 0x79, 0x45, 0x6e, 0x61, 0x62, 0x6c, 0x65, 0x64, 0x20, 0x73, 0x65, 0x63, 0x75, 0x72, 0x69, 0x74, 0x79, 0x50, 0x6f, 0x6c, 0x69, 0x63, 0x79, 0x55, 0x72, 0x6c, 0x20, 0x68, 0x61, 0x73, 0x56, 0x75, 0x6c, 0x6e, 0x65, 0x72, 0x61, 0x62, 0x69, 0x6c, 0x69, 0x74, 0x79, 0x41, 0x6c, 0x65, 0x72, 0x74, 0x73, 0x45, 0x6e, 0x61, 0x62, 0x6c, 0x65, 0x64, 0x20, 0x76, 0x75, 0x6c, 0x6e, 0x65, 0x72, 0x61, 0x62, 0x69, 0x6c, 0x69, 0x74, 0x79, 0x41, 0x6c, 0x65, 0x72, 0x74, 0x73, 0x20, 0x7b, 0x20, 0x5f, 0x5f, 0x74, 0x79, 0x70, 0x65, 0x6e, 0x61, 0x6d, 0x65, 0x20, 0x74, 0x6f, 0x74, 0x61, 0x6c, 0x43, 0x6f, 0x75, 0x6e, 0x74, 0x20, 0x7d, 0x20, 0x72, 0x65, 0x6c, 0x65, 0x61, 0x73, 0x65, 0x73, 0x28, 0x66, 0x69, 0x72, 0x73, 0x74, 0x3a, 0x20, 0x31, 0x29, 0x20, 0x7b, 0x20, 0x5f, 0x5f, 0x74, 0x79, 0x70, 0x65, 0x6e, 0x61, 0x6d, 0x65, 0x20, 0x65, 0x64, 0x67, 0x65, 0x73, 0x20, 0x7b, 0x20, 0x5f, 0x5f, 0x74, 0x79, 0x70, 0x65, 0x6e, 0x61, 0x6d, 0x65, 0x20, 0x6e, 0x6f, 0x64, 0x65, 0x20, 0x7b, 0x20, 0x5f, 0x5f, 0x74, 0x79, 0x70, 0x65, 0x6e, 0x61, 0x6d, 0x65, 0x20, 0x6e, 0x61, 0x6d, 0x65, 0x20, 0x75, 0x72, 0x6c, 0x20, 0x2e, 0x2e, 0x2e, 0x20, 0x6f, 0x6e, 0x20, 0x52, 0x65, 0x6c, 0x65, 0x61, 0x73, 0x65, 0x20, 0x7b, 0x20, 0x69, 0x64, 0x20, 0x7d, 0x20, 0x7d, 0x20, 0x7d, 0x20, 0x7d, 0x20, 0x64, 0x69, 0x73, 0x6b, 0x55, 0x73, 0x61, 0x67, 0x65, 0x20, 0x75, 0x70, 0x64, 0x61, 0x74, 0x65, 0x64, 0x41, 0x74, 0x20, 0x70, 0x75, 0x73, 0x68, 0x65, 0x64, 0x41, 0x74, 0x20, 0x72, 0x65, 0x70, 0x6f, 0x73, 0x69, 0x74, 0x6f, 0x72, 0x79, 0x54, 0x6f, 0x70, 0x69, 0x63, 0x73, 0x20, 0x7b, 0x20, 0x5f, 0x5f, 0x74, 0x79, 0x70, 0x65, 0x6e, 0x61, 0x6d, 0x65, 0x20, 0x74, 0x6f, 0x74, 0x61, 0x6c, 0x43, 0x6f, 0x75, 0x6e, 0x74, 0x20, 0x7d, 0x20, 0x63, 0x6f, 0x64, 0x65, 0x4f, 0x66, 0x43, 0x6f, 0x6e, 0x64, 0x75, 0x63, 0x74, 0x20, 0x7b, 0x20, 0x5f, 0x5f, 0x74, 0x79, 0x70, 0x65, 0x6e, 0x61, 0x6d, 0x65, 0x20, 0x75, 0x72, 0x6c, 0x20, 0x6e, 0x61, 0x6d, 0x65, 0x20, 0x2e, 0x2e, 0x2e, 0x20, 0x6f, 0x6e, 0x20, 0x43, 0x6f, 0x64, 0x65, 0x4f, 0x66, 0x43, 0x6f, 0x6e, 0x64, 0x75, 0x63, 0x74, 0x20, 0x7b, 0x20, 0x69, 0x64, 0x20, 0x7d, 0x20, 0x7d, 0x20, 0x63, 0x6f, 0x64, 0x65, 0x6f, 0x77, 0x6e, 0x65, 0x72, 0x73, 0x20, 0x7b, 0x20, 0x5f, 0x5f, 0x74, 0x79, 0x70, 0x65, 0x6e, 0x61, 0x6d, 0x65, 0x20, 0x65, 0x72, 0x72, 0x6f, 0x72, 0x73, 0x20, 0x7b, 0x20, 0x5f, 0x5f, 0x74, 0x79, 0x70, 0x65, 0x6e, 0x61, 0x6d, 0x65, 0x20, 0x6b, 0x69, 0x6e, 0x64, 0x20, 0x7d, 0x20, 0x7d, 0x20, 0x64, 0x65, 0x66, 0x61, 0x75, 0x6c, 0x74, 0x42, 0x72, 0x61, 0x6e, 0x63, 0x68, 0x52, 0x65, 0x66, 0x20, 0x7b, 0x20, 0x5f, 0x5f, 0x74, 0x79, 0x70, 0x65, 0x6e, 0x61, 0x6d, 0x65, 0x20, 0x6e, 0x61, 0x6d, 0x65, 0x20, 0x74, 0x61, 0x72, 0x67, 0x65, 0x74, 0x20, 0x7b, 0x20, 0x5f, 0x5f, 0x74, 0x79, 0x70, 0x65, 0x6e, 0x61, 0x6d, 0x65, 0x20, 0x63, 0x6f, 0x6d, 0x6d, 0x69, 0x74, 0x52, 0x65, 0x73, 0x6f, 0x75, 0x72, 0x63, 0x65, 0x50, 0x61, 0x74, 0x68, 0x20, 0x2e, 0x2e, 0x2e, 0x20, 0x6f, 0x6e, 0x20, 0x42, 0x6c, 0x6f, 0x62, 0x20, 0x7b, 0x20, 0x69, 0x64, 0x20, 0x7d, 0x20, 0x2e, 0x2e, 0x2e, 0x20, 0x6f, 0x6e, 0x20, 0x43, 0x6f, 0x6d, 0x6d, 0x69, 0x74, 0x20, 0x7b, 0x20, 0x69, 0x64, 0x20, 0x7d, 0x20, 0x2e, 0x2e, 0x2e, 0x20, 0x6f, 0x6e, 0x20, 0x54, 0x61, 0x67, 0x20, 0x7b, 0x20, 0x69, 0x64, 0x20, 0x7d, 0x20, 0x2e, 0x2e, 0x2e, 0x20, 0x6f, 0x6e, 0x20, 0x54, 0x72, 0x65, 0x65, 0x20, 0x7b, 0x20, 0x69, 0x64, 0x20, 0x7d, 0x20, 0x7d, 0x20, 0x62, 0x72, 0x61, 0x6e, 0x63, 0x68, 0x50, 0x72, 0x6f, 0x74, 0x65, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x52, 0x75, 0x6c, 0x65, 0x20, 0x7b, 0x20, 0x5f, 0x5f, 0x74, 0x79, 0x70, 0x65, 0x6e, 0x61, 0x6d, 0x65, 0x20, 0x61, 0x6c, 0x6c, 0x6f, 0x77, 0x73, 0x46, 0x6f, 0x72, 0x63, 0x65, 0x50, 0x75, 0x73, 0x68, 0x65, 0x73, 0x20, 0x64, 0x69, 0x73, 0x6d, 0x69, 0x73, 0x73, 0x65, 0x73, 0x53, 0x74, 0x61, 0x6c, 0x65, 0x52, 0x65, 0x76, 0x69, 0x65, 0x77, 0x73, 0x20, 0x6c, 0x6f, 0x63, 0x6b, 0x42, 0x72, 0x61, 0x6e, 0x63, 0x68, 0x20, 0x72, 0x65, 0x71, 0x75, 0x69, 0x72, 0x65, 0x73, 0x41, 0x70, 0x70, 0x72, 0x6f, 0x76, 0x69, 0x6e, 0x67, 0x52, 0x65, 0x76, 0x69, 0x65, 0x77, 0x73, 0x20, 0x72, 0x65, 0x71, 0x75, 0x69, 0x72, 0x65, 0x73, 0x43, 0x6f, 0x6e, 0x76, 0x65, 0x72, 0x73, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x52, 0x65, 0x73, 0x6f, 0x6c, 0x75, 0x74, 0x69, 0x6f, 0x6e, 0x20, 0x72, 0x65, 0x71, 0x75, 0x69, 0x72, 0x65, 0x73, 0x53, 0x74, 0x61, 0x74, 0x75, 0x73, 0x43, 0x68, 0x65, 0x63, 0x6b, 0x73, 0x20, 0x72, 0x65, 0x71, 0x75, 0x69, 0x72, 0x65, 0x73, 0x53, 0x74, 0x72, 0x69, 0x63, 0x74, 0x53, 0x74, 0x61, 0x74, 0x75, 0x73, 0x43, 0x68, 0x65, 0x63, 0x6b, 0x73, 0x20, 0x2e, 0x2e, 0x2e, 0x20, 0x6f, 0x6e, 0x20, 0x42, 0x72, 0x61, 0x6e, 0x63, 0x68, 0x50, 0x72, 0x6f, 0x74, 0x65, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x52, 0x75, 0x6c, 0x65, 0x20, 0x7b, 0x20, 0x69, 0x64, 0x20, 0x7d, 0x20, 0x7d, 0x20, 0x2e, 0x2e, 0x2e, 0x20, 0x6f, 0x6e, 0x20, 0x52, 0x65, 0x66, 0x20, 0x7b, 0x20, 0x69, 0x64, 0x20, 0x7d, 0x20, 0x7d, 0x20, 0x64, 0x65, 0x73, 0x63, 0x72, 0x69, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x20, 0x68, 0x61, 0x73, 0x44, 0x69, 0x73, 0x63, 0x75, 0x73, 0x73, 0x69, 0x6f, 0x6e, 0x73, 0x45, 0x6e, 0x61, 0x62, 0x6c, 0x65, 0x64, 0x20, 0x68, 0x61, 0x73, 0x49, 0x73, 0x73, 0x75, 0x65, 0x73, 0x45, 0x6e, 0x61, 0x62, 0x6c, 0x65, 0x64, 0x20, 0x69, 0x73, 0x41, 0x72, 0x63, 0x68, 0x69, 0x76, 0x65, 0x64, 0x20, 0x69, 0x73, 0x45, 0x6d, 0x70, 0x74, 0x79, 0x20, 0x69, 0x73, 0x4c, 0x6f, 0x63, 0x6b, 0x65, 0x64, 0x20, 0x69, 0x73, 0x73, 0x75, 0x65, 0x54, 0x65, 0x6d, 0x70, 0x6c, 0x61, 0x74, 0x65, 0x73, 0x20, 0x7b, 0x20, 0x5f, 0x5f, 0x74, 0x79, 0x70, 0x65, 0x6e, 0x61, 0x6d, 0x65, 0x20, 0x6e, 0x61, 0x6d, 0x65, 0x20, 0x66, 0x69, 0x6c, 0x65, 0x6e, 0x61, 0x6d, 0x65, 0x20, 0x7d, 0x20, 0x6c, 0x69, 0x63, 0x65, 0x6e, 0x73, 0x65, 0x49, 0x6e, 0x66, 0x6f, 0x20, 0x7b, 0x20, 0x5f, 0x5f, 0x74, 0x79, 0x70, 0x65, 0x6e, 0x61, 0x6d, 0x65, 0x20, 0x6e, 0x61, 0x6d, 0x65, 0x20, 0x75, 0x72, 0x6c, 0x20, 0x2e, 0x2e, 0x2e, 0x20, 0x6f, 0x6e, 0x20, 0x4c, 0x69, 0x63, 0x65, 0x6e, 0x73, 0x65, 0x20, 0x7b, 0x20, 0x69, 0x64, 0x20, 0x7d, 0x20, 0x7d, 0x20, 0x6f, 0x70, 0x65, 0x6e, 0x47, 0x72, 0x61, 0x70, 0x68, 0x49, 0x6d, 0x61, 0x67, 0x65, 0x55, 0x72, 0x6c, 0x20, 0x70, 0x72, 0x69, 0x6d, 0x61, 0x72, 0x79, 0x4c, 0x61, 0x6e, 0x67, 0x75, 0x61, 0x67, 0x65, 0x20, 0x7b, 0x20, 0x5f, 0x5f, 0x74, 0x79, 0x70, 0x65, 0x6e, 0x61, 0x6d, 0x65, 0x20, 0x6e, 0x61, 0x6d, 0x65, 0x20, 0x63, 0x6f, 0x6c, 0x6f, 0x72, 0x20, 0x2e, 0x2e, 0x2e, 0x20, 0x6f, 0x6e, 0x20, 0x4c, 0x61, 0x6e, 0x67, 0x75, 0x61, 0x67, 0x65, 0x20, 0x7b, 0x20, 0x69, 0x64, 0x20, 0x7d, 0x20, 0x7d, 0x20, 0x70, 0x75, 0x6c, 0x6c, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x54, 0x65, 0x6d, 0x70, 0x6c, 0x61, 0x74, 0x65, 0x73, 0x20, 0x7b, 0x20, 0x5f, 0x5f, 0x74, 0x79, 0x70, 0x65, 0x6e, 0x61, 0x6d, 0x65, 0x20, 0x66, 0x69, 0x6c, 0x65, 0x6e, 0x61, 0x6d, 0x65, 0x20, 0x7d, 0x20, 0x75, 0x72, 0x6c, 0x20, 0x70, 0x75, 0x6c, 0x6c, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x73, 0x28, 0x66, 0x69, 0x72, 0x73, 0x74, 0x3a, 0x20, 0x31, 0x30, 0x2c, 0x20, 0x73, 0x74, 0x61, 0x74, 0x65, 0x73, 0x3a, 0x20, 0x4f, 0x50, 0x45, 0x4e, 0x29, 0x20, 0x7b, 0x20, 0x5f, 0x5f, 0x74, 0x79, 0x70, 0x65, 0x6e, 0x61, 0x6d, 0x65, 0x20, 0x6e, 0x6f, 0x64, 0x65, 0x73, 0x20, 0x7b, 0x20, 0x5f, 0x5f, 0x74, 0x79, 0x70, 0x65, 0x6e, 0x61, 0x6d, 0x65, 0x20, 0x63, 0x72, 0x65, 0x61, 0x74, 0x65, 0x64, 0x41, 0x74, 0x20, 0x2e, 0x2e, 0x2e, 0x20, 0x6f, 0x6e, 0x20, 0x50, 0x75, 0x6c, 0x6c, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x20, 0x7b, 0x20, 0x69, 0x64, 0x20, 0x7d, 0x20, 0x7d, 0x20, 0x7d, 0x20, 0x69, 0x73, 0x73, 0x75, 0x65, 0x73, 0x28, 0x66, 0x69, 0x72, 0x73, 0x74, 0x3a, 0x20, 0x31, 0x30, 0x30, 0x2c, 0x20, 0x73, 0x74, 0x61, 0x74, 0x65, 0x73, 0x3a, 0x20, 0x4f, 0x50, 0x45, 0x4e, 0x29, 0x20, 0x7b, 0x20, 0x5f, 0x5f, 0x74, 0x79, 0x70, 0x65, 0x6e, 0x61, 0x6d, 0x65, 0x20, 0x65, 0x64, 0x67, 0x65, 0x73, 0x20, 0x7b, 0x20, 0x5f, 0x5f, 0x74, 0x79, 0x70, 0x65, 0x6e, 0x61, 0x6d, 0x65, 0x20, 0x6e, 0x6f, 0x64, 0x65, 0x20, 0x7b, 0x20, 0x5f, 0x5f, 0x74, 0x79, 0x70, 0x65, 0x6e, 0x61, 0x6d, 0x65, 0x20, 0x6c, 0x61, 0x62, 0x65, 0x6c, 0x73, 0x20, 0x7b, 0x20, 0x5f, 0x5f, 0x74, 0x79, 0x70, 0x65, 0x6e, 0x61, 0x6d, 0x65, 0x20, 0x74, 0x6f, 0x74, 0x61, 0x6c, 0x43, 0x6f, 0x75, 0x6e, 0x74, 0x20, 0x7d, 0x20, 0x6e, 0x75, 0x6d, 0x62, 0x65, 0x72, 0x20, 0x63, 0x72, 0x65, 0x61, 0x74, 0x65, 0x64, 0x41, 0x74, 0x20, 0x2e, 0x2e, 0x2e, 0x20, 0x6f, 0x6e, 0x20, 0x49, 0x73, 0x73, 0x75, 0x65, 0x20, 0x7b, 0x20, 0x69, 0x64, 0x20, 0x7d, 0x20, 0x7d, 0x20, 0x7d, 0x20, 0x7d, 0x20, 0x2e, 0x2e, 0x2e, 0x20, 0x6f, 0x6e, 0x20, 0x52, 0x65, 0x70, 0x6f, 0x73, 0x69, 0x74, 0x6f, 0x72, 0x79, 0x20, 0x7b, 0x20, 0x69, 0x64, 0x20, 0x7d, 0x20, 0x7d, 0x20, 0x7d};
-        public global::StrawberryShake.DocumentHash Hash { get; } = new global::StrawberryShake.DocumentHash("md5Hash", "e7b49d961b4e18bef7d9a59fca655e03");
-        public override global::System.String ToString()
-        {
-#if NETSTANDARD2_0
-        return global::System.Text.Encoding.UTF8.GetString(Body.ToArray());
-#else
-            return global::System.Text.Encoding.UTF8.GetString(Body);
-#endif
-        }
-    }
-
-    /// <summary>
-    /// Represents the operation service of the GetRepo GraphQL operation
-    /// <code>
-    /// query GetRepo($name: String!, $owner: String!) {
-    ///   repository(name: $name, owner: $owner) {
-    ///     __typename
-    ///     isSecurityPolicyEnabled
-    ///     securityPolicyUrl
-    ///     hasVulnerabilityAlertsEnabled
-    ///     vulnerabilityAlerts {
-    ///       __typename
-    ///       totalCount
-    ///     }
-    ///     releases(first: 1) {
-    ///       __typename
-    ///       edges {
-    ///         __typename
-    ///         node {
-    ///           __typename
-    ///           name
-    ///           url
-    ///           ... on Release {
-    ///             id
-    ///           }
-    ///         }
-    ///       }
-    ///     }
-    ///     diskUsage
-    ///     updatedAt
-    ///     pushedAt
-    ///     repositoryTopics {
-    ///       __typename
-    ///       totalCount
-    ///     }
-    ///     codeOfConduct {
-    ///       __typename
-    ///       url
-    ///       name
-    ///       ... on CodeOfConduct {
-    ///         id
-    ///       }
-    ///     }
-    ///     codeowners {
-    ///       __typename
-    ///       errors {
-    ///         __typename
-    ///         kind
-    ///       }
-    ///     }
-    ///     defaultBranchRef {
-    ///       __typename
-    ///       name
-    ///       target {
-    ///         __typename
-    ///         commitResourcePath
-    ///         ... on Blob {
-    ///           id
-    ///         }
-    ///         ... on Commit {
-    ///           id
-    ///         }
-    ///         ... on Tag {
-    ///           id
-    ///         }
-    ///         ... on Tree {
-    ///           id
-    ///         }
-    ///       }
-    ///       branchProtectionRule {
-    ///         __typename
-    ///         allowsForcePushes
-    ///         dismissesStaleReviews
-    ///         lockBranch
-    ///         requiresApprovingReviews
-    ///         requiresConversationResolution
-    ///         requiresStatusChecks
-    ///         requiresStrictStatusChecks
-    ///         ... on BranchProtectionRule {
-    ///           id
-    ///         }
-    ///       }
-    ///       ... on Ref {
-    ///         id
-    ///       }
-    ///     }
-    ///     description
-    ///     hasDiscussionsEnabled
-    ///     hasIssuesEnabled
-    ///     isArchived
-    ///     isEmpty
-    ///     isLocked
-    ///     issueTemplates {
-    ///       __typename
-    ///       name
-    ///       filename
-    ///     }
-    ///     licenseInfo {
-    ///       __typename
-    ///       name
-    ///       url
-    ///       ... on License {
-    ///         id
-    ///       }
-    ///     }
-    ///     openGraphImageUrl
-    ///     primaryLanguage {
-    ///       __typename
-    ///       name
-    ///       color
-    ///       ... on Language {
-    ///         id
-    ///       }
-    ///     }
-    ///     pullRequestTemplates {
-    ///       __typename
-    ///       filename
-    ///     }
-    ///     url
-    ///     pullRequests(first: 10, states: OPEN) {
-    ///       __typename
-    ///       nodes {
-    ///         __typename
-    ///         createdAt
-    ///         ... on PullRequest {
-    ///           id
-    ///         }
-    ///       }
-    ///     }
-    ///     issues(first: 100, states: OPEN) {
-    ///       __typename
-    ///       edges {
-    ///         __typename
-    ///         node {
-    ///           __typename
-    ///           labels {
-    ///             __typename
-    ///             totalCount
-    ///           }
-    ///           number
-    ///           createdAt
-    ///           ... on Issue {
-    ///             id
-    ///           }
-    ///         }
-    ///       }
-    ///     }
-    ///     ... on Repository {
-    ///       id
-    ///     }
-    ///   }
-    /// }
-    /// </code>
-    /// </summary>
-    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.15.2.0")]
-    public partial class GetRepoQuery : global::RepositoryAnalysis.Internal.GraphQL.IGetRepoQuery
-    {
-        private readonly global::StrawberryShake.IOperationExecutor<IGetRepoResult> _operationExecutor;
-        private readonly global::StrawberryShake.Serialization.IInputValueFormatter _stringFormatter;
-        public GetRepoQuery(global::StrawberryShake.IOperationExecutor<IGetRepoResult> operationExecutor, global::StrawberryShake.Serialization.ISerializerResolver serializerResolver)
-        {
-            _operationExecutor = operationExecutor ?? throw new global::System.ArgumentNullException(nameof(operationExecutor));
-            _stringFormatter = serializerResolver.GetInputValueFormatter("String");
-        }
-
-        global::System.Type global::StrawberryShake.IOperationRequestFactory.ResultType => typeof(IGetRepoResult);
-        public async global::System.Threading.Tasks.Task<global::StrawberryShake.IOperationResult<IGetRepoResult>> ExecuteAsync(global::System.String name, global::System.String owner, global::System.Threading.CancellationToken cancellationToken = default)
-        {
-            var request = CreateRequest(name, owner);
-            return await _operationExecutor.ExecuteAsync(request, cancellationToken).ConfigureAwait(false);
-        }
-
-        public global::System.IObservable<global::StrawberryShake.IOperationResult<IGetRepoResult>> Watch(global::System.String name, global::System.String owner, global::StrawberryShake.ExecutionStrategy? strategy = null)
-        {
-            var request = CreateRequest(name, owner);
-            return _operationExecutor.Watch(request, strategy);
-        }
-
-        private global::StrawberryShake.OperationRequest CreateRequest(global::System.String name, global::System.String owner)
-        {
-            var variables = new global::System.Collections.Generic.Dictionary<global::System.String, global::System.Object?>();
-            variables.Add("name", FormatName(name));
-            variables.Add("owner", FormatOwner(owner));
-            return CreateRequest(variables);
-        }
-
-        private global::StrawberryShake.OperationRequest CreateRequest(global::System.Collections.Generic.IReadOnlyDictionary<global::System.String, global::System.Object?>? variables)
-        {
-            return new global::StrawberryShake.OperationRequest(id: GetRepoQueryDocument.Instance.Hash.Value, name: "GetRepo", document: GetRepoQueryDocument.Instance, strategy: global::StrawberryShake.RequestStrategy.Default, variables: variables);
-        }
-
-        private global::System.Object? FormatName(global::System.String value)
-        {
-            if (value is null)
-            {
-                throw new global::System.ArgumentNullException(nameof(value));
-            }
-
-            return _stringFormatter.Format(value);
-        }
-
-        private global::System.Object? FormatOwner(global::System.String value)
-        {
-            if (value is null)
-            {
-                throw new global::System.ArgumentNullException(nameof(value));
-            }
-
-            return _stringFormatter.Format(value);
-        }
-
-        global::StrawberryShake.OperationRequest global::StrawberryShake.IOperationRequestFactory.Create(global::System.Collections.Generic.IReadOnlyDictionary<global::System.String, global::System.Object?>? variables)
-        {
-            return CreateRequest(variables!);
-        }
-    }
-
-    /// <summary>
-    /// Represents the operation service of the GetRepo GraphQL operation
-    /// <code>
-    /// query GetRepo($name: String!, $owner: String!) {
-    ///   repository(name: $name, owner: $owner) {
-    ///     __typename
-    ///     isSecurityPolicyEnabled
-    ///     securityPolicyUrl
-    ///     hasVulnerabilityAlertsEnabled
-    ///     vulnerabilityAlerts {
-    ///       __typename
-    ///       totalCount
-    ///     }
-    ///     releases(first: 1) {
-    ///       __typename
-    ///       edges {
-    ///         __typename
-    ///         node {
-    ///           __typename
-    ///           name
-    ///           url
-    ///           ... on Release {
-    ///             id
-    ///           }
-    ///         }
-    ///       }
-    ///     }
-    ///     diskUsage
-    ///     updatedAt
-    ///     pushedAt
-    ///     repositoryTopics {
-    ///       __typename
-    ///       totalCount
-    ///     }
-    ///     codeOfConduct {
-    ///       __typename
-    ///       url
-    ///       name
-    ///       ... on CodeOfConduct {
-    ///         id
-    ///       }
-    ///     }
-    ///     codeowners {
-    ///       __typename
-    ///       errors {
-    ///         __typename
-    ///         kind
-    ///       }
-    ///     }
-    ///     defaultBranchRef {
-    ///       __typename
-    ///       name
-    ///       target {
-    ///         __typename
-    ///         commitResourcePath
-    ///         ... on Blob {
-    ///           id
-    ///         }
-    ///         ... on Commit {
-    ///           id
-    ///         }
-    ///         ... on Tag {
-    ///           id
-    ///         }
-    ///         ... on Tree {
-    ///           id
-    ///         }
-    ///       }
-    ///       branchProtectionRule {
-    ///         __typename
-    ///         allowsForcePushes
-    ///         dismissesStaleReviews
-    ///         lockBranch
-    ///         requiresApprovingReviews
-    ///         requiresConversationResolution
-    ///         requiresStatusChecks
-    ///         requiresStrictStatusChecks
-    ///         ... on BranchProtectionRule {
-    ///           id
-    ///         }
-    ///       }
-    ///       ... on Ref {
-    ///         id
-    ///       }
-    ///     }
-    ///     description
-    ///     hasDiscussionsEnabled
-    ///     hasIssuesEnabled
-    ///     isArchived
-    ///     isEmpty
-    ///     isLocked
-    ///     issueTemplates {
-    ///       __typename
-    ///       name
-    ///       filename
-    ///     }
-    ///     licenseInfo {
-    ///       __typename
-    ///       name
-    ///       url
-    ///       ... on License {
-    ///         id
-    ///       }
-    ///     }
-    ///     openGraphImageUrl
-    ///     primaryLanguage {
-    ///       __typename
-    ///       name
-    ///       color
-    ///       ... on Language {
-    ///         id
-    ///       }
-    ///     }
-    ///     pullRequestTemplates {
-    ///       __typename
-    ///       filename
-    ///     }
-    ///     url
-    ///     pullRequests(first: 10, states: OPEN) {
-    ///       __typename
-    ///       nodes {
-    ///         __typename
-    ///         createdAt
-    ///         ... on PullRequest {
-    ///           id
-    ///         }
-    ///       }
-    ///     }
-    ///     issues(first: 100, states: OPEN) {
-    ///       __typename
-    ///       edges {
-    ///         __typename
-    ///         node {
-    ///           __typename
-    ///           labels {
-    ///             __typename
-    ///             totalCount
-    ///           }
-    ///           number
-    ///           createdAt
-    ///           ... on Issue {
-    ///             id
-    ///           }
-    ///         }
-    ///       }
-    ///     }
-    ///     ... on Repository {
-    ///       id
-    ///     }
-    ///   }
-    /// }
-    /// </code>
-    /// </summary>
-    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.15.2.0")]
-    public partial interface IGetRepoQuery : global::StrawberryShake.IOperationRequestFactory
-    {
-        global::System.Threading.Tasks.Task<global::StrawberryShake.IOperationResult<IGetRepoResult>> ExecuteAsync(global::System.String name, global::System.String owner, global::System.Threading.CancellationToken cancellationToken = default);
-        global::System.IObservable<global::StrawberryShake.IOperationResult<IGetRepoResult>> Watch(global::System.String name, global::System.String owner, global::StrawberryShake.ExecutionStrategy? strategy = null);
     }
 
     /// <summary>
@@ -4493,25 +4259,620 @@ namespace RepositoryAnalysis.Internal.GraphQL
     }
 
     /// <summary>
+    /// Represents the operation service of the GetRepo GraphQL operation
+    /// <code>
+    /// query GetRepo($name: String!, $owner: String!) {
+    ///   repository(name: $name, owner: $owner) {
+    ///     __typename
+    ///     discussions(first: 100, orderBy: { field: UPDATED_AT, direction: DESC }) {
+    ///       __typename
+    ///       edges {
+    ///         __typename
+    ///         node {
+    ///           __typename
+    ///           number
+    ///           answerChosenAt
+    ///           ... on Discussion {
+    ///             id
+    ///           }
+    ///         }
+    ///       }
+    ///       totalCount
+    ///     }
+    ///     isSecurityPolicyEnabled
+    ///     securityPolicyUrl
+    ///     hasVulnerabilityAlertsEnabled
+    ///     vulnerabilityAlerts {
+    ///       __typename
+    ///       totalCount
+    ///     }
+    ///     releases(first: 1) {
+    ///       __typename
+    ///       edges {
+    ///         __typename
+    ///         node {
+    ///           __typename
+    ///           name
+    ///           url
+    ///           ... on Release {
+    ///             id
+    ///           }
+    ///         }
+    ///       }
+    ///     }
+    ///     diskUsage
+    ///     updatedAt
+    ///     pushedAt
+    ///     repositoryTopics {
+    ///       __typename
+    ///       totalCount
+    ///     }
+    ///     codeOfConduct {
+    ///       __typename
+    ///       url
+    ///       name
+    ///       ... on CodeOfConduct {
+    ///         id
+    ///       }
+    ///     }
+    ///     codeowners {
+    ///       __typename
+    ///       errors {
+    ///         __typename
+    ///         kind
+    ///       }
+    ///     }
+    ///     defaultBranchRef {
+    ///       __typename
+    ///       name
+    ///       target {
+    ///         __typename
+    ///         commitResourcePath
+    ///         ... on Blob {
+    ///           id
+    ///         }
+    ///         ... on Commit {
+    ///           id
+    ///         }
+    ///         ... on Tag {
+    ///           id
+    ///         }
+    ///         ... on Tree {
+    ///           id
+    ///         }
+    ///       }
+    ///       branchProtectionRule {
+    ///         __typename
+    ///         allowsForcePushes
+    ///         dismissesStaleReviews
+    ///         lockBranch
+    ///         requiresApprovingReviews
+    ///         requiresConversationResolution
+    ///         requiresStatusChecks
+    ///         requiresStrictStatusChecks
+    ///         ... on BranchProtectionRule {
+    ///           id
+    ///         }
+    ///       }
+    ///       ... on Ref {
+    ///         id
+    ///       }
+    ///     }
+    ///     description
+    ///     hasDiscussionsEnabled
+    ///     hasIssuesEnabled
+    ///     isArchived
+    ///     isEmpty
+    ///     isLocked
+    ///     issueTemplates {
+    ///       __typename
+    ///       name
+    ///       filename
+    ///     }
+    ///     licenseInfo {
+    ///       __typename
+    ///       name
+    ///       url
+    ///       ... on License {
+    ///         id
+    ///       }
+    ///     }
+    ///     openGraphImageUrl
+    ///     primaryLanguage {
+    ///       __typename
+    ///       name
+    ///       color
+    ///       ... on Language {
+    ///         id
+    ///       }
+    ///     }
+    ///     pullRequestTemplates {
+    ///       __typename
+    ///       filename
+    ///     }
+    ///     url
+    ///     pullRequests(first: 10, states: OPEN) {
+    ///       __typename
+    ///       nodes {
+    ///         __typename
+    ///         createdAt
+    ///         ... on PullRequest {
+    ///           id
+    ///         }
+    ///       }
+    ///     }
+    ///     issues(first: 100, states: OPEN) {
+    ///       __typename
+    ///       edges {
+    ///         __typename
+    ///         node {
+    ///           __typename
+    ///           labels {
+    ///             __typename
+    ///             totalCount
+    ///           }
+    ///           number
+    ///           createdAt
+    ///           ... on Issue {
+    ///             id
+    ///           }
+    ///         }
+    ///       }
+    ///     }
+    ///     ... on Repository {
+    ///       id
+    ///     }
+    ///   }
+    /// }
+    /// </code>
+    /// </summary>
+    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.15.2.0")]
+    public partial class GetRepoQueryDocument : global::StrawberryShake.IDocument
+    {
+        private GetRepoQueryDocument()
+        {
+        }
+
+        public static GetRepoQueryDocument Instance { get; } = new GetRepoQueryDocument();
+        public global::StrawberryShake.OperationKind Kind => global::StrawberryShake.OperationKind.Query;
+        public global::System.ReadOnlySpan<global::System.Byte> Body => new global::System.Byte[]{0x71, 0x75, 0x65, 0x72, 0x79, 0x20, 0x47, 0x65, 0x74, 0x52, 0x65, 0x70, 0x6f, 0x28, 0x24, 0x6e, 0x61, 0x6d, 0x65, 0x3a, 0x20, 0x53, 0x74, 0x72, 0x69, 0x6e, 0x67, 0x21, 0x2c, 0x20, 0x24, 0x6f, 0x77, 0x6e, 0x65, 0x72, 0x3a, 0x20, 0x53, 0x74, 0x72, 0x69, 0x6e, 0x67, 0x21, 0x29, 0x20, 0x7b, 0x20, 0x72, 0x65, 0x70, 0x6f, 0x73, 0x69, 0x74, 0x6f, 0x72, 0x79, 0x28, 0x6e, 0x61, 0x6d, 0x65, 0x3a, 0x20, 0x24, 0x6e, 0x61, 0x6d, 0x65, 0x2c, 0x20, 0x6f, 0x77, 0x6e, 0x65, 0x72, 0x3a, 0x20, 0x24, 0x6f, 0x77, 0x6e, 0x65, 0x72, 0x29, 0x20, 0x7b, 0x20, 0x5f, 0x5f, 0x74, 0x79, 0x70, 0x65, 0x6e, 0x61, 0x6d, 0x65, 0x20, 0x64, 0x69, 0x73, 0x63, 0x75, 0x73, 0x73, 0x69, 0x6f, 0x6e, 0x73, 0x28, 0x66, 0x69, 0x72, 0x73, 0x74, 0x3a, 0x20, 0x31, 0x30, 0x30, 0x2c, 0x20, 0x6f, 0x72, 0x64, 0x65, 0x72, 0x42, 0x79, 0x3a, 0x20, 0x7b, 0x20, 0x66, 0x69, 0x65, 0x6c, 0x64, 0x3a, 0x20, 0x55, 0x50, 0x44, 0x41, 0x54, 0x45, 0x44, 0x5f, 0x41, 0x54, 0x2c, 0x20, 0x64, 0x69, 0x72, 0x65, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x3a, 0x20, 0x44, 0x45, 0x53, 0x43, 0x20, 0x7d, 0x29, 0x20, 0x7b, 0x20, 0x5f, 0x5f, 0x74, 0x79, 0x70, 0x65, 0x6e, 0x61, 0x6d, 0x65, 0x20, 0x65, 0x64, 0x67, 0x65, 0x73, 0x20, 0x7b, 0x20, 0x5f, 0x5f, 0x74, 0x79, 0x70, 0x65, 0x6e, 0x61, 0x6d, 0x65, 0x20, 0x6e, 0x6f, 0x64, 0x65, 0x20, 0x7b, 0x20, 0x5f, 0x5f, 0x74, 0x79, 0x70, 0x65, 0x6e, 0x61, 0x6d, 0x65, 0x20, 0x6e, 0x75, 0x6d, 0x62, 0x65, 0x72, 0x20, 0x61, 0x6e, 0x73, 0x77, 0x65, 0x72, 0x43, 0x68, 0x6f, 0x73, 0x65, 0x6e, 0x41, 0x74, 0x20, 0x2e, 0x2e, 0x2e, 0x20, 0x6f, 0x6e, 0x20, 0x44, 0x69, 0x73, 0x63, 0x75, 0x73, 0x73, 0x69, 0x6f, 0x6e, 0x20, 0x7b, 0x20, 0x69, 0x64, 0x20, 0x7d, 0x20, 0x7d, 0x20, 0x7d, 0x20, 0x74, 0x6f, 0x74, 0x61, 0x6c, 0x43, 0x6f, 0x75, 0x6e, 0x74, 0x20, 0x7d, 0x20, 0x69, 0x73, 0x53, 0x65, 0x63, 0x75, 0x72, 0x69, 0x74, 0x79, 0x50, 0x6f, 0x6c, 0x69, 0x63, 0x79, 0x45, 0x6e, 0x61, 0x62, 0x6c, 0x65, 0x64, 0x20, 0x73, 0x65, 0x63, 0x75, 0x72, 0x69, 0x74, 0x79, 0x50, 0x6f, 0x6c, 0x69, 0x63, 0x79, 0x55, 0x72, 0x6c, 0x20, 0x68, 0x61, 0x73, 0x56, 0x75, 0x6c, 0x6e, 0x65, 0x72, 0x61, 0x62, 0x69, 0x6c, 0x69, 0x74, 0x79, 0x41, 0x6c, 0x65, 0x72, 0x74, 0x73, 0x45, 0x6e, 0x61, 0x62, 0x6c, 0x65, 0x64, 0x20, 0x76, 0x75, 0x6c, 0x6e, 0x65, 0x72, 0x61, 0x62, 0x69, 0x6c, 0x69, 0x74, 0x79, 0x41, 0x6c, 0x65, 0x72, 0x74, 0x73, 0x20, 0x7b, 0x20, 0x5f, 0x5f, 0x74, 0x79, 0x70, 0x65, 0x6e, 0x61, 0x6d, 0x65, 0x20, 0x74, 0x6f, 0x74, 0x61, 0x6c, 0x43, 0x6f, 0x75, 0x6e, 0x74, 0x20, 0x7d, 0x20, 0x72, 0x65, 0x6c, 0x65, 0x61, 0x73, 0x65, 0x73, 0x28, 0x66, 0x69, 0x72, 0x73, 0x74, 0x3a, 0x20, 0x31, 0x29, 0x20, 0x7b, 0x20, 0x5f, 0x5f, 0x74, 0x79, 0x70, 0x65, 0x6e, 0x61, 0x6d, 0x65, 0x20, 0x65, 0x64, 0x67, 0x65, 0x73, 0x20, 0x7b, 0x20, 0x5f, 0x5f, 0x74, 0x79, 0x70, 0x65, 0x6e, 0x61, 0x6d, 0x65, 0x20, 0x6e, 0x6f, 0x64, 0x65, 0x20, 0x7b, 0x20, 0x5f, 0x5f, 0x74, 0x79, 0x70, 0x65, 0x6e, 0x61, 0x6d, 0x65, 0x20, 0x6e, 0x61, 0x6d, 0x65, 0x20, 0x75, 0x72, 0x6c, 0x20, 0x2e, 0x2e, 0x2e, 0x20, 0x6f, 0x6e, 0x20, 0x52, 0x65, 0x6c, 0x65, 0x61, 0x73, 0x65, 0x20, 0x7b, 0x20, 0x69, 0x64, 0x20, 0x7d, 0x20, 0x7d, 0x20, 0x7d, 0x20, 0x7d, 0x20, 0x64, 0x69, 0x73, 0x6b, 0x55, 0x73, 0x61, 0x67, 0x65, 0x20, 0x75, 0x70, 0x64, 0x61, 0x74, 0x65, 0x64, 0x41, 0x74, 0x20, 0x70, 0x75, 0x73, 0x68, 0x65, 0x64, 0x41, 0x74, 0x20, 0x72, 0x65, 0x70, 0x6f, 0x73, 0x69, 0x74, 0x6f, 0x72, 0x79, 0x54, 0x6f, 0x70, 0x69, 0x63, 0x73, 0x20, 0x7b, 0x20, 0x5f, 0x5f, 0x74, 0x79, 0x70, 0x65, 0x6e, 0x61, 0x6d, 0x65, 0x20, 0x74, 0x6f, 0x74, 0x61, 0x6c, 0x43, 0x6f, 0x75, 0x6e, 0x74, 0x20, 0x7d, 0x20, 0x63, 0x6f, 0x64, 0x65, 0x4f, 0x66, 0x43, 0x6f, 0x6e, 0x64, 0x75, 0x63, 0x74, 0x20, 0x7b, 0x20, 0x5f, 0x5f, 0x74, 0x79, 0x70, 0x65, 0x6e, 0x61, 0x6d, 0x65, 0x20, 0x75, 0x72, 0x6c, 0x20, 0x6e, 0x61, 0x6d, 0x65, 0x20, 0x2e, 0x2e, 0x2e, 0x20, 0x6f, 0x6e, 0x20, 0x43, 0x6f, 0x64, 0x65, 0x4f, 0x66, 0x43, 0x6f, 0x6e, 0x64, 0x75, 0x63, 0x74, 0x20, 0x7b, 0x20, 0x69, 0x64, 0x20, 0x7d, 0x20, 0x7d, 0x20, 0x63, 0x6f, 0x64, 0x65, 0x6f, 0x77, 0x6e, 0x65, 0x72, 0x73, 0x20, 0x7b, 0x20, 0x5f, 0x5f, 0x74, 0x79, 0x70, 0x65, 0x6e, 0x61, 0x6d, 0x65, 0x20, 0x65, 0x72, 0x72, 0x6f, 0x72, 0x73, 0x20, 0x7b, 0x20, 0x5f, 0x5f, 0x74, 0x79, 0x70, 0x65, 0x6e, 0x61, 0x6d, 0x65, 0x20, 0x6b, 0x69, 0x6e, 0x64, 0x20, 0x7d, 0x20, 0x7d, 0x20, 0x64, 0x65, 0x66, 0x61, 0x75, 0x6c, 0x74, 0x42, 0x72, 0x61, 0x6e, 0x63, 0x68, 0x52, 0x65, 0x66, 0x20, 0x7b, 0x20, 0x5f, 0x5f, 0x74, 0x79, 0x70, 0x65, 0x6e, 0x61, 0x6d, 0x65, 0x20, 0x6e, 0x61, 0x6d, 0x65, 0x20, 0x74, 0x61, 0x72, 0x67, 0x65, 0x74, 0x20, 0x7b, 0x20, 0x5f, 0x5f, 0x74, 0x79, 0x70, 0x65, 0x6e, 0x61, 0x6d, 0x65, 0x20, 0x63, 0x6f, 0x6d, 0x6d, 0x69, 0x74, 0x52, 0x65, 0x73, 0x6f, 0x75, 0x72, 0x63, 0x65, 0x50, 0x61, 0x74, 0x68, 0x20, 0x2e, 0x2e, 0x2e, 0x20, 0x6f, 0x6e, 0x20, 0x42, 0x6c, 0x6f, 0x62, 0x20, 0x7b, 0x20, 0x69, 0x64, 0x20, 0x7d, 0x20, 0x2e, 0x2e, 0x2e, 0x20, 0x6f, 0x6e, 0x20, 0x43, 0x6f, 0x6d, 0x6d, 0x69, 0x74, 0x20, 0x7b, 0x20, 0x69, 0x64, 0x20, 0x7d, 0x20, 0x2e, 0x2e, 0x2e, 0x20, 0x6f, 0x6e, 0x20, 0x54, 0x61, 0x67, 0x20, 0x7b, 0x20, 0x69, 0x64, 0x20, 0x7d, 0x20, 0x2e, 0x2e, 0x2e, 0x20, 0x6f, 0x6e, 0x20, 0x54, 0x72, 0x65, 0x65, 0x20, 0x7b, 0x20, 0x69, 0x64, 0x20, 0x7d, 0x20, 0x7d, 0x20, 0x62, 0x72, 0x61, 0x6e, 0x63, 0x68, 0x50, 0x72, 0x6f, 0x74, 0x65, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x52, 0x75, 0x6c, 0x65, 0x20, 0x7b, 0x20, 0x5f, 0x5f, 0x74, 0x79, 0x70, 0x65, 0x6e, 0x61, 0x6d, 0x65, 0x20, 0x61, 0x6c, 0x6c, 0x6f, 0x77, 0x73, 0x46, 0x6f, 0x72, 0x63, 0x65, 0x50, 0x75, 0x73, 0x68, 0x65, 0x73, 0x20, 0x64, 0x69, 0x73, 0x6d, 0x69, 0x73, 0x73, 0x65, 0x73, 0x53, 0x74, 0x61, 0x6c, 0x65, 0x52, 0x65, 0x76, 0x69, 0x65, 0x77, 0x73, 0x20, 0x6c, 0x6f, 0x63, 0x6b, 0x42, 0x72, 0x61, 0x6e, 0x63, 0x68, 0x20, 0x72, 0x65, 0x71, 0x75, 0x69, 0x72, 0x65, 0x73, 0x41, 0x70, 0x70, 0x72, 0x6f, 0x76, 0x69, 0x6e, 0x67, 0x52, 0x65, 0x76, 0x69, 0x65, 0x77, 0x73, 0x20, 0x72, 0x65, 0x71, 0x75, 0x69, 0x72, 0x65, 0x73, 0x43, 0x6f, 0x6e, 0x76, 0x65, 0x72, 0x73, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x52, 0x65, 0x73, 0x6f, 0x6c, 0x75, 0x74, 0x69, 0x6f, 0x6e, 0x20, 0x72, 0x65, 0x71, 0x75, 0x69, 0x72, 0x65, 0x73, 0x53, 0x74, 0x61, 0x74, 0x75, 0x73, 0x43, 0x68, 0x65, 0x63, 0x6b, 0x73, 0x20, 0x72, 0x65, 0x71, 0x75, 0x69, 0x72, 0x65, 0x73, 0x53, 0x74, 0x72, 0x69, 0x63, 0x74, 0x53, 0x74, 0x61, 0x74, 0x75, 0x73, 0x43, 0x68, 0x65, 0x63, 0x6b, 0x73, 0x20, 0x2e, 0x2e, 0x2e, 0x20, 0x6f, 0x6e, 0x20, 0x42, 0x72, 0x61, 0x6e, 0x63, 0x68, 0x50, 0x72, 0x6f, 0x74, 0x65, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x52, 0x75, 0x6c, 0x65, 0x20, 0x7b, 0x20, 0x69, 0x64, 0x20, 0x7d, 0x20, 0x7d, 0x20, 0x2e, 0x2e, 0x2e, 0x20, 0x6f, 0x6e, 0x20, 0x52, 0x65, 0x66, 0x20, 0x7b, 0x20, 0x69, 0x64, 0x20, 0x7d, 0x20, 0x7d, 0x20, 0x64, 0x65, 0x73, 0x63, 0x72, 0x69, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x20, 0x68, 0x61, 0x73, 0x44, 0x69, 0x73, 0x63, 0x75, 0x73, 0x73, 0x69, 0x6f, 0x6e, 0x73, 0x45, 0x6e, 0x61, 0x62, 0x6c, 0x65, 0x64, 0x20, 0x68, 0x61, 0x73, 0x49, 0x73, 0x73, 0x75, 0x65, 0x73, 0x45, 0x6e, 0x61, 0x62, 0x6c, 0x65, 0x64, 0x20, 0x69, 0x73, 0x41, 0x72, 0x63, 0x68, 0x69, 0x76, 0x65, 0x64, 0x20, 0x69, 0x73, 0x45, 0x6d, 0x70, 0x74, 0x79, 0x20, 0x69, 0x73, 0x4c, 0x6f, 0x63, 0x6b, 0x65, 0x64, 0x20, 0x69, 0x73, 0x73, 0x75, 0x65, 0x54, 0x65, 0x6d, 0x70, 0x6c, 0x61, 0x74, 0x65, 0x73, 0x20, 0x7b, 0x20, 0x5f, 0x5f, 0x74, 0x79, 0x70, 0x65, 0x6e, 0x61, 0x6d, 0x65, 0x20, 0x6e, 0x61, 0x6d, 0x65, 0x20, 0x66, 0x69, 0x6c, 0x65, 0x6e, 0x61, 0x6d, 0x65, 0x20, 0x7d, 0x20, 0x6c, 0x69, 0x63, 0x65, 0x6e, 0x73, 0x65, 0x49, 0x6e, 0x66, 0x6f, 0x20, 0x7b, 0x20, 0x5f, 0x5f, 0x74, 0x79, 0x70, 0x65, 0x6e, 0x61, 0x6d, 0x65, 0x20, 0x6e, 0x61, 0x6d, 0x65, 0x20, 0x75, 0x72, 0x6c, 0x20, 0x2e, 0x2e, 0x2e, 0x20, 0x6f, 0x6e, 0x20, 0x4c, 0x69, 0x63, 0x65, 0x6e, 0x73, 0x65, 0x20, 0x7b, 0x20, 0x69, 0x64, 0x20, 0x7d, 0x20, 0x7d, 0x20, 0x6f, 0x70, 0x65, 0x6e, 0x47, 0x72, 0x61, 0x70, 0x68, 0x49, 0x6d, 0x61, 0x67, 0x65, 0x55, 0x72, 0x6c, 0x20, 0x70, 0x72, 0x69, 0x6d, 0x61, 0x72, 0x79, 0x4c, 0x61, 0x6e, 0x67, 0x75, 0x61, 0x67, 0x65, 0x20, 0x7b, 0x20, 0x5f, 0x5f, 0x74, 0x79, 0x70, 0x65, 0x6e, 0x61, 0x6d, 0x65, 0x20, 0x6e, 0x61, 0x6d, 0x65, 0x20, 0x63, 0x6f, 0x6c, 0x6f, 0x72, 0x20, 0x2e, 0x2e, 0x2e, 0x20, 0x6f, 0x6e, 0x20, 0x4c, 0x61, 0x6e, 0x67, 0x75, 0x61, 0x67, 0x65, 0x20, 0x7b, 0x20, 0x69, 0x64, 0x20, 0x7d, 0x20, 0x7d, 0x20, 0x70, 0x75, 0x6c, 0x6c, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x54, 0x65, 0x6d, 0x70, 0x6c, 0x61, 0x74, 0x65, 0x73, 0x20, 0x7b, 0x20, 0x5f, 0x5f, 0x74, 0x79, 0x70, 0x65, 0x6e, 0x61, 0x6d, 0x65, 0x20, 0x66, 0x69, 0x6c, 0x65, 0x6e, 0x61, 0x6d, 0x65, 0x20, 0x7d, 0x20, 0x75, 0x72, 0x6c, 0x20, 0x70, 0x75, 0x6c, 0x6c, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x73, 0x28, 0x66, 0x69, 0x72, 0x73, 0x74, 0x3a, 0x20, 0x31, 0x30, 0x2c, 0x20, 0x73, 0x74, 0x61, 0x74, 0x65, 0x73, 0x3a, 0x20, 0x4f, 0x50, 0x45, 0x4e, 0x29, 0x20, 0x7b, 0x20, 0x5f, 0x5f, 0x74, 0x79, 0x70, 0x65, 0x6e, 0x61, 0x6d, 0x65, 0x20, 0x6e, 0x6f, 0x64, 0x65, 0x73, 0x20, 0x7b, 0x20, 0x5f, 0x5f, 0x74, 0x79, 0x70, 0x65, 0x6e, 0x61, 0x6d, 0x65, 0x20, 0x63, 0x72, 0x65, 0x61, 0x74, 0x65, 0x64, 0x41, 0x74, 0x20, 0x2e, 0x2e, 0x2e, 0x20, 0x6f, 0x6e, 0x20, 0x50, 0x75, 0x6c, 0x6c, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x20, 0x7b, 0x20, 0x69, 0x64, 0x20, 0x7d, 0x20, 0x7d, 0x20, 0x7d, 0x20, 0x69, 0x73, 0x73, 0x75, 0x65, 0x73, 0x28, 0x66, 0x69, 0x72, 0x73, 0x74, 0x3a, 0x20, 0x31, 0x30, 0x30, 0x2c, 0x20, 0x73, 0x74, 0x61, 0x74, 0x65, 0x73, 0x3a, 0x20, 0x4f, 0x50, 0x45, 0x4e, 0x29, 0x20, 0x7b, 0x20, 0x5f, 0x5f, 0x74, 0x79, 0x70, 0x65, 0x6e, 0x61, 0x6d, 0x65, 0x20, 0x65, 0x64, 0x67, 0x65, 0x73, 0x20, 0x7b, 0x20, 0x5f, 0x5f, 0x74, 0x79, 0x70, 0x65, 0x6e, 0x61, 0x6d, 0x65, 0x20, 0x6e, 0x6f, 0x64, 0x65, 0x20, 0x7b, 0x20, 0x5f, 0x5f, 0x74, 0x79, 0x70, 0x65, 0x6e, 0x61, 0x6d, 0x65, 0x20, 0x6c, 0x61, 0x62, 0x65, 0x6c, 0x73, 0x20, 0x7b, 0x20, 0x5f, 0x5f, 0x74, 0x79, 0x70, 0x65, 0x6e, 0x61, 0x6d, 0x65, 0x20, 0x74, 0x6f, 0x74, 0x61, 0x6c, 0x43, 0x6f, 0x75, 0x6e, 0x74, 0x20, 0x7d, 0x20, 0x6e, 0x75, 0x6d, 0x62, 0x65, 0x72, 0x20, 0x63, 0x72, 0x65, 0x61, 0x74, 0x65, 0x64, 0x41, 0x74, 0x20, 0x2e, 0x2e, 0x2e, 0x20, 0x6f, 0x6e, 0x20, 0x49, 0x73, 0x73, 0x75, 0x65, 0x20, 0x7b, 0x20, 0x69, 0x64, 0x20, 0x7d, 0x20, 0x7d, 0x20, 0x7d, 0x20, 0x7d, 0x20, 0x2e, 0x2e, 0x2e, 0x20, 0x6f, 0x6e, 0x20, 0x52, 0x65, 0x70, 0x6f, 0x73, 0x69, 0x74, 0x6f, 0x72, 0x79, 0x20, 0x7b, 0x20, 0x69, 0x64, 0x20, 0x7d, 0x20, 0x7d, 0x20, 0x7d};
+        public global::StrawberryShake.DocumentHash Hash { get; } = new global::StrawberryShake.DocumentHash("md5Hash", "16073dca8faab05c7d1b71ac163fbd78");
+        public override global::System.String ToString()
+        {
+#if NETSTANDARD2_0
+        return global::System.Text.Encoding.UTF8.GetString(Body.ToArray());
+#else
+            return global::System.Text.Encoding.UTF8.GetString(Body);
+#endif
+        }
+    }
+
+    /// <summary>
+    /// Represents the operation service of the GetRepo GraphQL operation
+    /// <code>
+    /// query GetRepo($name: String!, $owner: String!) {
+    ///   repository(name: $name, owner: $owner) {
+    ///     __typename
+    ///     discussions(first: 100, orderBy: { field: UPDATED_AT, direction: DESC }) {
+    ///       __typename
+    ///       edges {
+    ///         __typename
+    ///         node {
+    ///           __typename
+    ///           number
+    ///           answerChosenAt
+    ///           ... on Discussion {
+    ///             id
+    ///           }
+    ///         }
+    ///       }
+    ///       totalCount
+    ///     }
+    ///     isSecurityPolicyEnabled
+    ///     securityPolicyUrl
+    ///     hasVulnerabilityAlertsEnabled
+    ///     vulnerabilityAlerts {
+    ///       __typename
+    ///       totalCount
+    ///     }
+    ///     releases(first: 1) {
+    ///       __typename
+    ///       edges {
+    ///         __typename
+    ///         node {
+    ///           __typename
+    ///           name
+    ///           url
+    ///           ... on Release {
+    ///             id
+    ///           }
+    ///         }
+    ///       }
+    ///     }
+    ///     diskUsage
+    ///     updatedAt
+    ///     pushedAt
+    ///     repositoryTopics {
+    ///       __typename
+    ///       totalCount
+    ///     }
+    ///     codeOfConduct {
+    ///       __typename
+    ///       url
+    ///       name
+    ///       ... on CodeOfConduct {
+    ///         id
+    ///       }
+    ///     }
+    ///     codeowners {
+    ///       __typename
+    ///       errors {
+    ///         __typename
+    ///         kind
+    ///       }
+    ///     }
+    ///     defaultBranchRef {
+    ///       __typename
+    ///       name
+    ///       target {
+    ///         __typename
+    ///         commitResourcePath
+    ///         ... on Blob {
+    ///           id
+    ///         }
+    ///         ... on Commit {
+    ///           id
+    ///         }
+    ///         ... on Tag {
+    ///           id
+    ///         }
+    ///         ... on Tree {
+    ///           id
+    ///         }
+    ///       }
+    ///       branchProtectionRule {
+    ///         __typename
+    ///         allowsForcePushes
+    ///         dismissesStaleReviews
+    ///         lockBranch
+    ///         requiresApprovingReviews
+    ///         requiresConversationResolution
+    ///         requiresStatusChecks
+    ///         requiresStrictStatusChecks
+    ///         ... on BranchProtectionRule {
+    ///           id
+    ///         }
+    ///       }
+    ///       ... on Ref {
+    ///         id
+    ///       }
+    ///     }
+    ///     description
+    ///     hasDiscussionsEnabled
+    ///     hasIssuesEnabled
+    ///     isArchived
+    ///     isEmpty
+    ///     isLocked
+    ///     issueTemplates {
+    ///       __typename
+    ///       name
+    ///       filename
+    ///     }
+    ///     licenseInfo {
+    ///       __typename
+    ///       name
+    ///       url
+    ///       ... on License {
+    ///         id
+    ///       }
+    ///     }
+    ///     openGraphImageUrl
+    ///     primaryLanguage {
+    ///       __typename
+    ///       name
+    ///       color
+    ///       ... on Language {
+    ///         id
+    ///       }
+    ///     }
+    ///     pullRequestTemplates {
+    ///       __typename
+    ///       filename
+    ///     }
+    ///     url
+    ///     pullRequests(first: 10, states: OPEN) {
+    ///       __typename
+    ///       nodes {
+    ///         __typename
+    ///         createdAt
+    ///         ... on PullRequest {
+    ///           id
+    ///         }
+    ///       }
+    ///     }
+    ///     issues(first: 100, states: OPEN) {
+    ///       __typename
+    ///       edges {
+    ///         __typename
+    ///         node {
+    ///           __typename
+    ///           labels {
+    ///             __typename
+    ///             totalCount
+    ///           }
+    ///           number
+    ///           createdAt
+    ///           ... on Issue {
+    ///             id
+    ///           }
+    ///         }
+    ///       }
+    ///     }
+    ///     ... on Repository {
+    ///       id
+    ///     }
+    ///   }
+    /// }
+    /// </code>
+    /// </summary>
+    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.15.2.0")]
+    public partial class GetRepoQuery : global::RepositoryAnalysis.Internal.GraphQL.IGetRepoQuery
+    {
+        private readonly global::StrawberryShake.IOperationExecutor<IGetRepoResult> _operationExecutor;
+        private readonly global::StrawberryShake.Serialization.IInputValueFormatter _stringFormatter;
+        public GetRepoQuery(global::StrawberryShake.IOperationExecutor<IGetRepoResult> operationExecutor, global::StrawberryShake.Serialization.ISerializerResolver serializerResolver)
+        {
+            _operationExecutor = operationExecutor ?? throw new global::System.ArgumentNullException(nameof(operationExecutor));
+            _stringFormatter = serializerResolver.GetInputValueFormatter("String");
+        }
+
+        global::System.Type global::StrawberryShake.IOperationRequestFactory.ResultType => typeof(IGetRepoResult);
+        public async global::System.Threading.Tasks.Task<global::StrawberryShake.IOperationResult<IGetRepoResult>> ExecuteAsync(global::System.String name, global::System.String owner, global::System.Threading.CancellationToken cancellationToken = default)
+        {
+            var request = CreateRequest(name, owner);
+            return await _operationExecutor.ExecuteAsync(request, cancellationToken).ConfigureAwait(false);
+        }
+
+        public global::System.IObservable<global::StrawberryShake.IOperationResult<IGetRepoResult>> Watch(global::System.String name, global::System.String owner, global::StrawberryShake.ExecutionStrategy? strategy = null)
+        {
+            var request = CreateRequest(name, owner);
+            return _operationExecutor.Watch(request, strategy);
+        }
+
+        private global::StrawberryShake.OperationRequest CreateRequest(global::System.String name, global::System.String owner)
+        {
+            var variables = new global::System.Collections.Generic.Dictionary<global::System.String, global::System.Object?>();
+            variables.Add("name", FormatName(name));
+            variables.Add("owner", FormatOwner(owner));
+            return CreateRequest(variables);
+        }
+
+        private global::StrawberryShake.OperationRequest CreateRequest(global::System.Collections.Generic.IReadOnlyDictionary<global::System.String, global::System.Object?>? variables)
+        {
+            return new global::StrawberryShake.OperationRequest(id: GetRepoQueryDocument.Instance.Hash.Value, name: "GetRepo", document: GetRepoQueryDocument.Instance, strategy: global::StrawberryShake.RequestStrategy.Default, variables: variables);
+        }
+
+        private global::System.Object? FormatName(global::System.String value)
+        {
+            if (value is null)
+            {
+                throw new global::System.ArgumentNullException(nameof(value));
+            }
+
+            return _stringFormatter.Format(value);
+        }
+
+        private global::System.Object? FormatOwner(global::System.String value)
+        {
+            if (value is null)
+            {
+                throw new global::System.ArgumentNullException(nameof(value));
+            }
+
+            return _stringFormatter.Format(value);
+        }
+
+        global::StrawberryShake.OperationRequest global::StrawberryShake.IOperationRequestFactory.Create(global::System.Collections.Generic.IReadOnlyDictionary<global::System.String, global::System.Object?>? variables)
+        {
+            return CreateRequest(variables!);
+        }
+    }
+
+    /// <summary>
+    /// Represents the operation service of the GetRepo GraphQL operation
+    /// <code>
+    /// query GetRepo($name: String!, $owner: String!) {
+    ///   repository(name: $name, owner: $owner) {
+    ///     __typename
+    ///     discussions(first: 100, orderBy: { field: UPDATED_AT, direction: DESC }) {
+    ///       __typename
+    ///       edges {
+    ///         __typename
+    ///         node {
+    ///           __typename
+    ///           number
+    ///           answerChosenAt
+    ///           ... on Discussion {
+    ///             id
+    ///           }
+    ///         }
+    ///       }
+    ///       totalCount
+    ///     }
+    ///     isSecurityPolicyEnabled
+    ///     securityPolicyUrl
+    ///     hasVulnerabilityAlertsEnabled
+    ///     vulnerabilityAlerts {
+    ///       __typename
+    ///       totalCount
+    ///     }
+    ///     releases(first: 1) {
+    ///       __typename
+    ///       edges {
+    ///         __typename
+    ///         node {
+    ///           __typename
+    ///           name
+    ///           url
+    ///           ... on Release {
+    ///             id
+    ///           }
+    ///         }
+    ///       }
+    ///     }
+    ///     diskUsage
+    ///     updatedAt
+    ///     pushedAt
+    ///     repositoryTopics {
+    ///       __typename
+    ///       totalCount
+    ///     }
+    ///     codeOfConduct {
+    ///       __typename
+    ///       url
+    ///       name
+    ///       ... on CodeOfConduct {
+    ///         id
+    ///       }
+    ///     }
+    ///     codeowners {
+    ///       __typename
+    ///       errors {
+    ///         __typename
+    ///         kind
+    ///       }
+    ///     }
+    ///     defaultBranchRef {
+    ///       __typename
+    ///       name
+    ///       target {
+    ///         __typename
+    ///         commitResourcePath
+    ///         ... on Blob {
+    ///           id
+    ///         }
+    ///         ... on Commit {
+    ///           id
+    ///         }
+    ///         ... on Tag {
+    ///           id
+    ///         }
+    ///         ... on Tree {
+    ///           id
+    ///         }
+    ///       }
+    ///       branchProtectionRule {
+    ///         __typename
+    ///         allowsForcePushes
+    ///         dismissesStaleReviews
+    ///         lockBranch
+    ///         requiresApprovingReviews
+    ///         requiresConversationResolution
+    ///         requiresStatusChecks
+    ///         requiresStrictStatusChecks
+    ///         ... on BranchProtectionRule {
+    ///           id
+    ///         }
+    ///       }
+    ///       ... on Ref {
+    ///         id
+    ///       }
+    ///     }
+    ///     description
+    ///     hasDiscussionsEnabled
+    ///     hasIssuesEnabled
+    ///     isArchived
+    ///     isEmpty
+    ///     isLocked
+    ///     issueTemplates {
+    ///       __typename
+    ///       name
+    ///       filename
+    ///     }
+    ///     licenseInfo {
+    ///       __typename
+    ///       name
+    ///       url
+    ///       ... on License {
+    ///         id
+    ///       }
+    ///     }
+    ///     openGraphImageUrl
+    ///     primaryLanguage {
+    ///       __typename
+    ///       name
+    ///       color
+    ///       ... on Language {
+    ///         id
+    ///       }
+    ///     }
+    ///     pullRequestTemplates {
+    ///       __typename
+    ///       filename
+    ///     }
+    ///     url
+    ///     pullRequests(first: 10, states: OPEN) {
+    ///       __typename
+    ///       nodes {
+    ///         __typename
+    ///         createdAt
+    ///         ... on PullRequest {
+    ///           id
+    ///         }
+    ///       }
+    ///     }
+    ///     issues(first: 100, states: OPEN) {
+    ///       __typename
+    ///       edges {
+    ///         __typename
+    ///         node {
+    ///           __typename
+    ///           labels {
+    ///             __typename
+    ///             totalCount
+    ///           }
+    ///           number
+    ///           createdAt
+    ///           ... on Issue {
+    ///             id
+    ///           }
+    ///         }
+    ///       }
+    ///     }
+    ///     ... on Repository {
+    ///       id
+    ///     }
+    ///   }
+    /// }
+    /// </code>
+    /// </summary>
+    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.15.2.0")]
+    public partial interface IGetRepoQuery : global::StrawberryShake.IOperationRequestFactory
+    {
+        global::System.Threading.Tasks.Task<global::StrawberryShake.IOperationResult<IGetRepoResult>> ExecuteAsync(global::System.String name, global::System.String owner, global::System.Threading.CancellationToken cancellationToken = default);
+        global::System.IObservable<global::StrawberryShake.IOperationResult<IGetRepoResult>> Watch(global::System.String name, global::System.String owner, global::StrawberryShake.ExecutionStrategy? strategy = null);
+    }
+
+    /// <summary>
     /// Represents the GithubClient GraphQL client
     /// </summary>
     [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.15.2.0")]
     public partial class GithubClient : global::RepositoryAnalysis.Internal.GraphQL.IGithubClient
     {
-        private readonly global::RepositoryAnalysis.Internal.GraphQL.IGetRepoQuery _getRepo;
         private readonly global::RepositoryAnalysis.Internal.GraphQL.IGetAgeQuery _getAge;
         private readonly global::RepositoryAnalysis.Internal.GraphQL.IGetFileQuery _getFile;
-        public GithubClient(global::RepositoryAnalysis.Internal.GraphQL.IGetRepoQuery getRepo, global::RepositoryAnalysis.Internal.GraphQL.IGetAgeQuery getAge, global::RepositoryAnalysis.Internal.GraphQL.IGetFileQuery getFile)
+        private readonly global::RepositoryAnalysis.Internal.GraphQL.IGetRepoQuery _getRepo;
+        public GithubClient(global::RepositoryAnalysis.Internal.GraphQL.IGetAgeQuery getAge, global::RepositoryAnalysis.Internal.GraphQL.IGetFileQuery getFile, global::RepositoryAnalysis.Internal.GraphQL.IGetRepoQuery getRepo)
         {
-            _getRepo = getRepo ?? throw new global::System.ArgumentNullException(nameof(getRepo));
             _getAge = getAge ?? throw new global::System.ArgumentNullException(nameof(getAge));
             _getFile = getFile ?? throw new global::System.ArgumentNullException(nameof(getFile));
+            _getRepo = getRepo ?? throw new global::System.ArgumentNullException(nameof(getRepo));
         }
 
         public static global::System.String ClientName => "GithubClient";
-        public global::RepositoryAnalysis.Internal.GraphQL.IGetRepoQuery GetRepo => _getRepo;
         public global::RepositoryAnalysis.Internal.GraphQL.IGetAgeQuery GetAge => _getAge;
         public global::RepositoryAnalysis.Internal.GraphQL.IGetFileQuery GetFile => _getFile;
+        public global::RepositoryAnalysis.Internal.GraphQL.IGetRepoQuery GetRepo => _getRepo;
     }
 
     /// <summary>
@@ -4520,11 +4881,11 @@ namespace RepositoryAnalysis.Internal.GraphQL
     [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.15.2.0")]
     public partial interface IGithubClient
     {
-        global::RepositoryAnalysis.Internal.GraphQL.IGetRepoQuery GetRepo { get; }
-
         global::RepositoryAnalysis.Internal.GraphQL.IGetAgeQuery GetAge { get; }
 
         global::RepositoryAnalysis.Internal.GraphQL.IGetFileQuery GetFile { get; }
+
+        global::RepositoryAnalysis.Internal.GraphQL.IGetRepoQuery GetRepo { get; }
     }
 }
 
@@ -4534,16 +4895,18 @@ namespace RepositoryAnalysis.Internal.GraphQL.State
     [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.15.2.0")]
     public partial class RepositoryEntity
     {
-        public RepositoryEntity(global::System.Boolean? isSecurityPolicyEnabled = default !, global::System.Uri? securityPolicyUrl = default !, global::System.Boolean hasVulnerabilityAlertsEnabled = default !, global::RepositoryAnalysis.Internal.GraphQL.State.RepositoryVulnerabilityAlertConnectionData? vulnerabilityAlerts = default !, global::RepositoryAnalysis.Internal.GraphQL.State.ReleaseConnectionData releases = default !, global::System.Int32? diskUsage = default !, global::System.DateTimeOffset updatedAt = default !, global::System.DateTimeOffset? pushedAt = default !, global::RepositoryAnalysis.Internal.GraphQL.State.RepositoryTopicConnectionData repositoryTopics = default !, global::StrawberryShake.EntityId? codeOfConduct = default !, global::RepositoryAnalysis.Internal.GraphQL.State.RepositoryCodeownersData? codeowners = default !, global::StrawberryShake.EntityId? defaultBranchRef = default !, global::System.String? description = default !, global::System.Boolean hasDiscussionsEnabled = default !, global::System.Boolean hasIssuesEnabled = default !, global::System.Boolean isArchived = default !, global::System.Boolean isEmpty = default !, global::System.Boolean isLocked = default !, global::System.Collections.Generic.IReadOnlyList<global::RepositoryAnalysis.Internal.GraphQL.State.IssueTemplateData>? issueTemplates = default !, global::StrawberryShake.EntityId? licenseInfo = default !, global::System.Uri openGraphImageUrl = default !, global::StrawberryShake.EntityId? primaryLanguage = default !, global::System.Collections.Generic.IReadOnlyList<global::RepositoryAnalysis.Internal.GraphQL.State.PullRequestTemplateData>? pullRequestTemplates = default !, global::System.Uri url = default !, global::RepositoryAnalysis.Internal.GraphQL.State.PullRequestConnectionData pullRequests = default !, global::RepositoryAnalysis.Internal.GraphQL.State.IssueConnectionData issues = default !, global::StrawberryShake.EntityId? file = default !)
+        public RepositoryEntity(global::System.DateTimeOffset updatedAt = default !, global::System.DateTimeOffset? pushedAt = default !, global::StrawberryShake.EntityId? file = default !, global::RepositoryAnalysis.Internal.GraphQL.State.DiscussionConnectionData discussions = default !, global::System.Boolean? isSecurityPolicyEnabled = default !, global::System.Uri? securityPolicyUrl = default !, global::System.Boolean hasVulnerabilityAlertsEnabled = default !, global::RepositoryAnalysis.Internal.GraphQL.State.RepositoryVulnerabilityAlertConnectionData? vulnerabilityAlerts = default !, global::RepositoryAnalysis.Internal.GraphQL.State.ReleaseConnectionData releases = default !, global::System.Int32? diskUsage = default !, global::RepositoryAnalysis.Internal.GraphQL.State.RepositoryTopicConnectionData repositoryTopics = default !, global::StrawberryShake.EntityId? codeOfConduct = default !, global::RepositoryAnalysis.Internal.GraphQL.State.RepositoryCodeownersData? codeowners = default !, global::StrawberryShake.EntityId? defaultBranchRef = default !, global::System.String? description = default !, global::System.Boolean hasDiscussionsEnabled = default !, global::System.Boolean hasIssuesEnabled = default !, global::System.Boolean isArchived = default !, global::System.Boolean isEmpty = default !, global::System.Boolean isLocked = default !, global::System.Collections.Generic.IReadOnlyList<global::RepositoryAnalysis.Internal.GraphQL.State.IssueTemplateData>? issueTemplates = default !, global::StrawberryShake.EntityId? licenseInfo = default !, global::System.Uri openGraphImageUrl = default !, global::StrawberryShake.EntityId? primaryLanguage = default !, global::System.Collections.Generic.IReadOnlyList<global::RepositoryAnalysis.Internal.GraphQL.State.PullRequestTemplateData>? pullRequestTemplates = default !, global::System.Uri url = default !, global::RepositoryAnalysis.Internal.GraphQL.State.PullRequestConnectionData pullRequests = default !, global::RepositoryAnalysis.Internal.GraphQL.State.IssueConnectionData issues = default !)
         {
+            UpdatedAt = updatedAt;
+            PushedAt = pushedAt;
+            File = file;
+            Discussions = discussions;
             IsSecurityPolicyEnabled = isSecurityPolicyEnabled;
             SecurityPolicyUrl = securityPolicyUrl;
             HasVulnerabilityAlertsEnabled = hasVulnerabilityAlertsEnabled;
             VulnerabilityAlerts = vulnerabilityAlerts;
             Releases = releases;
             DiskUsage = diskUsage;
-            UpdatedAt = updatedAt;
-            PushedAt = pushedAt;
             RepositoryTopics = repositoryTopics;
             CodeOfConduct = codeOfConduct;
             Codeowners = codeowners;
@@ -4562,8 +4925,19 @@ namespace RepositoryAnalysis.Internal.GraphQL.State
             Url = url;
             PullRequests = pullRequests;
             Issues = issues;
-            File = file;
         }
+
+        ///<summary>Identifies the date and time when the object was last updated.</summary>
+        public global::System.DateTimeOffset UpdatedAt { get; }
+
+        ///<summary>Identifies when the repository was last pushed to.</summary>
+        public global::System.DateTimeOffset? PushedAt { get; }
+
+        ///<summary>A Git object in the repository</summary>
+        public global::StrawberryShake.EntityId? File { get; }
+
+        ///<summary>A list of discussions that have been opened in the repository.</summary>
+        public global::RepositoryAnalysis.Internal.GraphQL.State.DiscussionConnectionData Discussions { get; }
 
         ///<summary>Returns true if this repository has a security policy</summary>
         public global::System.Boolean? IsSecurityPolicyEnabled { get; }
@@ -4582,12 +4956,6 @@ namespace RepositoryAnalysis.Internal.GraphQL.State
 
         ///<summary>The number of kilobytes this repository occupies on disk.</summary>
         public global::System.Int32? DiskUsage { get; }
-
-        ///<summary>Identifies the date and time when the object was last updated.</summary>
-        public global::System.DateTimeOffset UpdatedAt { get; }
-
-        ///<summary>Identifies when the repository was last pushed to.</summary>
-        public global::System.DateTimeOffset? PushedAt { get; }
 
         ///<summary>A list of applied repository-topic associations for this repository.</summary>
         public global::RepositoryAnalysis.Internal.GraphQL.State.RepositoryTopicConnectionData RepositoryTopics { get; }
@@ -4642,9 +5010,62 @@ namespace RepositoryAnalysis.Internal.GraphQL.State
 
         ///<summary>A list of issues that have been opened in the repository.</summary>
         public global::RepositoryAnalysis.Internal.GraphQL.State.IssueConnectionData Issues { get; }
+    }
 
-        ///<summary>A Git object in the repository</summary>
-        public global::StrawberryShake.EntityId? File { get; }
+    ///<summary>Represents a Git blob.</summary>
+    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.15.2.0")]
+    public partial class BlobEntity
+    {
+        public BlobEntity(global::System.String? text = default !, global::System.Uri commitResourcePath = default !)
+        {
+            Text = text;
+            CommitResourcePath = commitResourcePath;
+        }
+
+        ///<summary>UTF8 text data or null if the Blob is binary</summary>
+        public global::System.String? Text { get; }
+
+        ///<summary>The HTTP path for this Git object</summary>
+        public global::System.Uri CommitResourcePath { get; }
+    }
+
+    ///<summary>Represents a Git commit.</summary>
+    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.15.2.0")]
+    public partial class CommitEntity
+    {
+        public CommitEntity(global::System.Uri commitResourcePath = default !)
+        {
+            CommitResourcePath = commitResourcePath;
+        }
+
+        ///<summary>The HTTP path for this Git object</summary>
+        public global::System.Uri CommitResourcePath { get; }
+    }
+
+    ///<summary>Represents a Git tag.</summary>
+    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.15.2.0")]
+    public partial class TagEntity
+    {
+        public TagEntity(global::System.Uri commitResourcePath = default !)
+        {
+            CommitResourcePath = commitResourcePath;
+        }
+
+        ///<summary>The HTTP path for this Git object</summary>
+        public global::System.Uri CommitResourcePath { get; }
+    }
+
+    ///<summary>Represents a Git tree.</summary>
+    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.15.2.0")]
+    public partial class TreeEntity
+    {
+        public TreeEntity(global::System.Uri commitResourcePath = default !)
+        {
+            CommitResourcePath = commitResourcePath;
+        }
+
+        ///<summary>The HTTP path for this Git object</summary>
+        public global::System.Uri CommitResourcePath { get; }
     }
 
     ///<summary>The Code of Conduct for a repository</summary>
@@ -4719,62 +5140,6 @@ namespace RepositoryAnalysis.Internal.GraphQL.State
         public global::System.String? Color { get; }
     }
 
-    ///<summary>Represents a Git blob.</summary>
-    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.15.2.0")]
-    public partial class BlobEntity
-    {
-        public BlobEntity(global::System.Uri commitResourcePath = default !, global::System.String? text = default !)
-        {
-            CommitResourcePath = commitResourcePath;
-            Text = text;
-        }
-
-        ///<summary>The HTTP path for this Git object</summary>
-        public global::System.Uri CommitResourcePath { get; }
-
-        ///<summary>UTF8 text data or null if the Blob is binary</summary>
-        public global::System.String? Text { get; }
-    }
-
-    ///<summary>Represents a Git commit.</summary>
-    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.15.2.0")]
-    public partial class CommitEntity
-    {
-        public CommitEntity(global::System.Uri commitResourcePath = default !)
-        {
-            CommitResourcePath = commitResourcePath;
-        }
-
-        ///<summary>The HTTP path for this Git object</summary>
-        public global::System.Uri CommitResourcePath { get; }
-    }
-
-    ///<summary>Represents a Git tag.</summary>
-    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.15.2.0")]
-    public partial class TagEntity
-    {
-        public TagEntity(global::System.Uri commitResourcePath = default !)
-        {
-            CommitResourcePath = commitResourcePath;
-        }
-
-        ///<summary>The HTTP path for this Git object</summary>
-        public global::System.Uri CommitResourcePath { get; }
-    }
-
-    ///<summary>Represents a Git tree.</summary>
-    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.15.2.0")]
-    public partial class TreeEntity
-    {
-        public TreeEntity(global::System.Uri commitResourcePath = default !)
-        {
-            CommitResourcePath = commitResourcePath;
-        }
-
-        ///<summary>The HTTP path for this Git object</summary>
-        public global::System.Uri CommitResourcePath { get; }
-    }
-
     ///<summary>A branch protection rule.</summary>
     [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.15.2.0")]
     public partial class BranchProtectionRuleEntity
@@ -4825,6 +5190,23 @@ namespace RepositoryAnalysis.Internal.GraphQL.State
         public global::System.DateTimeOffset CreatedAt { get; }
     }
 
+    ///<summary>A discussion in a repository.</summary>
+    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.15.2.0")]
+    public partial class DiscussionEntity
+    {
+        public DiscussionEntity(global::System.Int32 number = default !, global::System.DateTimeOffset? answerChosenAt = default !)
+        {
+            Number = number;
+            AnswerChosenAt = answerChosenAt;
+        }
+
+        ///<summary>The number identifying this discussion within the repository.</summary>
+        public global::System.Int32 Number { get; }
+
+        ///<summary>The time when a user chose this discussion's answer, if answered.</summary>
+        public global::System.DateTimeOffset? AnswerChosenAt { get; }
+    }
+
     ///<summary>A release contains the content for a release.</summary>
     [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.15.2.0")]
     public partial class ReleaseEntity
@@ -4861,6 +5243,310 @@ namespace RepositoryAnalysis.Internal.GraphQL.State
 
         ///<summary>Identifies the date and time when the object was created.</summary>
         public global::System.DateTimeOffset CreatedAt { get; }
+    }
+
+    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.15.2.0")]
+    public partial class GetAgeResultFactory : global::StrawberryShake.IOperationResultDataFactory<global::RepositoryAnalysis.Internal.GraphQL.GetAgeResult>
+    {
+        private readonly global::StrawberryShake.IEntityStore _entityStore;
+        private readonly global::StrawberryShake.IEntityMapper<global::RepositoryAnalysis.Internal.GraphQL.State.RepositoryEntity, GetAge_Repository_Repository> _getAge_Repository_RepositoryFromRepositoryEntityMapper;
+        public GetAgeResultFactory(global::StrawberryShake.IEntityStore entityStore, global::StrawberryShake.IEntityMapper<global::RepositoryAnalysis.Internal.GraphQL.State.RepositoryEntity, GetAge_Repository_Repository> getAge_Repository_RepositoryFromRepositoryEntityMapper)
+        {
+            _entityStore = entityStore ?? throw new global::System.ArgumentNullException(nameof(entityStore));
+            _getAge_Repository_RepositoryFromRepositoryEntityMapper = getAge_Repository_RepositoryFromRepositoryEntityMapper ?? throw new global::System.ArgumentNullException(nameof(getAge_Repository_RepositoryFromRepositoryEntityMapper));
+        }
+
+        global::System.Type global::StrawberryShake.IOperationResultDataFactory.ResultType => typeof(global::RepositoryAnalysis.Internal.GraphQL.IGetAgeResult);
+        public GetAgeResult Create(global::StrawberryShake.IOperationResultDataInfo dataInfo, global::StrawberryShake.IEntityStoreSnapshot? snapshot = null)
+        {
+            if (snapshot is null)
+            {
+                snapshot = _entityStore.CurrentSnapshot;
+            }
+
+            if (dataInfo is GetAgeResultInfo info)
+            {
+                return new GetAgeResult(MapIGetAge_Repository(info.Repository, snapshot));
+            }
+
+            throw new global::System.ArgumentException("GetAgeResultInfo expected.");
+        }
+
+        private global::RepositoryAnalysis.Internal.GraphQL.IGetAge_Repository? MapIGetAge_Repository(global::StrawberryShake.EntityId? entityId, global::StrawberryShake.IEntityStoreSnapshot snapshot)
+        {
+            if (entityId is null)
+            {
+                return null;
+            }
+
+            if (entityId.Value.Name.Equals("Repository", global::System.StringComparison.Ordinal))
+            {
+                return _getAge_Repository_RepositoryFromRepositoryEntityMapper.Map(snapshot.GetEntity<global::RepositoryAnalysis.Internal.GraphQL.State.RepositoryEntity>(entityId.Value) ?? throw new global::StrawberryShake.GraphQLClientException());
+            }
+
+            throw new global::System.NotSupportedException();
+        }
+
+        global::System.Object global::StrawberryShake.IOperationResultDataFactory.Create(global::StrawberryShake.IOperationResultDataInfo dataInfo, global::StrawberryShake.IEntityStoreSnapshot? snapshot)
+        {
+            return Create(dataInfo, snapshot);
+        }
+    }
+
+    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.15.2.0")]
+    public partial class GetAgeResultInfo : global::StrawberryShake.IOperationResultDataInfo
+    {
+        private readonly global::System.Collections.Generic.IReadOnlyCollection<global::StrawberryShake.EntityId> _entityIds;
+        private readonly global::System.UInt64 _version;
+        public GetAgeResultInfo(global::StrawberryShake.EntityId? repository, global::System.Collections.Generic.IReadOnlyCollection<global::StrawberryShake.EntityId> entityIds, global::System.UInt64 version)
+        {
+            Repository = repository;
+            _entityIds = entityIds ?? throw new global::System.ArgumentNullException(nameof(entityIds));
+            _version = version;
+        }
+
+        /// <summary>
+        /// Lookup a given repository by the owner and repository name.
+        /// </summary>
+        public global::StrawberryShake.EntityId? Repository { get; }
+
+        public global::System.Collections.Generic.IReadOnlyCollection<global::StrawberryShake.EntityId> EntityIds => _entityIds;
+        public global::System.UInt64 Version => _version;
+        public global::StrawberryShake.IOperationResultDataInfo WithVersion(global::System.UInt64 version)
+        {
+            return new GetAgeResultInfo(Repository, _entityIds, version);
+        }
+    }
+
+    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.15.2.0")]
+    public partial class GetAge_Repository_RepositoryFromRepositoryEntityMapper : global::StrawberryShake.IEntityMapper<global::RepositoryAnalysis.Internal.GraphQL.State.RepositoryEntity, GetAge_Repository_Repository>
+    {
+        private readonly global::StrawberryShake.IEntityStore _entityStore;
+        public GetAge_Repository_RepositoryFromRepositoryEntityMapper(global::StrawberryShake.IEntityStore entityStore)
+        {
+            _entityStore = entityStore ?? throw new global::System.ArgumentNullException(nameof(entityStore));
+        }
+
+        public GetAge_Repository_Repository Map(global::RepositoryAnalysis.Internal.GraphQL.State.RepositoryEntity entity, global::StrawberryShake.IEntityStoreSnapshot? snapshot = null)
+        {
+            if (snapshot is null)
+            {
+                snapshot = _entityStore.CurrentSnapshot;
+            }
+
+            return new GetAge_Repository_Repository(entity.UpdatedAt, entity.PushedAt);
+        }
+    }
+
+    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.15.2.0")]
+    public partial class GetFileResultFactory : global::StrawberryShake.IOperationResultDataFactory<global::RepositoryAnalysis.Internal.GraphQL.GetFileResult>
+    {
+        private readonly global::StrawberryShake.IEntityStore _entityStore;
+        private readonly global::StrawberryShake.IEntityMapper<global::RepositoryAnalysis.Internal.GraphQL.State.RepositoryEntity, GetFile_Repository_Repository> _getFile_Repository_RepositoryFromRepositoryEntityMapper;
+        public GetFileResultFactory(global::StrawberryShake.IEntityStore entityStore, global::StrawberryShake.IEntityMapper<global::RepositoryAnalysis.Internal.GraphQL.State.RepositoryEntity, GetFile_Repository_Repository> getFile_Repository_RepositoryFromRepositoryEntityMapper)
+        {
+            _entityStore = entityStore ?? throw new global::System.ArgumentNullException(nameof(entityStore));
+            _getFile_Repository_RepositoryFromRepositoryEntityMapper = getFile_Repository_RepositoryFromRepositoryEntityMapper ?? throw new global::System.ArgumentNullException(nameof(getFile_Repository_RepositoryFromRepositoryEntityMapper));
+        }
+
+        global::System.Type global::StrawberryShake.IOperationResultDataFactory.ResultType => typeof(global::RepositoryAnalysis.Internal.GraphQL.IGetFileResult);
+        public GetFileResult Create(global::StrawberryShake.IOperationResultDataInfo dataInfo, global::StrawberryShake.IEntityStoreSnapshot? snapshot = null)
+        {
+            if (snapshot is null)
+            {
+                snapshot = _entityStore.CurrentSnapshot;
+            }
+
+            if (dataInfo is GetFileResultInfo info)
+            {
+                return new GetFileResult(MapIGetFile_Repository(info.Repository, snapshot));
+            }
+
+            throw new global::System.ArgumentException("GetFileResultInfo expected.");
+        }
+
+        private global::RepositoryAnalysis.Internal.GraphQL.IGetFile_Repository? MapIGetFile_Repository(global::StrawberryShake.EntityId? entityId, global::StrawberryShake.IEntityStoreSnapshot snapshot)
+        {
+            if (entityId is null)
+            {
+                return null;
+            }
+
+            if (entityId.Value.Name.Equals("Repository", global::System.StringComparison.Ordinal))
+            {
+                return _getFile_Repository_RepositoryFromRepositoryEntityMapper.Map(snapshot.GetEntity<global::RepositoryAnalysis.Internal.GraphQL.State.RepositoryEntity>(entityId.Value) ?? throw new global::StrawberryShake.GraphQLClientException());
+            }
+
+            throw new global::System.NotSupportedException();
+        }
+
+        global::System.Object global::StrawberryShake.IOperationResultDataFactory.Create(global::StrawberryShake.IOperationResultDataInfo dataInfo, global::StrawberryShake.IEntityStoreSnapshot? snapshot)
+        {
+            return Create(dataInfo, snapshot);
+        }
+    }
+
+    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.15.2.0")]
+    public partial class GetFileResultInfo : global::StrawberryShake.IOperationResultDataInfo
+    {
+        private readonly global::System.Collections.Generic.IReadOnlyCollection<global::StrawberryShake.EntityId> _entityIds;
+        private readonly global::System.UInt64 _version;
+        public GetFileResultInfo(global::StrawberryShake.EntityId? repository, global::System.Collections.Generic.IReadOnlyCollection<global::StrawberryShake.EntityId> entityIds, global::System.UInt64 version)
+        {
+            Repository = repository;
+            _entityIds = entityIds ?? throw new global::System.ArgumentNullException(nameof(entityIds));
+            _version = version;
+        }
+
+        /// <summary>
+        /// Lookup a given repository by the owner and repository name.
+        /// </summary>
+        public global::StrawberryShake.EntityId? Repository { get; }
+
+        public global::System.Collections.Generic.IReadOnlyCollection<global::StrawberryShake.EntityId> EntityIds => _entityIds;
+        public global::System.UInt64 Version => _version;
+        public global::StrawberryShake.IOperationResultDataInfo WithVersion(global::System.UInt64 version)
+        {
+            return new GetFileResultInfo(Repository, _entityIds, version);
+        }
+    }
+
+    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.15.2.0")]
+    public partial class GetFile_Repository_RepositoryFromRepositoryEntityMapper : global::StrawberryShake.IEntityMapper<global::RepositoryAnalysis.Internal.GraphQL.State.RepositoryEntity, GetFile_Repository_Repository>
+    {
+        private readonly global::StrawberryShake.IEntityStore _entityStore;
+        private readonly global::StrawberryShake.IEntityMapper<global::RepositoryAnalysis.Internal.GraphQL.State.BlobEntity, GetFile_Repository_File_Blob> _getFile_Repository_File_BlobFromBlobEntityMapper;
+        private readonly global::StrawberryShake.IEntityMapper<global::RepositoryAnalysis.Internal.GraphQL.State.CommitEntity, GetFile_Repository_File_Commit> _getFile_Repository_File_CommitFromCommitEntityMapper;
+        private readonly global::StrawberryShake.IEntityMapper<global::RepositoryAnalysis.Internal.GraphQL.State.TagEntity, GetFile_Repository_File_Tag> _getFile_Repository_File_TagFromTagEntityMapper;
+        private readonly global::StrawberryShake.IEntityMapper<global::RepositoryAnalysis.Internal.GraphQL.State.TreeEntity, GetFile_Repository_File_Tree> _getFile_Repository_File_TreeFromTreeEntityMapper;
+        public GetFile_Repository_RepositoryFromRepositoryEntityMapper(global::StrawberryShake.IEntityStore entityStore, global::StrawberryShake.IEntityMapper<global::RepositoryAnalysis.Internal.GraphQL.State.BlobEntity, GetFile_Repository_File_Blob> getFile_Repository_File_BlobFromBlobEntityMapper, global::StrawberryShake.IEntityMapper<global::RepositoryAnalysis.Internal.GraphQL.State.CommitEntity, GetFile_Repository_File_Commit> getFile_Repository_File_CommitFromCommitEntityMapper, global::StrawberryShake.IEntityMapper<global::RepositoryAnalysis.Internal.GraphQL.State.TagEntity, GetFile_Repository_File_Tag> getFile_Repository_File_TagFromTagEntityMapper, global::StrawberryShake.IEntityMapper<global::RepositoryAnalysis.Internal.GraphQL.State.TreeEntity, GetFile_Repository_File_Tree> getFile_Repository_File_TreeFromTreeEntityMapper)
+        {
+            _entityStore = entityStore ?? throw new global::System.ArgumentNullException(nameof(entityStore));
+            _getFile_Repository_File_BlobFromBlobEntityMapper = getFile_Repository_File_BlobFromBlobEntityMapper ?? throw new global::System.ArgumentNullException(nameof(getFile_Repository_File_BlobFromBlobEntityMapper));
+            _getFile_Repository_File_CommitFromCommitEntityMapper = getFile_Repository_File_CommitFromCommitEntityMapper ?? throw new global::System.ArgumentNullException(nameof(getFile_Repository_File_CommitFromCommitEntityMapper));
+            _getFile_Repository_File_TagFromTagEntityMapper = getFile_Repository_File_TagFromTagEntityMapper ?? throw new global::System.ArgumentNullException(nameof(getFile_Repository_File_TagFromTagEntityMapper));
+            _getFile_Repository_File_TreeFromTreeEntityMapper = getFile_Repository_File_TreeFromTreeEntityMapper ?? throw new global::System.ArgumentNullException(nameof(getFile_Repository_File_TreeFromTreeEntityMapper));
+        }
+
+        public GetFile_Repository_Repository Map(global::RepositoryAnalysis.Internal.GraphQL.State.RepositoryEntity entity, global::StrawberryShake.IEntityStoreSnapshot? snapshot = null)
+        {
+            if (snapshot is null)
+            {
+                snapshot = _entityStore.CurrentSnapshot;
+            }
+
+            return new GetFile_Repository_Repository(MapIGetFile_Repository_File(entity.File, snapshot));
+        }
+
+        private global::RepositoryAnalysis.Internal.GraphQL.IGetFile_Repository_File? MapIGetFile_Repository_File(global::StrawberryShake.EntityId? entityId, global::StrawberryShake.IEntityStoreSnapshot snapshot)
+        {
+            if (entityId is null)
+            {
+                return null;
+            }
+
+            if (entityId.Value.Name.Equals("Blob", global::System.StringComparison.Ordinal))
+            {
+                return _getFile_Repository_File_BlobFromBlobEntityMapper.Map(snapshot.GetEntity<global::RepositoryAnalysis.Internal.GraphQL.State.BlobEntity>(entityId.Value) ?? throw new global::StrawberryShake.GraphQLClientException());
+            }
+
+            if (entityId.Value.Name.Equals("Commit", global::System.StringComparison.Ordinal))
+            {
+                return _getFile_Repository_File_CommitFromCommitEntityMapper.Map(snapshot.GetEntity<global::RepositoryAnalysis.Internal.GraphQL.State.CommitEntity>(entityId.Value) ?? throw new global::StrawberryShake.GraphQLClientException());
+            }
+
+            if (entityId.Value.Name.Equals("Tag", global::System.StringComparison.Ordinal))
+            {
+                return _getFile_Repository_File_TagFromTagEntityMapper.Map(snapshot.GetEntity<global::RepositoryAnalysis.Internal.GraphQL.State.TagEntity>(entityId.Value) ?? throw new global::StrawberryShake.GraphQLClientException());
+            }
+
+            if (entityId.Value.Name.Equals("Tree", global::System.StringComparison.Ordinal))
+            {
+                return _getFile_Repository_File_TreeFromTreeEntityMapper.Map(snapshot.GetEntity<global::RepositoryAnalysis.Internal.GraphQL.State.TreeEntity>(entityId.Value) ?? throw new global::StrawberryShake.GraphQLClientException());
+            }
+
+            throw new global::System.NotSupportedException();
+        }
+    }
+
+    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.15.2.0")]
+    public partial class GetFile_Repository_File_BlobFromBlobEntityMapper : global::StrawberryShake.IEntityMapper<global::RepositoryAnalysis.Internal.GraphQL.State.BlobEntity, GetFile_Repository_File_Blob>
+    {
+        private readonly global::StrawberryShake.IEntityStore _entityStore;
+        public GetFile_Repository_File_BlobFromBlobEntityMapper(global::StrawberryShake.IEntityStore entityStore)
+        {
+            _entityStore = entityStore ?? throw new global::System.ArgumentNullException(nameof(entityStore));
+        }
+
+        public GetFile_Repository_File_Blob Map(global::RepositoryAnalysis.Internal.GraphQL.State.BlobEntity entity, global::StrawberryShake.IEntityStoreSnapshot? snapshot = null)
+        {
+            if (snapshot is null)
+            {
+                snapshot = _entityStore.CurrentSnapshot;
+            }
+
+            return new GetFile_Repository_File_Blob(entity.Text);
+        }
+    }
+
+    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.15.2.0")]
+    public partial class GetFile_Repository_File_CommitFromCommitEntityMapper : global::StrawberryShake.IEntityMapper<global::RepositoryAnalysis.Internal.GraphQL.State.CommitEntity, GetFile_Repository_File_Commit>
+    {
+        private readonly global::StrawberryShake.IEntityStore _entityStore;
+        public GetFile_Repository_File_CommitFromCommitEntityMapper(global::StrawberryShake.IEntityStore entityStore)
+        {
+            _entityStore = entityStore ?? throw new global::System.ArgumentNullException(nameof(entityStore));
+        }
+
+        public GetFile_Repository_File_Commit Map(global::RepositoryAnalysis.Internal.GraphQL.State.CommitEntity entity, global::StrawberryShake.IEntityStoreSnapshot? snapshot = null)
+        {
+            if (snapshot is null)
+            {
+                snapshot = _entityStore.CurrentSnapshot;
+            }
+
+            return new GetFile_Repository_File_Commit();
+        }
+    }
+
+    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.15.2.0")]
+    public partial class GetFile_Repository_File_TagFromTagEntityMapper : global::StrawberryShake.IEntityMapper<global::RepositoryAnalysis.Internal.GraphQL.State.TagEntity, GetFile_Repository_File_Tag>
+    {
+        private readonly global::StrawberryShake.IEntityStore _entityStore;
+        public GetFile_Repository_File_TagFromTagEntityMapper(global::StrawberryShake.IEntityStore entityStore)
+        {
+            _entityStore = entityStore ?? throw new global::System.ArgumentNullException(nameof(entityStore));
+        }
+
+        public GetFile_Repository_File_Tag Map(global::RepositoryAnalysis.Internal.GraphQL.State.TagEntity entity, global::StrawberryShake.IEntityStoreSnapshot? snapshot = null)
+        {
+            if (snapshot is null)
+            {
+                snapshot = _entityStore.CurrentSnapshot;
+            }
+
+            return new GetFile_Repository_File_Tag();
+        }
+    }
+
+    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.15.2.0")]
+    public partial class GetFile_Repository_File_TreeFromTreeEntityMapper : global::StrawberryShake.IEntityMapper<global::RepositoryAnalysis.Internal.GraphQL.State.TreeEntity, GetFile_Repository_File_Tree>
+    {
+        private readonly global::StrawberryShake.IEntityStore _entityStore;
+        public GetFile_Repository_File_TreeFromTreeEntityMapper(global::StrawberryShake.IEntityStore entityStore)
+        {
+            _entityStore = entityStore ?? throw new global::System.ArgumentNullException(nameof(entityStore));
+        }
+
+        public GetFile_Repository_File_Tree Map(global::RepositoryAnalysis.Internal.GraphQL.State.TreeEntity entity, global::StrawberryShake.IEntityStoreSnapshot? snapshot = null)
+        {
+            if (snapshot is null)
+            {
+                snapshot = _entityStore.CurrentSnapshot;
+            }
+
+            return new GetFile_Repository_File_Tree();
+        }
     }
 
     [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.15.2.0")]
@@ -4940,6 +5626,7 @@ namespace RepositoryAnalysis.Internal.GraphQL.State
     public partial class GetRepo_Repository_RepositoryFromRepositoryEntityMapper : global::StrawberryShake.IEntityMapper<global::RepositoryAnalysis.Internal.GraphQL.State.RepositoryEntity, GetRepo_Repository_Repository>
     {
         private readonly global::StrawberryShake.IEntityStore _entityStore;
+        private readonly global::StrawberryShake.IEntityMapper<global::RepositoryAnalysis.Internal.GraphQL.State.DiscussionEntity, GetRepo_Repository_Discussions_Edges_Node_Discussion> _getRepo_Repository_Discussions_Edges_Node_DiscussionFromDiscussionEntityMapper;
         private readonly global::StrawberryShake.IEntityMapper<global::RepositoryAnalysis.Internal.GraphQL.State.ReleaseEntity, GetRepo_Repository_Releases_Edges_Node_Release> _getRepo_Repository_Releases_Edges_Node_ReleaseFromReleaseEntityMapper;
         private readonly global::StrawberryShake.IEntityMapper<global::RepositoryAnalysis.Internal.GraphQL.State.CodeOfConductEntity, GetRepo_Repository_CodeOfConduct_CodeOfConduct> _getRepo_Repository_CodeOfConduct_CodeOfConductFromCodeOfConductEntityMapper;
         private readonly global::StrawberryShake.IEntityMapper<global::RepositoryAnalysis.Internal.GraphQL.State.RefEntity, GetRepo_Repository_DefaultBranchRef_Ref> _getRepo_Repository_DefaultBranchRef_RefFromRefEntityMapper;
@@ -4952,9 +5639,10 @@ namespace RepositoryAnalysis.Internal.GraphQL.State
         private readonly global::StrawberryShake.IEntityMapper<global::RepositoryAnalysis.Internal.GraphQL.State.LanguageEntity, GetRepo_Repository_PrimaryLanguage_Language> _getRepo_Repository_PrimaryLanguage_LanguageFromLanguageEntityMapper;
         private readonly global::StrawberryShake.IEntityMapper<global::RepositoryAnalysis.Internal.GraphQL.State.PullRequestEntity, GetRepo_Repository_PullRequests_Nodes_PullRequest> _getRepo_Repository_PullRequests_Nodes_PullRequestFromPullRequestEntityMapper;
         private readonly global::StrawberryShake.IEntityMapper<global::RepositoryAnalysis.Internal.GraphQL.State.IssueEntity, GetRepo_Repository_Issues_Edges_Node_Issue> _getRepo_Repository_Issues_Edges_Node_IssueFromIssueEntityMapper;
-        public GetRepo_Repository_RepositoryFromRepositoryEntityMapper(global::StrawberryShake.IEntityStore entityStore, global::StrawberryShake.IEntityMapper<global::RepositoryAnalysis.Internal.GraphQL.State.ReleaseEntity, GetRepo_Repository_Releases_Edges_Node_Release> getRepo_Repository_Releases_Edges_Node_ReleaseFromReleaseEntityMapper, global::StrawberryShake.IEntityMapper<global::RepositoryAnalysis.Internal.GraphQL.State.CodeOfConductEntity, GetRepo_Repository_CodeOfConduct_CodeOfConduct> getRepo_Repository_CodeOfConduct_CodeOfConductFromCodeOfConductEntityMapper, global::StrawberryShake.IEntityMapper<global::RepositoryAnalysis.Internal.GraphQL.State.RefEntity, GetRepo_Repository_DefaultBranchRef_Ref> getRepo_Repository_DefaultBranchRef_RefFromRefEntityMapper, global::StrawberryShake.IEntityMapper<global::RepositoryAnalysis.Internal.GraphQL.State.BlobEntity, GetRepo_Repository_DefaultBranchRef_Target_Blob> getRepo_Repository_DefaultBranchRef_Target_BlobFromBlobEntityMapper, global::StrawberryShake.IEntityMapper<global::RepositoryAnalysis.Internal.GraphQL.State.CommitEntity, GetRepo_Repository_DefaultBranchRef_Target_Commit> getRepo_Repository_DefaultBranchRef_Target_CommitFromCommitEntityMapper, global::StrawberryShake.IEntityMapper<global::RepositoryAnalysis.Internal.GraphQL.State.TagEntity, GetRepo_Repository_DefaultBranchRef_Target_Tag> getRepo_Repository_DefaultBranchRef_Target_TagFromTagEntityMapper, global::StrawberryShake.IEntityMapper<global::RepositoryAnalysis.Internal.GraphQL.State.TreeEntity, GetRepo_Repository_DefaultBranchRef_Target_Tree> getRepo_Repository_DefaultBranchRef_Target_TreeFromTreeEntityMapper, global::StrawberryShake.IEntityMapper<global::RepositoryAnalysis.Internal.GraphQL.State.BranchProtectionRuleEntity, GetRepo_Repository_DefaultBranchRef_BranchProtectionRule_BranchProtectionRule> getRepo_Repository_DefaultBranchRef_BranchProtectionRule_BranchProtectionRuleFromBranchProtectionRuleEntityMapper, global::StrawberryShake.IEntityMapper<global::RepositoryAnalysis.Internal.GraphQL.State.LicenseEntity, GetRepo_Repository_LicenseInfo_License> getRepo_Repository_LicenseInfo_LicenseFromLicenseEntityMapper, global::StrawberryShake.IEntityMapper<global::RepositoryAnalysis.Internal.GraphQL.State.LanguageEntity, GetRepo_Repository_PrimaryLanguage_Language> getRepo_Repository_PrimaryLanguage_LanguageFromLanguageEntityMapper, global::StrawberryShake.IEntityMapper<global::RepositoryAnalysis.Internal.GraphQL.State.PullRequestEntity, GetRepo_Repository_PullRequests_Nodes_PullRequest> getRepo_Repository_PullRequests_Nodes_PullRequestFromPullRequestEntityMapper, global::StrawberryShake.IEntityMapper<global::RepositoryAnalysis.Internal.GraphQL.State.IssueEntity, GetRepo_Repository_Issues_Edges_Node_Issue> getRepo_Repository_Issues_Edges_Node_IssueFromIssueEntityMapper)
+        public GetRepo_Repository_RepositoryFromRepositoryEntityMapper(global::StrawberryShake.IEntityStore entityStore, global::StrawberryShake.IEntityMapper<global::RepositoryAnalysis.Internal.GraphQL.State.DiscussionEntity, GetRepo_Repository_Discussions_Edges_Node_Discussion> getRepo_Repository_Discussions_Edges_Node_DiscussionFromDiscussionEntityMapper, global::StrawberryShake.IEntityMapper<global::RepositoryAnalysis.Internal.GraphQL.State.ReleaseEntity, GetRepo_Repository_Releases_Edges_Node_Release> getRepo_Repository_Releases_Edges_Node_ReleaseFromReleaseEntityMapper, global::StrawberryShake.IEntityMapper<global::RepositoryAnalysis.Internal.GraphQL.State.CodeOfConductEntity, GetRepo_Repository_CodeOfConduct_CodeOfConduct> getRepo_Repository_CodeOfConduct_CodeOfConductFromCodeOfConductEntityMapper, global::StrawberryShake.IEntityMapper<global::RepositoryAnalysis.Internal.GraphQL.State.RefEntity, GetRepo_Repository_DefaultBranchRef_Ref> getRepo_Repository_DefaultBranchRef_RefFromRefEntityMapper, global::StrawberryShake.IEntityMapper<global::RepositoryAnalysis.Internal.GraphQL.State.BlobEntity, GetRepo_Repository_DefaultBranchRef_Target_Blob> getRepo_Repository_DefaultBranchRef_Target_BlobFromBlobEntityMapper, global::StrawberryShake.IEntityMapper<global::RepositoryAnalysis.Internal.GraphQL.State.CommitEntity, GetRepo_Repository_DefaultBranchRef_Target_Commit> getRepo_Repository_DefaultBranchRef_Target_CommitFromCommitEntityMapper, global::StrawberryShake.IEntityMapper<global::RepositoryAnalysis.Internal.GraphQL.State.TagEntity, GetRepo_Repository_DefaultBranchRef_Target_Tag> getRepo_Repository_DefaultBranchRef_Target_TagFromTagEntityMapper, global::StrawberryShake.IEntityMapper<global::RepositoryAnalysis.Internal.GraphQL.State.TreeEntity, GetRepo_Repository_DefaultBranchRef_Target_Tree> getRepo_Repository_DefaultBranchRef_Target_TreeFromTreeEntityMapper, global::StrawberryShake.IEntityMapper<global::RepositoryAnalysis.Internal.GraphQL.State.BranchProtectionRuleEntity, GetRepo_Repository_DefaultBranchRef_BranchProtectionRule_BranchProtectionRule> getRepo_Repository_DefaultBranchRef_BranchProtectionRule_BranchProtectionRuleFromBranchProtectionRuleEntityMapper, global::StrawberryShake.IEntityMapper<global::RepositoryAnalysis.Internal.GraphQL.State.LicenseEntity, GetRepo_Repository_LicenseInfo_License> getRepo_Repository_LicenseInfo_LicenseFromLicenseEntityMapper, global::StrawberryShake.IEntityMapper<global::RepositoryAnalysis.Internal.GraphQL.State.LanguageEntity, GetRepo_Repository_PrimaryLanguage_Language> getRepo_Repository_PrimaryLanguage_LanguageFromLanguageEntityMapper, global::StrawberryShake.IEntityMapper<global::RepositoryAnalysis.Internal.GraphQL.State.PullRequestEntity, GetRepo_Repository_PullRequests_Nodes_PullRequest> getRepo_Repository_PullRequests_Nodes_PullRequestFromPullRequestEntityMapper, global::StrawberryShake.IEntityMapper<global::RepositoryAnalysis.Internal.GraphQL.State.IssueEntity, GetRepo_Repository_Issues_Edges_Node_Issue> getRepo_Repository_Issues_Edges_Node_IssueFromIssueEntityMapper)
         {
             _entityStore = entityStore ?? throw new global::System.ArgumentNullException(nameof(entityStore));
+            _getRepo_Repository_Discussions_Edges_Node_DiscussionFromDiscussionEntityMapper = getRepo_Repository_Discussions_Edges_Node_DiscussionFromDiscussionEntityMapper ?? throw new global::System.ArgumentNullException(nameof(getRepo_Repository_Discussions_Edges_Node_DiscussionFromDiscussionEntityMapper));
             _getRepo_Repository_Releases_Edges_Node_ReleaseFromReleaseEntityMapper = getRepo_Repository_Releases_Edges_Node_ReleaseFromReleaseEntityMapper ?? throw new global::System.ArgumentNullException(nameof(getRepo_Repository_Releases_Edges_Node_ReleaseFromReleaseEntityMapper));
             _getRepo_Repository_CodeOfConduct_CodeOfConductFromCodeOfConductEntityMapper = getRepo_Repository_CodeOfConduct_CodeOfConductFromCodeOfConductEntityMapper ?? throw new global::System.ArgumentNullException(nameof(getRepo_Repository_CodeOfConduct_CodeOfConductFromCodeOfConductEntityMapper));
             _getRepo_Repository_DefaultBranchRef_RefFromRefEntityMapper = getRepo_Repository_DefaultBranchRef_RefFromRefEntityMapper ?? throw new global::System.ArgumentNullException(nameof(getRepo_Repository_DefaultBranchRef_RefFromRefEntityMapper));
@@ -4976,7 +5664,73 @@ namespace RepositoryAnalysis.Internal.GraphQL.State
                 snapshot = _entityStore.CurrentSnapshot;
             }
 
-            return new GetRepo_Repository_Repository(entity.IsSecurityPolicyEnabled, entity.SecurityPolicyUrl, entity.HasVulnerabilityAlertsEnabled, MapIGetRepo_Repository_VulnerabilityAlerts(entity.VulnerabilityAlerts, snapshot), MapNonNullableIGetRepo_Repository_Releases(entity.Releases, snapshot), entity.DiskUsage, entity.UpdatedAt, entity.PushedAt, MapNonNullableIGetRepo_Repository_RepositoryTopics(entity.RepositoryTopics, snapshot), MapIGetRepo_Repository_CodeOfConduct(entity.CodeOfConduct, snapshot), MapIGetRepo_Repository_Codeowners(entity.Codeowners, snapshot), MapIGetRepo_Repository_DefaultBranchRef(entity.DefaultBranchRef, snapshot), entity.Description, entity.HasDiscussionsEnabled, entity.HasIssuesEnabled, entity.IsArchived, entity.IsEmpty, entity.IsLocked, MapIGetRepo_Repository_IssueTemplatesNonNullableArray(entity.IssueTemplates, snapshot), MapIGetRepo_Repository_LicenseInfo(entity.LicenseInfo, snapshot), entity.OpenGraphImageUrl, MapIGetRepo_Repository_PrimaryLanguage(entity.PrimaryLanguage, snapshot), MapIGetRepo_Repository_PullRequestTemplatesNonNullableArray(entity.PullRequestTemplates, snapshot), entity.Url, MapNonNullableIGetRepo_Repository_PullRequests(entity.PullRequests, snapshot), MapNonNullableIGetRepo_Repository_Issues(entity.Issues, snapshot));
+            return new GetRepo_Repository_Repository(MapNonNullableIGetRepo_Repository_Discussions(entity.Discussions, snapshot), entity.IsSecurityPolicyEnabled, entity.SecurityPolicyUrl, entity.HasVulnerabilityAlertsEnabled, MapIGetRepo_Repository_VulnerabilityAlerts(entity.VulnerabilityAlerts, snapshot), MapNonNullableIGetRepo_Repository_Releases(entity.Releases, snapshot), entity.DiskUsage, entity.UpdatedAt, entity.PushedAt, MapNonNullableIGetRepo_Repository_RepositoryTopics(entity.RepositoryTopics, snapshot), MapIGetRepo_Repository_CodeOfConduct(entity.CodeOfConduct, snapshot), MapIGetRepo_Repository_Codeowners(entity.Codeowners, snapshot), MapIGetRepo_Repository_DefaultBranchRef(entity.DefaultBranchRef, snapshot), entity.Description, entity.HasDiscussionsEnabled, entity.HasIssuesEnabled, entity.IsArchived, entity.IsEmpty, entity.IsLocked, MapIGetRepo_Repository_IssueTemplatesNonNullableArray(entity.IssueTemplates, snapshot), MapIGetRepo_Repository_LicenseInfo(entity.LicenseInfo, snapshot), entity.OpenGraphImageUrl, MapIGetRepo_Repository_PrimaryLanguage(entity.PrimaryLanguage, snapshot), MapIGetRepo_Repository_PullRequestTemplatesNonNullableArray(entity.PullRequestTemplates, snapshot), entity.Url, MapNonNullableIGetRepo_Repository_PullRequests(entity.PullRequests, snapshot), MapNonNullableIGetRepo_Repository_Issues(entity.Issues, snapshot));
+        }
+
+        private global::RepositoryAnalysis.Internal.GraphQL.IGetRepo_Repository_Discussions MapNonNullableIGetRepo_Repository_Discussions(global::RepositoryAnalysis.Internal.GraphQL.State.DiscussionConnectionData data, global::StrawberryShake.IEntityStoreSnapshot snapshot)
+        {
+            IGetRepo_Repository_Discussions returnValue = default !;
+            if (data.__typename.Equals("DiscussionConnection", global::System.StringComparison.Ordinal))
+            {
+                returnValue = new GetRepo_Repository_Discussions_DiscussionConnection(MapIGetRepo_Repository_Discussions_EdgesArray(data.Edges, snapshot), data.TotalCount ?? throw new global::System.ArgumentNullException());
+            }
+            else
+            {
+                throw new global::System.NotSupportedException();
+            }
+
+            return returnValue;
+        }
+
+        private global::System.Collections.Generic.IReadOnlyList<global::RepositoryAnalysis.Internal.GraphQL.IGetRepo_Repository_Discussions_Edges?>? MapIGetRepo_Repository_Discussions_EdgesArray(global::System.Collections.Generic.IReadOnlyList<global::RepositoryAnalysis.Internal.GraphQL.State.DiscussionEdgeData?>? list, global::StrawberryShake.IEntityStoreSnapshot snapshot)
+        {
+            if (list is null)
+            {
+                return null;
+            }
+
+            var discussionEdges = new global::System.Collections.Generic.List<global::RepositoryAnalysis.Internal.GraphQL.IGetRepo_Repository_Discussions_Edges?>();
+            foreach (global::RepositoryAnalysis.Internal.GraphQL.State.DiscussionEdgeData? child in list)
+            {
+                discussionEdges.Add(MapIGetRepo_Repository_Discussions_Edges(child, snapshot));
+            }
+
+            return discussionEdges;
+        }
+
+        private global::RepositoryAnalysis.Internal.GraphQL.IGetRepo_Repository_Discussions_Edges? MapIGetRepo_Repository_Discussions_Edges(global::RepositoryAnalysis.Internal.GraphQL.State.DiscussionEdgeData? data, global::StrawberryShake.IEntityStoreSnapshot snapshot)
+        {
+            if (data is null)
+            {
+                return null;
+            }
+
+            IGetRepo_Repository_Discussions_Edges returnValue = default !;
+            if (data?.__typename.Equals("DiscussionEdge", global::System.StringComparison.Ordinal) ?? false)
+            {
+                returnValue = new GetRepo_Repository_Discussions_Edges_DiscussionEdge(MapIGetRepo_Repository_Discussions_Edges_Node(data.Node, snapshot));
+            }
+            else
+            {
+                throw new global::System.NotSupportedException();
+            }
+
+            return returnValue;
+        }
+
+        private global::RepositoryAnalysis.Internal.GraphQL.IGetRepo_Repository_Discussions_Edges_Node? MapIGetRepo_Repository_Discussions_Edges_Node(global::StrawberryShake.EntityId? entityId, global::StrawberryShake.IEntityStoreSnapshot snapshot)
+        {
+            if (entityId is null)
+            {
+                return null;
+            }
+
+            if (entityId.Value.Name.Equals("Discussion", global::System.StringComparison.Ordinal))
+            {
+                return _getRepo_Repository_Discussions_Edges_Node_DiscussionFromDiscussionEntityMapper.Map(snapshot.GetEntity<global::RepositoryAnalysis.Internal.GraphQL.State.DiscussionEntity>(entityId.Value) ?? throw new global::StrawberryShake.GraphQLClientException());
+            }
+
+            throw new global::System.NotSupportedException();
         }
 
         private global::RepositoryAnalysis.Internal.GraphQL.IGetRepo_Repository_VulnerabilityAlerts? MapIGetRepo_Repository_VulnerabilityAlerts(global::RepositoryAnalysis.Internal.GraphQL.State.RepositoryVulnerabilityAlertConnectionData? data, global::StrawberryShake.IEntityStoreSnapshot snapshot)
@@ -5687,6 +6441,26 @@ namespace RepositoryAnalysis.Internal.GraphQL.State
     }
 
     [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.15.2.0")]
+    public partial class GetRepo_Repository_Discussions_Edges_Node_DiscussionFromDiscussionEntityMapper : global::StrawberryShake.IEntityMapper<global::RepositoryAnalysis.Internal.GraphQL.State.DiscussionEntity, GetRepo_Repository_Discussions_Edges_Node_Discussion>
+    {
+        private readonly global::StrawberryShake.IEntityStore _entityStore;
+        public GetRepo_Repository_Discussions_Edges_Node_DiscussionFromDiscussionEntityMapper(global::StrawberryShake.IEntityStore entityStore)
+        {
+            _entityStore = entityStore ?? throw new global::System.ArgumentNullException(nameof(entityStore));
+        }
+
+        public GetRepo_Repository_Discussions_Edges_Node_Discussion Map(global::RepositoryAnalysis.Internal.GraphQL.State.DiscussionEntity entity, global::StrawberryShake.IEntityStoreSnapshot? snapshot = null)
+        {
+            if (snapshot is null)
+            {
+                snapshot = _entityStore.CurrentSnapshot;
+            }
+
+            return new GetRepo_Repository_Discussions_Edges_Node_Discussion(entity.Number, entity.AnswerChosenAt);
+        }
+    }
+
+    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.15.2.0")]
     public partial class GetRepo_Repository_Releases_Edges_Node_ReleaseFromReleaseEntityMapper : global::StrawberryShake.IEntityMapper<global::RepositoryAnalysis.Internal.GraphQL.State.ReleaseEntity, GetRepo_Repository_Releases_Edges_Node_Release>
     {
         private readonly global::StrawberryShake.IEntityStore _entityStore;
@@ -5747,306 +6521,296 @@ namespace RepositoryAnalysis.Internal.GraphQL.State
     }
 
     [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.15.2.0")]
-    public partial class GetAgeResultFactory : global::StrawberryShake.IOperationResultDataFactory<global::RepositoryAnalysis.Internal.GraphQL.GetAgeResult>
+    public partial class GetAgeBuilder : global::StrawberryShake.IOperationResultBuilder<global::System.Text.Json.JsonDocument, global::RepositoryAnalysis.Internal.GraphQL.IGetAgeResult>
     {
         private readonly global::StrawberryShake.IEntityStore _entityStore;
-        private readonly global::StrawberryShake.IEntityMapper<global::RepositoryAnalysis.Internal.GraphQL.State.RepositoryEntity, GetAge_Repository_Repository> _getAge_Repository_RepositoryFromRepositoryEntityMapper;
-        public GetAgeResultFactory(global::StrawberryShake.IEntityStore entityStore, global::StrawberryShake.IEntityMapper<global::RepositoryAnalysis.Internal.GraphQL.State.RepositoryEntity, GetAge_Repository_Repository> getAge_Repository_RepositoryFromRepositoryEntityMapper)
+        private readonly global::StrawberryShake.IEntityIdSerializer _idSerializer;
+        private readonly global::StrawberryShake.IOperationResultDataFactory<global::RepositoryAnalysis.Internal.GraphQL.IGetAgeResult> _resultDataFactory;
+        private readonly global::StrawberryShake.Serialization.ILeafValueParser<global::System.String, global::System.String> _stringParser;
+        private readonly global::StrawberryShake.Serialization.ILeafValueParser<global::System.String, global::System.DateTimeOffset> _dateTimeParser;
+        public GetAgeBuilder(global::StrawberryShake.IEntityStore entityStore, global::StrawberryShake.IEntityIdSerializer idSerializer, global::StrawberryShake.IOperationResultDataFactory<global::RepositoryAnalysis.Internal.GraphQL.IGetAgeResult> resultDataFactory, global::StrawberryShake.Serialization.ISerializerResolver serializerResolver)
         {
             _entityStore = entityStore ?? throw new global::System.ArgumentNullException(nameof(entityStore));
-            _getAge_Repository_RepositoryFromRepositoryEntityMapper = getAge_Repository_RepositoryFromRepositoryEntityMapper ?? throw new global::System.ArgumentNullException(nameof(getAge_Repository_RepositoryFromRepositoryEntityMapper));
+            _idSerializer = idSerializer ?? throw new global::System.ArgumentNullException(nameof(idSerializer));
+            _resultDataFactory = resultDataFactory ?? throw new global::System.ArgumentNullException(nameof(resultDataFactory));
+            _stringParser = serializerResolver.GetLeafValueParser<global::System.String, global::System.String>("String") ?? throw new global::System.ArgumentException("No serializer for type `String` found.");
+            _dateTimeParser = serializerResolver.GetLeafValueParser<global::System.String, global::System.DateTimeOffset>("DateTime") ?? throw new global::System.ArgumentException("No serializer for type `DateTime` found.");
         }
 
-        global::System.Type global::StrawberryShake.IOperationResultDataFactory.ResultType => typeof(global::RepositoryAnalysis.Internal.GraphQL.IGetAgeResult);
-        public GetAgeResult Create(global::StrawberryShake.IOperationResultDataInfo dataInfo, global::StrawberryShake.IEntityStoreSnapshot? snapshot = null)
+        public global::StrawberryShake.IOperationResult<IGetAgeResult> Build(global::StrawberryShake.Response<global::System.Text.Json.JsonDocument> response)
         {
-            if (snapshot is null)
+            (IGetAgeResult Result, GetAgeResultInfo Info)? data = null;
+            global::System.Collections.Generic.IReadOnlyList<global::StrawberryShake.IClientError>? errors = null;
+            if (response.Exception is null)
             {
-                snapshot = _entityStore.CurrentSnapshot;
+                try
+                {
+                    if (response.Body != null)
+                    {
+                        if (response.Body.RootElement.TryGetProperty("data", out global::System.Text.Json.JsonElement dataElement) && dataElement.ValueKind == global::System.Text.Json.JsonValueKind.Object)
+                        {
+                            data = BuildData(dataElement);
+                        }
+
+                        if (response.Body.RootElement.TryGetProperty("errors", out global::System.Text.Json.JsonElement errorsElement))
+                        {
+                            errors = global::StrawberryShake.Json.JsonErrorParser.ParseErrors(errorsElement);
+                        }
+                    }
+                }
+                catch (global::System.Exception ex)
+                {
+                    errors = new global::StrawberryShake.IClientError[]{new global::StrawberryShake.ClientError(ex.Message, exception: ex, extensions: new global::System.Collections.Generic.Dictionary<global::System.String, global::System.Object?>{{"body", response.Body?.RootElement.ToString()}})};
+                }
+            }
+            else
+            {
+                if (response.Body != null && response.Body.RootElement.TryGetProperty("errors", out global::System.Text.Json.JsonElement errorsElement))
+                {
+                    errors = global::StrawberryShake.Json.JsonErrorParser.ParseErrors(errorsElement);
+                }
+                else
+                {
+                    errors = new global::StrawberryShake.IClientError[]{new global::StrawberryShake.ClientError(response.Exception.Message, exception: response.Exception, extensions: new global::System.Collections.Generic.Dictionary<global::System.String, global::System.Object?>{{"body", response.Body?.RootElement.ToString()}})};
+                }
             }
 
-            if (dataInfo is GetAgeResultInfo info)
-            {
-                return new GetAgeResult(MapIGetAge_Repository(info.Repository, snapshot));
-            }
-
-            throw new global::System.ArgumentException("GetAgeResultInfo expected.");
+            return new global::StrawberryShake.OperationResult<IGetAgeResult>(data?.Result, data?.Info, _resultDataFactory, errors);
         }
 
-        private global::RepositoryAnalysis.Internal.GraphQL.IGetAge_Repository? MapIGetAge_Repository(global::StrawberryShake.EntityId? entityId, global::StrawberryShake.IEntityStoreSnapshot snapshot)
+        private (IGetAgeResult, GetAgeResultInfo) BuildData(global::System.Text.Json.JsonElement obj)
         {
-            if (entityId is null)
+            var entityIds = new global::System.Collections.Generic.HashSet<global::StrawberryShake.EntityId>();
+            global::StrawberryShake.IEntityStoreSnapshot snapshot = default !;
+            global::StrawberryShake.EntityId? repositoryId = default !;
+            _entityStore.Update(session =>
+            {
+                repositoryId = UpdateIGetAge_RepositoryEntity(session, global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "repository"), entityIds);
+                snapshot = session.CurrentSnapshot;
+            });
+            var resultInfo = new GetAgeResultInfo(repositoryId, entityIds, snapshot.Version);
+            return (_resultDataFactory.Create(resultInfo), resultInfo);
+        }
+
+        private global::StrawberryShake.EntityId? UpdateIGetAge_RepositoryEntity(global::StrawberryShake.IEntityStoreUpdateSession session, global::System.Text.Json.JsonElement? obj, global::System.Collections.Generic.ISet<global::StrawberryShake.EntityId> entityIds)
+        {
+            if (!obj.HasValue)
             {
                 return null;
             }
 
-            if (entityId.Value.Name.Equals("Repository", global::System.StringComparison.Ordinal))
+            global::StrawberryShake.EntityId entityId = _idSerializer.Parse(obj.Value);
+            entityIds.Add(entityId);
+            if (entityId.Name.Equals("Repository", global::System.StringComparison.Ordinal))
             {
-                return _getAge_Repository_RepositoryFromRepositoryEntityMapper.Map(snapshot.GetEntity<global::RepositoryAnalysis.Internal.GraphQL.State.RepositoryEntity>(entityId.Value) ?? throw new global::StrawberryShake.GraphQLClientException());
+                if (session.CurrentSnapshot.TryGetEntity(entityId, out global::RepositoryAnalysis.Internal.GraphQL.State.RepositoryEntity? entity))
+                {
+                    session.SetEntity(entityId, new global::RepositoryAnalysis.Internal.GraphQL.State.RepositoryEntity(DeserializeNonNullableDateTimeOffset(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "updatedAt")), DeserializeDateTimeOffset(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "pushedAt")), entity.File, entity.Discussions, entity.IsSecurityPolicyEnabled, entity.SecurityPolicyUrl, entity.HasVulnerabilityAlertsEnabled, entity.VulnerabilityAlerts, entity.Releases, entity.DiskUsage, entity.RepositoryTopics, entity.CodeOfConduct, entity.Codeowners, entity.DefaultBranchRef, entity.Description, entity.HasDiscussionsEnabled, entity.HasIssuesEnabled, entity.IsArchived, entity.IsEmpty, entity.IsLocked, entity.IssueTemplates, entity.LicenseInfo, entity.OpenGraphImageUrl, entity.PrimaryLanguage, entity.PullRequestTemplates, entity.Url, entity.PullRequests, entity.Issues));
+                }
+                else
+                {
+                    session.SetEntity(entityId, new global::RepositoryAnalysis.Internal.GraphQL.State.RepositoryEntity(DeserializeNonNullableDateTimeOffset(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "updatedAt")), DeserializeDateTimeOffset(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "pushedAt")), default !, default !, default !, default !, default !, default !, default !, default !, default !, default !, default !, default !, default !, default !, default !, default !, default !, default !, default !, default !, default !, default !, default !, default !, default !, default !));
+                }
+
+                return entityId;
             }
 
             throw new global::System.NotSupportedException();
         }
 
-        global::System.Object global::StrawberryShake.IOperationResultDataFactory.Create(global::StrawberryShake.IOperationResultDataInfo dataInfo, global::StrawberryShake.IEntityStoreSnapshot? snapshot)
+        private global::System.DateTimeOffset DeserializeNonNullableDateTimeOffset(global::System.Text.Json.JsonElement? obj)
         {
-            return Create(dataInfo, snapshot);
-        }
-    }
-
-    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.15.2.0")]
-    public partial class GetAgeResultInfo : global::StrawberryShake.IOperationResultDataInfo
-    {
-        private readonly global::System.Collections.Generic.IReadOnlyCollection<global::StrawberryShake.EntityId> _entityIds;
-        private readonly global::System.UInt64 _version;
-        public GetAgeResultInfo(global::StrawberryShake.EntityId? repository, global::System.Collections.Generic.IReadOnlyCollection<global::StrawberryShake.EntityId> entityIds, global::System.UInt64 version)
-        {
-            Repository = repository;
-            _entityIds = entityIds ?? throw new global::System.ArgumentNullException(nameof(entityIds));
-            _version = version;
-        }
-
-        /// <summary>
-        /// Lookup a given repository by the owner and repository name.
-        /// </summary>
-        public global::StrawberryShake.EntityId? Repository { get; }
-
-        public global::System.Collections.Generic.IReadOnlyCollection<global::StrawberryShake.EntityId> EntityIds => _entityIds;
-        public global::System.UInt64 Version => _version;
-        public global::StrawberryShake.IOperationResultDataInfo WithVersion(global::System.UInt64 version)
-        {
-            return new GetAgeResultInfo(Repository, _entityIds, version);
-        }
-    }
-
-    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.15.2.0")]
-    public partial class GetAge_Repository_RepositoryFromRepositoryEntityMapper : global::StrawberryShake.IEntityMapper<global::RepositoryAnalysis.Internal.GraphQL.State.RepositoryEntity, GetAge_Repository_Repository>
-    {
-        private readonly global::StrawberryShake.IEntityStore _entityStore;
-        public GetAge_Repository_RepositoryFromRepositoryEntityMapper(global::StrawberryShake.IEntityStore entityStore)
-        {
-            _entityStore = entityStore ?? throw new global::System.ArgumentNullException(nameof(entityStore));
-        }
-
-        public GetAge_Repository_Repository Map(global::RepositoryAnalysis.Internal.GraphQL.State.RepositoryEntity entity, global::StrawberryShake.IEntityStoreSnapshot? snapshot = null)
-        {
-            if (snapshot is null)
+            if (!obj.HasValue)
             {
-                snapshot = _entityStore.CurrentSnapshot;
+                throw new global::System.ArgumentNullException();
             }
 
-            return new GetAge_Repository_Repository(entity.UpdatedAt, entity.PushedAt);
-        }
-    }
-
-    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.15.2.0")]
-    public partial class GetFileResultFactory : global::StrawberryShake.IOperationResultDataFactory<global::RepositoryAnalysis.Internal.GraphQL.GetFileResult>
-    {
-        private readonly global::StrawberryShake.IEntityStore _entityStore;
-        private readonly global::StrawberryShake.IEntityMapper<global::RepositoryAnalysis.Internal.GraphQL.State.RepositoryEntity, GetFile_Repository_Repository> _getFile_Repository_RepositoryFromRepositoryEntityMapper;
-        public GetFileResultFactory(global::StrawberryShake.IEntityStore entityStore, global::StrawberryShake.IEntityMapper<global::RepositoryAnalysis.Internal.GraphQL.State.RepositoryEntity, GetFile_Repository_Repository> getFile_Repository_RepositoryFromRepositoryEntityMapper)
-        {
-            _entityStore = entityStore ?? throw new global::System.ArgumentNullException(nameof(entityStore));
-            _getFile_Repository_RepositoryFromRepositoryEntityMapper = getFile_Repository_RepositoryFromRepositoryEntityMapper ?? throw new global::System.ArgumentNullException(nameof(getFile_Repository_RepositoryFromRepositoryEntityMapper));
+            return _dateTimeParser.Parse(obj.Value.GetString()!);
         }
 
-        global::System.Type global::StrawberryShake.IOperationResultDataFactory.ResultType => typeof(global::RepositoryAnalysis.Internal.GraphQL.IGetFileResult);
-        public GetFileResult Create(global::StrawberryShake.IOperationResultDataInfo dataInfo, global::StrawberryShake.IEntityStoreSnapshot? snapshot = null)
+        private global::System.DateTimeOffset? DeserializeDateTimeOffset(global::System.Text.Json.JsonElement? obj)
         {
-            if (snapshot is null)
-            {
-                snapshot = _entityStore.CurrentSnapshot;
-            }
-
-            if (dataInfo is GetFileResultInfo info)
-            {
-                return new GetFileResult(MapIGetFile_Repository(info.Repository, snapshot));
-            }
-
-            throw new global::System.ArgumentException("GetFileResultInfo expected.");
-        }
-
-        private global::RepositoryAnalysis.Internal.GraphQL.IGetFile_Repository? MapIGetFile_Repository(global::StrawberryShake.EntityId? entityId, global::StrawberryShake.IEntityStoreSnapshot snapshot)
-        {
-            if (entityId is null)
+            if (!obj.HasValue)
             {
                 return null;
             }
 
-            if (entityId.Value.Name.Equals("Repository", global::System.StringComparison.Ordinal))
+            return _dateTimeParser.Parse(obj.Value.GetString()!);
+        }
+    }
+
+    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.15.2.0")]
+    public partial class GetFileBuilder : global::StrawberryShake.IOperationResultBuilder<global::System.Text.Json.JsonDocument, global::RepositoryAnalysis.Internal.GraphQL.IGetFileResult>
+    {
+        private readonly global::StrawberryShake.IEntityStore _entityStore;
+        private readonly global::StrawberryShake.IEntityIdSerializer _idSerializer;
+        private readonly global::StrawberryShake.IOperationResultDataFactory<global::RepositoryAnalysis.Internal.GraphQL.IGetFileResult> _resultDataFactory;
+        private readonly global::StrawberryShake.Serialization.ILeafValueParser<global::System.String, global::System.String> _stringParser;
+        public GetFileBuilder(global::StrawberryShake.IEntityStore entityStore, global::StrawberryShake.IEntityIdSerializer idSerializer, global::StrawberryShake.IOperationResultDataFactory<global::RepositoryAnalysis.Internal.GraphQL.IGetFileResult> resultDataFactory, global::StrawberryShake.Serialization.ISerializerResolver serializerResolver)
+        {
+            _entityStore = entityStore ?? throw new global::System.ArgumentNullException(nameof(entityStore));
+            _idSerializer = idSerializer ?? throw new global::System.ArgumentNullException(nameof(idSerializer));
+            _resultDataFactory = resultDataFactory ?? throw new global::System.ArgumentNullException(nameof(resultDataFactory));
+            _stringParser = serializerResolver.GetLeafValueParser<global::System.String, global::System.String>("String") ?? throw new global::System.ArgumentException("No serializer for type `String` found.");
+        }
+
+        public global::StrawberryShake.IOperationResult<IGetFileResult> Build(global::StrawberryShake.Response<global::System.Text.Json.JsonDocument> response)
+        {
+            (IGetFileResult Result, GetFileResultInfo Info)? data = null;
+            global::System.Collections.Generic.IReadOnlyList<global::StrawberryShake.IClientError>? errors = null;
+            if (response.Exception is null)
             {
-                return _getFile_Repository_RepositoryFromRepositoryEntityMapper.Map(snapshot.GetEntity<global::RepositoryAnalysis.Internal.GraphQL.State.RepositoryEntity>(entityId.Value) ?? throw new global::StrawberryShake.GraphQLClientException());
+                try
+                {
+                    if (response.Body != null)
+                    {
+                        if (response.Body.RootElement.TryGetProperty("data", out global::System.Text.Json.JsonElement dataElement) && dataElement.ValueKind == global::System.Text.Json.JsonValueKind.Object)
+                        {
+                            data = BuildData(dataElement);
+                        }
+
+                        if (response.Body.RootElement.TryGetProperty("errors", out global::System.Text.Json.JsonElement errorsElement))
+                        {
+                            errors = global::StrawberryShake.Json.JsonErrorParser.ParseErrors(errorsElement);
+                        }
+                    }
+                }
+                catch (global::System.Exception ex)
+                {
+                    errors = new global::StrawberryShake.IClientError[]{new global::StrawberryShake.ClientError(ex.Message, exception: ex, extensions: new global::System.Collections.Generic.Dictionary<global::System.String, global::System.Object?>{{"body", response.Body?.RootElement.ToString()}})};
+                }
+            }
+            else
+            {
+                if (response.Body != null && response.Body.RootElement.TryGetProperty("errors", out global::System.Text.Json.JsonElement errorsElement))
+                {
+                    errors = global::StrawberryShake.Json.JsonErrorParser.ParseErrors(errorsElement);
+                }
+                else
+                {
+                    errors = new global::StrawberryShake.IClientError[]{new global::StrawberryShake.ClientError(response.Exception.Message, exception: response.Exception, extensions: new global::System.Collections.Generic.Dictionary<global::System.String, global::System.Object?>{{"body", response.Body?.RootElement.ToString()}})};
+                }
+            }
+
+            return new global::StrawberryShake.OperationResult<IGetFileResult>(data?.Result, data?.Info, _resultDataFactory, errors);
+        }
+
+        private (IGetFileResult, GetFileResultInfo) BuildData(global::System.Text.Json.JsonElement obj)
+        {
+            var entityIds = new global::System.Collections.Generic.HashSet<global::StrawberryShake.EntityId>();
+            global::StrawberryShake.IEntityStoreSnapshot snapshot = default !;
+            global::StrawberryShake.EntityId? repositoryId = default !;
+            _entityStore.Update(session =>
+            {
+                repositoryId = UpdateIGetFile_RepositoryEntity(session, global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "repository"), entityIds);
+                snapshot = session.CurrentSnapshot;
+            });
+            var resultInfo = new GetFileResultInfo(repositoryId, entityIds, snapshot.Version);
+            return (_resultDataFactory.Create(resultInfo), resultInfo);
+        }
+
+        private global::StrawberryShake.EntityId? UpdateIGetFile_RepositoryEntity(global::StrawberryShake.IEntityStoreUpdateSession session, global::System.Text.Json.JsonElement? obj, global::System.Collections.Generic.ISet<global::StrawberryShake.EntityId> entityIds)
+        {
+            if (!obj.HasValue)
+            {
+                return null;
+            }
+
+            global::StrawberryShake.EntityId entityId = _idSerializer.Parse(obj.Value);
+            entityIds.Add(entityId);
+            if (entityId.Name.Equals("Repository", global::System.StringComparison.Ordinal))
+            {
+                if (session.CurrentSnapshot.TryGetEntity(entityId, out global::RepositoryAnalysis.Internal.GraphQL.State.RepositoryEntity? entity))
+                {
+                    session.SetEntity(entityId, new global::RepositoryAnalysis.Internal.GraphQL.State.RepositoryEntity(entity.UpdatedAt, entity.PushedAt, UpdateIGetFile_Repository_FileEntity(session, global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "file"), entityIds), entity.Discussions, entity.IsSecurityPolicyEnabled, entity.SecurityPolicyUrl, entity.HasVulnerabilityAlertsEnabled, entity.VulnerabilityAlerts, entity.Releases, entity.DiskUsage, entity.RepositoryTopics, entity.CodeOfConduct, entity.Codeowners, entity.DefaultBranchRef, entity.Description, entity.HasDiscussionsEnabled, entity.HasIssuesEnabled, entity.IsArchived, entity.IsEmpty, entity.IsLocked, entity.IssueTemplates, entity.LicenseInfo, entity.OpenGraphImageUrl, entity.PrimaryLanguage, entity.PullRequestTemplates, entity.Url, entity.PullRequests, entity.Issues));
+                }
+                else
+                {
+                    session.SetEntity(entityId, new global::RepositoryAnalysis.Internal.GraphQL.State.RepositoryEntity(default !, default !, UpdateIGetFile_Repository_FileEntity(session, global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "file"), entityIds), default !, default !, default !, default !, default !, default !, default !, default !, default !, default !, default !, default !, default !, default !, default !, default !, default !, default !, default !, default !, default !, default !, default !, default !, default !));
+                }
+
+                return entityId;
             }
 
             throw new global::System.NotSupportedException();
         }
 
-        global::System.Object global::StrawberryShake.IOperationResultDataFactory.Create(global::StrawberryShake.IOperationResultDataInfo dataInfo, global::StrawberryShake.IEntityStoreSnapshot? snapshot)
+        private global::StrawberryShake.EntityId? UpdateIGetFile_Repository_FileEntity(global::StrawberryShake.IEntityStoreUpdateSession session, global::System.Text.Json.JsonElement? obj, global::System.Collections.Generic.ISet<global::StrawberryShake.EntityId> entityIds)
         {
-            return Create(dataInfo, snapshot);
-        }
-    }
-
-    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.15.2.0")]
-    public partial class GetFileResultInfo : global::StrawberryShake.IOperationResultDataInfo
-    {
-        private readonly global::System.Collections.Generic.IReadOnlyCollection<global::StrawberryShake.EntityId> _entityIds;
-        private readonly global::System.UInt64 _version;
-        public GetFileResultInfo(global::StrawberryShake.EntityId? repository, global::System.Collections.Generic.IReadOnlyCollection<global::StrawberryShake.EntityId> entityIds, global::System.UInt64 version)
-        {
-            Repository = repository;
-            _entityIds = entityIds ?? throw new global::System.ArgumentNullException(nameof(entityIds));
-            _version = version;
-        }
-
-        /// <summary>
-        /// Lookup a given repository by the owner and repository name.
-        /// </summary>
-        public global::StrawberryShake.EntityId? Repository { get; }
-
-        public global::System.Collections.Generic.IReadOnlyCollection<global::StrawberryShake.EntityId> EntityIds => _entityIds;
-        public global::System.UInt64 Version => _version;
-        public global::StrawberryShake.IOperationResultDataInfo WithVersion(global::System.UInt64 version)
-        {
-            return new GetFileResultInfo(Repository, _entityIds, version);
-        }
-    }
-
-    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.15.2.0")]
-    public partial class GetFile_Repository_RepositoryFromRepositoryEntityMapper : global::StrawberryShake.IEntityMapper<global::RepositoryAnalysis.Internal.GraphQL.State.RepositoryEntity, GetFile_Repository_Repository>
-    {
-        private readonly global::StrawberryShake.IEntityStore _entityStore;
-        private readonly global::StrawberryShake.IEntityMapper<global::RepositoryAnalysis.Internal.GraphQL.State.BlobEntity, GetFile_Repository_File_Blob> _getFile_Repository_File_BlobFromBlobEntityMapper;
-        private readonly global::StrawberryShake.IEntityMapper<global::RepositoryAnalysis.Internal.GraphQL.State.CommitEntity, GetFile_Repository_File_Commit> _getFile_Repository_File_CommitFromCommitEntityMapper;
-        private readonly global::StrawberryShake.IEntityMapper<global::RepositoryAnalysis.Internal.GraphQL.State.TagEntity, GetFile_Repository_File_Tag> _getFile_Repository_File_TagFromTagEntityMapper;
-        private readonly global::StrawberryShake.IEntityMapper<global::RepositoryAnalysis.Internal.GraphQL.State.TreeEntity, GetFile_Repository_File_Tree> _getFile_Repository_File_TreeFromTreeEntityMapper;
-        public GetFile_Repository_RepositoryFromRepositoryEntityMapper(global::StrawberryShake.IEntityStore entityStore, global::StrawberryShake.IEntityMapper<global::RepositoryAnalysis.Internal.GraphQL.State.BlobEntity, GetFile_Repository_File_Blob> getFile_Repository_File_BlobFromBlobEntityMapper, global::StrawberryShake.IEntityMapper<global::RepositoryAnalysis.Internal.GraphQL.State.CommitEntity, GetFile_Repository_File_Commit> getFile_Repository_File_CommitFromCommitEntityMapper, global::StrawberryShake.IEntityMapper<global::RepositoryAnalysis.Internal.GraphQL.State.TagEntity, GetFile_Repository_File_Tag> getFile_Repository_File_TagFromTagEntityMapper, global::StrawberryShake.IEntityMapper<global::RepositoryAnalysis.Internal.GraphQL.State.TreeEntity, GetFile_Repository_File_Tree> getFile_Repository_File_TreeFromTreeEntityMapper)
-        {
-            _entityStore = entityStore ?? throw new global::System.ArgumentNullException(nameof(entityStore));
-            _getFile_Repository_File_BlobFromBlobEntityMapper = getFile_Repository_File_BlobFromBlobEntityMapper ?? throw new global::System.ArgumentNullException(nameof(getFile_Repository_File_BlobFromBlobEntityMapper));
-            _getFile_Repository_File_CommitFromCommitEntityMapper = getFile_Repository_File_CommitFromCommitEntityMapper ?? throw new global::System.ArgumentNullException(nameof(getFile_Repository_File_CommitFromCommitEntityMapper));
-            _getFile_Repository_File_TagFromTagEntityMapper = getFile_Repository_File_TagFromTagEntityMapper ?? throw new global::System.ArgumentNullException(nameof(getFile_Repository_File_TagFromTagEntityMapper));
-            _getFile_Repository_File_TreeFromTreeEntityMapper = getFile_Repository_File_TreeFromTreeEntityMapper ?? throw new global::System.ArgumentNullException(nameof(getFile_Repository_File_TreeFromTreeEntityMapper));
-        }
-
-        public GetFile_Repository_Repository Map(global::RepositoryAnalysis.Internal.GraphQL.State.RepositoryEntity entity, global::StrawberryShake.IEntityStoreSnapshot? snapshot = null)
-        {
-            if (snapshot is null)
-            {
-                snapshot = _entityStore.CurrentSnapshot;
-            }
-
-            return new GetFile_Repository_Repository(MapIGetFile_Repository_File(entity.File, snapshot));
-        }
-
-        private global::RepositoryAnalysis.Internal.GraphQL.IGetFile_Repository_File? MapIGetFile_Repository_File(global::StrawberryShake.EntityId? entityId, global::StrawberryShake.IEntityStoreSnapshot snapshot)
-        {
-            if (entityId is null)
+            if (!obj.HasValue)
             {
                 return null;
             }
 
-            if (entityId.Value.Name.Equals("Blob", global::System.StringComparison.Ordinal))
+            global::StrawberryShake.EntityId entityId = _idSerializer.Parse(obj.Value);
+            entityIds.Add(entityId);
+            if (entityId.Name.Equals("Blob", global::System.StringComparison.Ordinal))
             {
-                return _getFile_Repository_File_BlobFromBlobEntityMapper.Map(snapshot.GetEntity<global::RepositoryAnalysis.Internal.GraphQL.State.BlobEntity>(entityId.Value) ?? throw new global::StrawberryShake.GraphQLClientException());
+                if (session.CurrentSnapshot.TryGetEntity(entityId, out global::RepositoryAnalysis.Internal.GraphQL.State.BlobEntity? entity))
+                {
+                    session.SetEntity(entityId, new global::RepositoryAnalysis.Internal.GraphQL.State.BlobEntity(DeserializeString(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "text")), entity.CommitResourcePath));
+                }
+                else
+                {
+                    session.SetEntity(entityId, new global::RepositoryAnalysis.Internal.GraphQL.State.BlobEntity(DeserializeString(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "text")), default !));
+                }
+
+                return entityId;
             }
 
-            if (entityId.Value.Name.Equals("Commit", global::System.StringComparison.Ordinal))
+            if (entityId.Name.Equals("Commit", global::System.StringComparison.Ordinal))
             {
-                return _getFile_Repository_File_CommitFromCommitEntityMapper.Map(snapshot.GetEntity<global::RepositoryAnalysis.Internal.GraphQL.State.CommitEntity>(entityId.Value) ?? throw new global::StrawberryShake.GraphQLClientException());
+                if (session.CurrentSnapshot.TryGetEntity(entityId, out global::RepositoryAnalysis.Internal.GraphQL.State.CommitEntity? entity))
+                {
+                    session.SetEntity(entityId, new global::RepositoryAnalysis.Internal.GraphQL.State.CommitEntity(entity.CommitResourcePath));
+                }
+                else
+                {
+                    session.SetEntity(entityId, new global::RepositoryAnalysis.Internal.GraphQL.State.CommitEntity(default !));
+                }
+
+                return entityId;
             }
 
-            if (entityId.Value.Name.Equals("Tag", global::System.StringComparison.Ordinal))
+            if (entityId.Name.Equals("Tag", global::System.StringComparison.Ordinal))
             {
-                return _getFile_Repository_File_TagFromTagEntityMapper.Map(snapshot.GetEntity<global::RepositoryAnalysis.Internal.GraphQL.State.TagEntity>(entityId.Value) ?? throw new global::StrawberryShake.GraphQLClientException());
+                if (session.CurrentSnapshot.TryGetEntity(entityId, out global::RepositoryAnalysis.Internal.GraphQL.State.TagEntity? entity))
+                {
+                    session.SetEntity(entityId, new global::RepositoryAnalysis.Internal.GraphQL.State.TagEntity(entity.CommitResourcePath));
+                }
+                else
+                {
+                    session.SetEntity(entityId, new global::RepositoryAnalysis.Internal.GraphQL.State.TagEntity(default !));
+                }
+
+                return entityId;
             }
 
-            if (entityId.Value.Name.Equals("Tree", global::System.StringComparison.Ordinal))
+            if (entityId.Name.Equals("Tree", global::System.StringComparison.Ordinal))
             {
-                return _getFile_Repository_File_TreeFromTreeEntityMapper.Map(snapshot.GetEntity<global::RepositoryAnalysis.Internal.GraphQL.State.TreeEntity>(entityId.Value) ?? throw new global::StrawberryShake.GraphQLClientException());
+                if (session.CurrentSnapshot.TryGetEntity(entityId, out global::RepositoryAnalysis.Internal.GraphQL.State.TreeEntity? entity))
+                {
+                    session.SetEntity(entityId, new global::RepositoryAnalysis.Internal.GraphQL.State.TreeEntity(entity.CommitResourcePath));
+                }
+                else
+                {
+                    session.SetEntity(entityId, new global::RepositoryAnalysis.Internal.GraphQL.State.TreeEntity(default !));
+                }
+
+                return entityId;
             }
 
             throw new global::System.NotSupportedException();
         }
-    }
 
-    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.15.2.0")]
-    public partial class GetFile_Repository_File_BlobFromBlobEntityMapper : global::StrawberryShake.IEntityMapper<global::RepositoryAnalysis.Internal.GraphQL.State.BlobEntity, GetFile_Repository_File_Blob>
-    {
-        private readonly global::StrawberryShake.IEntityStore _entityStore;
-        public GetFile_Repository_File_BlobFromBlobEntityMapper(global::StrawberryShake.IEntityStore entityStore)
+        private global::System.String? DeserializeString(global::System.Text.Json.JsonElement? obj)
         {
-            _entityStore = entityStore ?? throw new global::System.ArgumentNullException(nameof(entityStore));
-        }
-
-        public GetFile_Repository_File_Blob Map(global::RepositoryAnalysis.Internal.GraphQL.State.BlobEntity entity, global::StrawberryShake.IEntityStoreSnapshot? snapshot = null)
-        {
-            if (snapshot is null)
+            if (!obj.HasValue)
             {
-                snapshot = _entityStore.CurrentSnapshot;
+                return null;
             }
 
-            return new GetFile_Repository_File_Blob(entity.Text);
-        }
-    }
-
-    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.15.2.0")]
-    public partial class GetFile_Repository_File_CommitFromCommitEntityMapper : global::StrawberryShake.IEntityMapper<global::RepositoryAnalysis.Internal.GraphQL.State.CommitEntity, GetFile_Repository_File_Commit>
-    {
-        private readonly global::StrawberryShake.IEntityStore _entityStore;
-        public GetFile_Repository_File_CommitFromCommitEntityMapper(global::StrawberryShake.IEntityStore entityStore)
-        {
-            _entityStore = entityStore ?? throw new global::System.ArgumentNullException(nameof(entityStore));
-        }
-
-        public GetFile_Repository_File_Commit Map(global::RepositoryAnalysis.Internal.GraphQL.State.CommitEntity entity, global::StrawberryShake.IEntityStoreSnapshot? snapshot = null)
-        {
-            if (snapshot is null)
-            {
-                snapshot = _entityStore.CurrentSnapshot;
-            }
-
-            return new GetFile_Repository_File_Commit();
-        }
-    }
-
-    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.15.2.0")]
-    public partial class GetFile_Repository_File_TagFromTagEntityMapper : global::StrawberryShake.IEntityMapper<global::RepositoryAnalysis.Internal.GraphQL.State.TagEntity, GetFile_Repository_File_Tag>
-    {
-        private readonly global::StrawberryShake.IEntityStore _entityStore;
-        public GetFile_Repository_File_TagFromTagEntityMapper(global::StrawberryShake.IEntityStore entityStore)
-        {
-            _entityStore = entityStore ?? throw new global::System.ArgumentNullException(nameof(entityStore));
-        }
-
-        public GetFile_Repository_File_Tag Map(global::RepositoryAnalysis.Internal.GraphQL.State.TagEntity entity, global::StrawberryShake.IEntityStoreSnapshot? snapshot = null)
-        {
-            if (snapshot is null)
-            {
-                snapshot = _entityStore.CurrentSnapshot;
-            }
-
-            return new GetFile_Repository_File_Tag();
-        }
-    }
-
-    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.15.2.0")]
-    public partial class GetFile_Repository_File_TreeFromTreeEntityMapper : global::StrawberryShake.IEntityMapper<global::RepositoryAnalysis.Internal.GraphQL.State.TreeEntity, GetFile_Repository_File_Tree>
-    {
-        private readonly global::StrawberryShake.IEntityStore _entityStore;
-        public GetFile_Repository_File_TreeFromTreeEntityMapper(global::StrawberryShake.IEntityStore entityStore)
-        {
-            _entityStore = entityStore ?? throw new global::System.ArgumentNullException(nameof(entityStore));
-        }
-
-        public GetFile_Repository_File_Tree Map(global::RepositoryAnalysis.Internal.GraphQL.State.TreeEntity entity, global::StrawberryShake.IEntityStoreSnapshot? snapshot = null)
-        {
-            if (snapshot is null)
-            {
-                snapshot = _entityStore.CurrentSnapshot;
-            }
-
-            return new GetFile_Repository_File_Tree();
+            return _stringParser.Parse(obj.Value.GetString()!);
         }
     }
 
@@ -6141,17 +6905,111 @@ namespace RepositoryAnalysis.Internal.GraphQL.State
             {
                 if (session.CurrentSnapshot.TryGetEntity(entityId, out global::RepositoryAnalysis.Internal.GraphQL.State.RepositoryEntity? entity))
                 {
-                    session.SetEntity(entityId, new global::RepositoryAnalysis.Internal.GraphQL.State.RepositoryEntity(DeserializeBoolean(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "isSecurityPolicyEnabled")), DeserializeUri(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "securityPolicyUrl")), DeserializeNonNullableBoolean(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "hasVulnerabilityAlertsEnabled")), DeserializeIGetRepo_Repository_VulnerabilityAlerts(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "vulnerabilityAlerts")), DeserializeNonNullableIGetRepo_Repository_Releases(session, global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "releases"), entityIds), DeserializeInt32(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "diskUsage")), DeserializeNonNullableDateTimeOffset(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "updatedAt")), DeserializeDateTimeOffset(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "pushedAt")), DeserializeNonNullableIGetRepo_Repository_RepositoryTopics(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "repositoryTopics")), UpdateIGetRepo_Repository_CodeOfConductEntity(session, global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "codeOfConduct"), entityIds), DeserializeIGetRepo_Repository_Codeowners(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "codeowners")), UpdateIGetRepo_Repository_DefaultBranchRefEntity(session, global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "defaultBranchRef"), entityIds), DeserializeString(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "description")), DeserializeNonNullableBoolean(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "hasDiscussionsEnabled")), DeserializeNonNullableBoolean(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "hasIssuesEnabled")), DeserializeNonNullableBoolean(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "isArchived")), DeserializeNonNullableBoolean(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "isEmpty")), DeserializeNonNullableBoolean(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "isLocked")), DeserializeIGetRepo_Repository_IssueTemplatesNonNullableArray(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "issueTemplates")), UpdateIGetRepo_Repository_LicenseInfoEntity(session, global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "licenseInfo"), entityIds), DeserializeNonNullableUri(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "openGraphImageUrl")), UpdateIGetRepo_Repository_PrimaryLanguageEntity(session, global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "primaryLanguage"), entityIds), DeserializeIGetRepo_Repository_PullRequestTemplatesNonNullableArray(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "pullRequestTemplates")), DeserializeNonNullableUri(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "url")), DeserializeNonNullableIGetRepo_Repository_PullRequests(session, global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "pullRequests"), entityIds), DeserializeNonNullableIGetRepo_Repository_Issues(session, global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "issues"), entityIds), entity.File));
+                    session.SetEntity(entityId, new global::RepositoryAnalysis.Internal.GraphQL.State.RepositoryEntity(DeserializeNonNullableDateTimeOffset(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "updatedAt")), DeserializeDateTimeOffset(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "pushedAt")), entity.File, DeserializeNonNullableIGetRepo_Repository_Discussions(session, global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "discussions"), entityIds), DeserializeBoolean(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "isSecurityPolicyEnabled")), DeserializeUri(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "securityPolicyUrl")), DeserializeNonNullableBoolean(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "hasVulnerabilityAlertsEnabled")), DeserializeIGetRepo_Repository_VulnerabilityAlerts(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "vulnerabilityAlerts")), DeserializeNonNullableIGetRepo_Repository_Releases(session, global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "releases"), entityIds), DeserializeInt32(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "diskUsage")), DeserializeNonNullableIGetRepo_Repository_RepositoryTopics(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "repositoryTopics")), UpdateIGetRepo_Repository_CodeOfConductEntity(session, global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "codeOfConduct"), entityIds), DeserializeIGetRepo_Repository_Codeowners(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "codeowners")), UpdateIGetRepo_Repository_DefaultBranchRefEntity(session, global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "defaultBranchRef"), entityIds), DeserializeString(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "description")), DeserializeNonNullableBoolean(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "hasDiscussionsEnabled")), DeserializeNonNullableBoolean(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "hasIssuesEnabled")), DeserializeNonNullableBoolean(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "isArchived")), DeserializeNonNullableBoolean(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "isEmpty")), DeserializeNonNullableBoolean(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "isLocked")), DeserializeIGetRepo_Repository_IssueTemplatesNonNullableArray(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "issueTemplates")), UpdateIGetRepo_Repository_LicenseInfoEntity(session, global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "licenseInfo"), entityIds), DeserializeNonNullableUri(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "openGraphImageUrl")), UpdateIGetRepo_Repository_PrimaryLanguageEntity(session, global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "primaryLanguage"), entityIds), DeserializeIGetRepo_Repository_PullRequestTemplatesNonNullableArray(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "pullRequestTemplates")), DeserializeNonNullableUri(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "url")), DeserializeNonNullableIGetRepo_Repository_PullRequests(session, global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "pullRequests"), entityIds), DeserializeNonNullableIGetRepo_Repository_Issues(session, global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "issues"), entityIds)));
                 }
                 else
                 {
-                    session.SetEntity(entityId, new global::RepositoryAnalysis.Internal.GraphQL.State.RepositoryEntity(DeserializeBoolean(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "isSecurityPolicyEnabled")), DeserializeUri(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "securityPolicyUrl")), DeserializeNonNullableBoolean(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "hasVulnerabilityAlertsEnabled")), DeserializeIGetRepo_Repository_VulnerabilityAlerts(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "vulnerabilityAlerts")), DeserializeNonNullableIGetRepo_Repository_Releases(session, global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "releases"), entityIds), DeserializeInt32(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "diskUsage")), DeserializeNonNullableDateTimeOffset(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "updatedAt")), DeserializeDateTimeOffset(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "pushedAt")), DeserializeNonNullableIGetRepo_Repository_RepositoryTopics(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "repositoryTopics")), UpdateIGetRepo_Repository_CodeOfConductEntity(session, global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "codeOfConduct"), entityIds), DeserializeIGetRepo_Repository_Codeowners(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "codeowners")), UpdateIGetRepo_Repository_DefaultBranchRefEntity(session, global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "defaultBranchRef"), entityIds), DeserializeString(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "description")), DeserializeNonNullableBoolean(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "hasDiscussionsEnabled")), DeserializeNonNullableBoolean(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "hasIssuesEnabled")), DeserializeNonNullableBoolean(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "isArchived")), DeserializeNonNullableBoolean(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "isEmpty")), DeserializeNonNullableBoolean(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "isLocked")), DeserializeIGetRepo_Repository_IssueTemplatesNonNullableArray(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "issueTemplates")), UpdateIGetRepo_Repository_LicenseInfoEntity(session, global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "licenseInfo"), entityIds), DeserializeNonNullableUri(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "openGraphImageUrl")), UpdateIGetRepo_Repository_PrimaryLanguageEntity(session, global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "primaryLanguage"), entityIds), DeserializeIGetRepo_Repository_PullRequestTemplatesNonNullableArray(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "pullRequestTemplates")), DeserializeNonNullableUri(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "url")), DeserializeNonNullableIGetRepo_Repository_PullRequests(session, global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "pullRequests"), entityIds), DeserializeNonNullableIGetRepo_Repository_Issues(session, global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "issues"), entityIds), default !));
+                    session.SetEntity(entityId, new global::RepositoryAnalysis.Internal.GraphQL.State.RepositoryEntity(DeserializeNonNullableDateTimeOffset(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "updatedAt")), DeserializeDateTimeOffset(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "pushedAt")), default !, DeserializeNonNullableIGetRepo_Repository_Discussions(session, global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "discussions"), entityIds), DeserializeBoolean(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "isSecurityPolicyEnabled")), DeserializeUri(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "securityPolicyUrl")), DeserializeNonNullableBoolean(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "hasVulnerabilityAlertsEnabled")), DeserializeIGetRepo_Repository_VulnerabilityAlerts(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "vulnerabilityAlerts")), DeserializeNonNullableIGetRepo_Repository_Releases(session, global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "releases"), entityIds), DeserializeInt32(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "diskUsage")), DeserializeNonNullableIGetRepo_Repository_RepositoryTopics(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "repositoryTopics")), UpdateIGetRepo_Repository_CodeOfConductEntity(session, global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "codeOfConduct"), entityIds), DeserializeIGetRepo_Repository_Codeowners(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "codeowners")), UpdateIGetRepo_Repository_DefaultBranchRefEntity(session, global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "defaultBranchRef"), entityIds), DeserializeString(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "description")), DeserializeNonNullableBoolean(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "hasDiscussionsEnabled")), DeserializeNonNullableBoolean(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "hasIssuesEnabled")), DeserializeNonNullableBoolean(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "isArchived")), DeserializeNonNullableBoolean(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "isEmpty")), DeserializeNonNullableBoolean(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "isLocked")), DeserializeIGetRepo_Repository_IssueTemplatesNonNullableArray(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "issueTemplates")), UpdateIGetRepo_Repository_LicenseInfoEntity(session, global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "licenseInfo"), entityIds), DeserializeNonNullableUri(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "openGraphImageUrl")), UpdateIGetRepo_Repository_PrimaryLanguageEntity(session, global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "primaryLanguage"), entityIds), DeserializeIGetRepo_Repository_PullRequestTemplatesNonNullableArray(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "pullRequestTemplates")), DeserializeNonNullableUri(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "url")), DeserializeNonNullableIGetRepo_Repository_PullRequests(session, global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "pullRequests"), entityIds), DeserializeNonNullableIGetRepo_Repository_Issues(session, global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "issues"), entityIds)));
                 }
 
                 return entityId;
             }
 
             throw new global::System.NotSupportedException();
+        }
+
+        private global::RepositoryAnalysis.Internal.GraphQL.State.DiscussionConnectionData DeserializeNonNullableIGetRepo_Repository_Discussions(global::StrawberryShake.IEntityStoreUpdateSession session, global::System.Text.Json.JsonElement? obj, global::System.Collections.Generic.ISet<global::StrawberryShake.EntityId> entityIds)
+        {
+            if (!obj.HasValue)
+            {
+                throw new global::System.ArgumentNullException();
+            }
+
+            var typename = obj.Value.GetProperty("__typename").GetString();
+            if (typename?.Equals("DiscussionConnection", global::System.StringComparison.Ordinal) ?? false)
+            {
+                return new global::RepositoryAnalysis.Internal.GraphQL.State.DiscussionConnectionData(typename, edges: DeserializeIGetRepo_Repository_Discussions_EdgesArray(session, global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "edges"), entityIds), totalCount: DeserializeNonNullableInt32(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "totalCount")));
+            }
+
+            throw new global::System.NotSupportedException();
+        }
+
+        private global::System.Collections.Generic.IReadOnlyList<global::RepositoryAnalysis.Internal.GraphQL.State.DiscussionEdgeData?>? DeserializeIGetRepo_Repository_Discussions_EdgesArray(global::StrawberryShake.IEntityStoreUpdateSession session, global::System.Text.Json.JsonElement? obj, global::System.Collections.Generic.ISet<global::StrawberryShake.EntityId> entityIds)
+        {
+            if (!obj.HasValue)
+            {
+                return null;
+            }
+
+            var discussionEdges = new global::System.Collections.Generic.List<global::RepositoryAnalysis.Internal.GraphQL.State.DiscussionEdgeData?>();
+            foreach (global::System.Text.Json.JsonElement child in obj.Value.EnumerateArray())
+            {
+                discussionEdges.Add(DeserializeIGetRepo_Repository_Discussions_Edges(session, child, entityIds));
+            }
+
+            return discussionEdges;
+        }
+
+        private global::RepositoryAnalysis.Internal.GraphQL.State.DiscussionEdgeData? DeserializeIGetRepo_Repository_Discussions_Edges(global::StrawberryShake.IEntityStoreUpdateSession session, global::System.Text.Json.JsonElement? obj, global::System.Collections.Generic.ISet<global::StrawberryShake.EntityId> entityIds)
+        {
+            if (!obj.HasValue)
+            {
+                return null;
+            }
+
+            var typename = obj.Value.GetProperty("__typename").GetString();
+            if (typename?.Equals("DiscussionEdge", global::System.StringComparison.Ordinal) ?? false)
+            {
+                return new global::RepositoryAnalysis.Internal.GraphQL.State.DiscussionEdgeData(typename, node: UpdateIGetRepo_Repository_Discussions_Edges_NodeEntity(session, global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "node"), entityIds));
+            }
+
+            throw new global::System.NotSupportedException();
+        }
+
+        private global::StrawberryShake.EntityId? UpdateIGetRepo_Repository_Discussions_Edges_NodeEntity(global::StrawberryShake.IEntityStoreUpdateSession session, global::System.Text.Json.JsonElement? obj, global::System.Collections.Generic.ISet<global::StrawberryShake.EntityId> entityIds)
+        {
+            if (!obj.HasValue)
+            {
+                return null;
+            }
+
+            global::StrawberryShake.EntityId entityId = _idSerializer.Parse(obj.Value);
+            entityIds.Add(entityId);
+            if (entityId.Name.Equals("Discussion", global::System.StringComparison.Ordinal))
+            {
+                if (session.CurrentSnapshot.TryGetEntity(entityId, out global::RepositoryAnalysis.Internal.GraphQL.State.DiscussionEntity? entity))
+                {
+                    session.SetEntity(entityId, new global::RepositoryAnalysis.Internal.GraphQL.State.DiscussionEntity(DeserializeNonNullableInt32(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "number")), DeserializeDateTimeOffset(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "answerChosenAt"))));
+                }
+                else
+                {
+                    session.SetEntity(entityId, new global::RepositoryAnalysis.Internal.GraphQL.State.DiscussionEntity(DeserializeNonNullableInt32(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "number")), DeserializeDateTimeOffset(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "answerChosenAt"))));
+                }
+
+                return entityId;
+            }
+
+            throw new global::System.NotSupportedException();
+        }
+
+        private global::System.Int32 DeserializeNonNullableInt32(global::System.Text.Json.JsonElement? obj)
+        {
+            if (!obj.HasValue)
+            {
+                throw new global::System.ArgumentNullException();
+            }
+
+            return _intParser.Parse(obj.Value.GetInt32()!);
+        }
+
+        private global::System.DateTimeOffset? DeserializeDateTimeOffset(global::System.Text.Json.JsonElement? obj)
+        {
+            if (!obj.HasValue)
+            {
+                return null;
+            }
+
+            return _dateTimeParser.Parse(obj.Value.GetString()!);
         }
 
         private global::System.Boolean? DeserializeBoolean(global::System.Text.Json.JsonElement? obj)
@@ -6198,16 +7056,6 @@ namespace RepositoryAnalysis.Internal.GraphQL.State
             }
 
             throw new global::System.NotSupportedException();
-        }
-
-        private global::System.Int32 DeserializeNonNullableInt32(global::System.Text.Json.JsonElement? obj)
-        {
-            if (!obj.HasValue)
-            {
-                throw new global::System.ArgumentNullException();
-            }
-
-            return _intParser.Parse(obj.Value.GetInt32()!);
         }
 
         private global::RepositoryAnalysis.Internal.GraphQL.State.ReleaseConnectionData DeserializeNonNullableIGetRepo_Repository_Releases(global::StrawberryShake.IEntityStoreUpdateSession session, global::System.Text.Json.JsonElement? obj, global::System.Collections.Generic.ISet<global::StrawberryShake.EntityId> entityIds)
@@ -6319,16 +7167,6 @@ namespace RepositoryAnalysis.Internal.GraphQL.State
             if (!obj.HasValue)
             {
                 throw new global::System.ArgumentNullException();
-            }
-
-            return _dateTimeParser.Parse(obj.Value.GetString()!);
-        }
-
-        private global::System.DateTimeOffset? DeserializeDateTimeOffset(global::System.Text.Json.JsonElement? obj)
-        {
-            if (!obj.HasValue)
-            {
-                return null;
             }
 
             return _dateTimeParser.Parse(obj.Value.GetString()!);
@@ -6473,11 +7311,11 @@ namespace RepositoryAnalysis.Internal.GraphQL.State
             {
                 if (session.CurrentSnapshot.TryGetEntity(entityId, out global::RepositoryAnalysis.Internal.GraphQL.State.BlobEntity? entity))
                 {
-                    session.SetEntity(entityId, new global::RepositoryAnalysis.Internal.GraphQL.State.BlobEntity(DeserializeNonNullableUri(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "commitResourcePath")), entity.Text));
+                    session.SetEntity(entityId, new global::RepositoryAnalysis.Internal.GraphQL.State.BlobEntity(entity.Text, DeserializeNonNullableUri(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "commitResourcePath"))));
                 }
                 else
                 {
-                    session.SetEntity(entityId, new global::RepositoryAnalysis.Internal.GraphQL.State.BlobEntity(DeserializeNonNullableUri(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "commitResourcePath")), default !));
+                    session.SetEntity(entityId, new global::RepositoryAnalysis.Internal.GraphQL.State.BlobEntity(default !, DeserializeNonNullableUri(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "commitResourcePath"))));
                 }
 
                 return entityId;
@@ -6819,298 +7657,24 @@ namespace RepositoryAnalysis.Internal.GraphQL.State
         }
     }
 
+    ///<summary>The connection type for Discussion.</summary>
     [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.15.2.0")]
-    public partial class GetAgeBuilder : global::StrawberryShake.IOperationResultBuilder<global::System.Text.Json.JsonDocument, global::RepositoryAnalysis.Internal.GraphQL.IGetAgeResult>
+    public partial class DiscussionConnectionData
     {
-        private readonly global::StrawberryShake.IEntityStore _entityStore;
-        private readonly global::StrawberryShake.IEntityIdSerializer _idSerializer;
-        private readonly global::StrawberryShake.IOperationResultDataFactory<global::RepositoryAnalysis.Internal.GraphQL.IGetAgeResult> _resultDataFactory;
-        private readonly global::StrawberryShake.Serialization.ILeafValueParser<global::System.String, global::System.String> _stringParser;
-        private readonly global::StrawberryShake.Serialization.ILeafValueParser<global::System.String, global::System.DateTimeOffset> _dateTimeParser;
-        public GetAgeBuilder(global::StrawberryShake.IEntityStore entityStore, global::StrawberryShake.IEntityIdSerializer idSerializer, global::StrawberryShake.IOperationResultDataFactory<global::RepositoryAnalysis.Internal.GraphQL.IGetAgeResult> resultDataFactory, global::StrawberryShake.Serialization.ISerializerResolver serializerResolver)
+        public DiscussionConnectionData(global::System.String __typename, global::System.Collections.Generic.IReadOnlyList<global::RepositoryAnalysis.Internal.GraphQL.State.DiscussionEdgeData?>? edges = default !, global::System.Int32? totalCount = default !)
         {
-            _entityStore = entityStore ?? throw new global::System.ArgumentNullException(nameof(entityStore));
-            _idSerializer = idSerializer ?? throw new global::System.ArgumentNullException(nameof(idSerializer));
-            _resultDataFactory = resultDataFactory ?? throw new global::System.ArgumentNullException(nameof(resultDataFactory));
-            _stringParser = serializerResolver.GetLeafValueParser<global::System.String, global::System.String>("String") ?? throw new global::System.ArgumentException("No serializer for type `String` found.");
-            _dateTimeParser = serializerResolver.GetLeafValueParser<global::System.String, global::System.DateTimeOffset>("DateTime") ?? throw new global::System.ArgumentException("No serializer for type `DateTime` found.");
+            this.__typename = __typename ?? throw new global::System.ArgumentNullException(nameof(__typename));
+            Edges = edges;
+            TotalCount = totalCount;
         }
 
-        public global::StrawberryShake.IOperationResult<IGetAgeResult> Build(global::StrawberryShake.Response<global::System.Text.Json.JsonDocument> response)
-        {
-            (IGetAgeResult Result, GetAgeResultInfo Info)? data = null;
-            global::System.Collections.Generic.IReadOnlyList<global::StrawberryShake.IClientError>? errors = null;
-            if (response.Exception is null)
-            {
-                try
-                {
-                    if (response.Body != null)
-                    {
-                        if (response.Body.RootElement.TryGetProperty("data", out global::System.Text.Json.JsonElement dataElement) && dataElement.ValueKind == global::System.Text.Json.JsonValueKind.Object)
-                        {
-                            data = BuildData(dataElement);
-                        }
+        public global::System.String __typename { get; }
 
-                        if (response.Body.RootElement.TryGetProperty("errors", out global::System.Text.Json.JsonElement errorsElement))
-                        {
-                            errors = global::StrawberryShake.Json.JsonErrorParser.ParseErrors(errorsElement);
-                        }
-                    }
-                }
-                catch (global::System.Exception ex)
-                {
-                    errors = new global::StrawberryShake.IClientError[]{new global::StrawberryShake.ClientError(ex.Message, exception: ex, extensions: new global::System.Collections.Generic.Dictionary<global::System.String, global::System.Object?>{{"body", response.Body?.RootElement.ToString()}})};
-                }
-            }
-            else
-            {
-                if (response.Body != null && response.Body.RootElement.TryGetProperty("errors", out global::System.Text.Json.JsonElement errorsElement))
-                {
-                    errors = global::StrawberryShake.Json.JsonErrorParser.ParseErrors(errorsElement);
-                }
-                else
-                {
-                    errors = new global::StrawberryShake.IClientError[]{new global::StrawberryShake.ClientError(response.Exception.Message, exception: response.Exception, extensions: new global::System.Collections.Generic.Dictionary<global::System.String, global::System.Object?>{{"body", response.Body?.RootElement.ToString()}})};
-                }
-            }
+        ///<summary>A list of edges.</summary>
+        public global::System.Collections.Generic.IReadOnlyList<global::RepositoryAnalysis.Internal.GraphQL.State.DiscussionEdgeData?>? Edges { get; }
 
-            return new global::StrawberryShake.OperationResult<IGetAgeResult>(data?.Result, data?.Info, _resultDataFactory, errors);
-        }
-
-        private (IGetAgeResult, GetAgeResultInfo) BuildData(global::System.Text.Json.JsonElement obj)
-        {
-            var entityIds = new global::System.Collections.Generic.HashSet<global::StrawberryShake.EntityId>();
-            global::StrawberryShake.IEntityStoreSnapshot snapshot = default !;
-            global::StrawberryShake.EntityId? repositoryId = default !;
-            _entityStore.Update(session =>
-            {
-                repositoryId = UpdateIGetAge_RepositoryEntity(session, global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "repository"), entityIds);
-                snapshot = session.CurrentSnapshot;
-            });
-            var resultInfo = new GetAgeResultInfo(repositoryId, entityIds, snapshot.Version);
-            return (_resultDataFactory.Create(resultInfo), resultInfo);
-        }
-
-        private global::StrawberryShake.EntityId? UpdateIGetAge_RepositoryEntity(global::StrawberryShake.IEntityStoreUpdateSession session, global::System.Text.Json.JsonElement? obj, global::System.Collections.Generic.ISet<global::StrawberryShake.EntityId> entityIds)
-        {
-            if (!obj.HasValue)
-            {
-                return null;
-            }
-
-            global::StrawberryShake.EntityId entityId = _idSerializer.Parse(obj.Value);
-            entityIds.Add(entityId);
-            if (entityId.Name.Equals("Repository", global::System.StringComparison.Ordinal))
-            {
-                if (session.CurrentSnapshot.TryGetEntity(entityId, out global::RepositoryAnalysis.Internal.GraphQL.State.RepositoryEntity? entity))
-                {
-                    session.SetEntity(entityId, new global::RepositoryAnalysis.Internal.GraphQL.State.RepositoryEntity(entity.IsSecurityPolicyEnabled, entity.SecurityPolicyUrl, entity.HasVulnerabilityAlertsEnabled, entity.VulnerabilityAlerts, entity.Releases, entity.DiskUsage, DeserializeNonNullableDateTimeOffset(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "updatedAt")), DeserializeDateTimeOffset(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "pushedAt")), entity.RepositoryTopics, entity.CodeOfConduct, entity.Codeowners, entity.DefaultBranchRef, entity.Description, entity.HasDiscussionsEnabled, entity.HasIssuesEnabled, entity.IsArchived, entity.IsEmpty, entity.IsLocked, entity.IssueTemplates, entity.LicenseInfo, entity.OpenGraphImageUrl, entity.PrimaryLanguage, entity.PullRequestTemplates, entity.Url, entity.PullRequests, entity.Issues, entity.File));
-                }
-                else
-                {
-                    session.SetEntity(entityId, new global::RepositoryAnalysis.Internal.GraphQL.State.RepositoryEntity(default !, default !, default !, default !, default !, default !, DeserializeNonNullableDateTimeOffset(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "updatedAt")), DeserializeDateTimeOffset(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "pushedAt")), default !, default !, default !, default !, default !, default !, default !, default !, default !, default !, default !, default !, default !, default !, default !, default !, default !, default !, default !));
-                }
-
-                return entityId;
-            }
-
-            throw new global::System.NotSupportedException();
-        }
-
-        private global::System.DateTimeOffset DeserializeNonNullableDateTimeOffset(global::System.Text.Json.JsonElement? obj)
-        {
-            if (!obj.HasValue)
-            {
-                throw new global::System.ArgumentNullException();
-            }
-
-            return _dateTimeParser.Parse(obj.Value.GetString()!);
-        }
-
-        private global::System.DateTimeOffset? DeserializeDateTimeOffset(global::System.Text.Json.JsonElement? obj)
-        {
-            if (!obj.HasValue)
-            {
-                return null;
-            }
-
-            return _dateTimeParser.Parse(obj.Value.GetString()!);
-        }
-    }
-
-    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.15.2.0")]
-    public partial class GetFileBuilder : global::StrawberryShake.IOperationResultBuilder<global::System.Text.Json.JsonDocument, global::RepositoryAnalysis.Internal.GraphQL.IGetFileResult>
-    {
-        private readonly global::StrawberryShake.IEntityStore _entityStore;
-        private readonly global::StrawberryShake.IEntityIdSerializer _idSerializer;
-        private readonly global::StrawberryShake.IOperationResultDataFactory<global::RepositoryAnalysis.Internal.GraphQL.IGetFileResult> _resultDataFactory;
-        private readonly global::StrawberryShake.Serialization.ILeafValueParser<global::System.String, global::System.String> _stringParser;
-        public GetFileBuilder(global::StrawberryShake.IEntityStore entityStore, global::StrawberryShake.IEntityIdSerializer idSerializer, global::StrawberryShake.IOperationResultDataFactory<global::RepositoryAnalysis.Internal.GraphQL.IGetFileResult> resultDataFactory, global::StrawberryShake.Serialization.ISerializerResolver serializerResolver)
-        {
-            _entityStore = entityStore ?? throw new global::System.ArgumentNullException(nameof(entityStore));
-            _idSerializer = idSerializer ?? throw new global::System.ArgumentNullException(nameof(idSerializer));
-            _resultDataFactory = resultDataFactory ?? throw new global::System.ArgumentNullException(nameof(resultDataFactory));
-            _stringParser = serializerResolver.GetLeafValueParser<global::System.String, global::System.String>("String") ?? throw new global::System.ArgumentException("No serializer for type `String` found.");
-        }
-
-        public global::StrawberryShake.IOperationResult<IGetFileResult> Build(global::StrawberryShake.Response<global::System.Text.Json.JsonDocument> response)
-        {
-            (IGetFileResult Result, GetFileResultInfo Info)? data = null;
-            global::System.Collections.Generic.IReadOnlyList<global::StrawberryShake.IClientError>? errors = null;
-            if (response.Exception is null)
-            {
-                try
-                {
-                    if (response.Body != null)
-                    {
-                        if (response.Body.RootElement.TryGetProperty("data", out global::System.Text.Json.JsonElement dataElement) && dataElement.ValueKind == global::System.Text.Json.JsonValueKind.Object)
-                        {
-                            data = BuildData(dataElement);
-                        }
-
-                        if (response.Body.RootElement.TryGetProperty("errors", out global::System.Text.Json.JsonElement errorsElement))
-                        {
-                            errors = global::StrawberryShake.Json.JsonErrorParser.ParseErrors(errorsElement);
-                        }
-                    }
-                }
-                catch (global::System.Exception ex)
-                {
-                    errors = new global::StrawberryShake.IClientError[]{new global::StrawberryShake.ClientError(ex.Message, exception: ex, extensions: new global::System.Collections.Generic.Dictionary<global::System.String, global::System.Object?>{{"body", response.Body?.RootElement.ToString()}})};
-                }
-            }
-            else
-            {
-                if (response.Body != null && response.Body.RootElement.TryGetProperty("errors", out global::System.Text.Json.JsonElement errorsElement))
-                {
-                    errors = global::StrawberryShake.Json.JsonErrorParser.ParseErrors(errorsElement);
-                }
-                else
-                {
-                    errors = new global::StrawberryShake.IClientError[]{new global::StrawberryShake.ClientError(response.Exception.Message, exception: response.Exception, extensions: new global::System.Collections.Generic.Dictionary<global::System.String, global::System.Object?>{{"body", response.Body?.RootElement.ToString()}})};
-                }
-            }
-
-            return new global::StrawberryShake.OperationResult<IGetFileResult>(data?.Result, data?.Info, _resultDataFactory, errors);
-        }
-
-        private (IGetFileResult, GetFileResultInfo) BuildData(global::System.Text.Json.JsonElement obj)
-        {
-            var entityIds = new global::System.Collections.Generic.HashSet<global::StrawberryShake.EntityId>();
-            global::StrawberryShake.IEntityStoreSnapshot snapshot = default !;
-            global::StrawberryShake.EntityId? repositoryId = default !;
-            _entityStore.Update(session =>
-            {
-                repositoryId = UpdateIGetFile_RepositoryEntity(session, global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "repository"), entityIds);
-                snapshot = session.CurrentSnapshot;
-            });
-            var resultInfo = new GetFileResultInfo(repositoryId, entityIds, snapshot.Version);
-            return (_resultDataFactory.Create(resultInfo), resultInfo);
-        }
-
-        private global::StrawberryShake.EntityId? UpdateIGetFile_RepositoryEntity(global::StrawberryShake.IEntityStoreUpdateSession session, global::System.Text.Json.JsonElement? obj, global::System.Collections.Generic.ISet<global::StrawberryShake.EntityId> entityIds)
-        {
-            if (!obj.HasValue)
-            {
-                return null;
-            }
-
-            global::StrawberryShake.EntityId entityId = _idSerializer.Parse(obj.Value);
-            entityIds.Add(entityId);
-            if (entityId.Name.Equals("Repository", global::System.StringComparison.Ordinal))
-            {
-                if (session.CurrentSnapshot.TryGetEntity(entityId, out global::RepositoryAnalysis.Internal.GraphQL.State.RepositoryEntity? entity))
-                {
-                    session.SetEntity(entityId, new global::RepositoryAnalysis.Internal.GraphQL.State.RepositoryEntity(entity.IsSecurityPolicyEnabled, entity.SecurityPolicyUrl, entity.HasVulnerabilityAlertsEnabled, entity.VulnerabilityAlerts, entity.Releases, entity.DiskUsage, entity.UpdatedAt, entity.PushedAt, entity.RepositoryTopics, entity.CodeOfConduct, entity.Codeowners, entity.DefaultBranchRef, entity.Description, entity.HasDiscussionsEnabled, entity.HasIssuesEnabled, entity.IsArchived, entity.IsEmpty, entity.IsLocked, entity.IssueTemplates, entity.LicenseInfo, entity.OpenGraphImageUrl, entity.PrimaryLanguage, entity.PullRequestTemplates, entity.Url, entity.PullRequests, entity.Issues, UpdateIGetFile_Repository_FileEntity(session, global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "file"), entityIds)));
-                }
-                else
-                {
-                    session.SetEntity(entityId, new global::RepositoryAnalysis.Internal.GraphQL.State.RepositoryEntity(default !, default !, default !, default !, default !, default !, default !, default !, default !, default !, default !, default !, default !, default !, default !, default !, default !, default !, default !, default !, default !, default !, default !, default !, default !, default !, UpdateIGetFile_Repository_FileEntity(session, global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "file"), entityIds)));
-                }
-
-                return entityId;
-            }
-
-            throw new global::System.NotSupportedException();
-        }
-
-        private global::StrawberryShake.EntityId? UpdateIGetFile_Repository_FileEntity(global::StrawberryShake.IEntityStoreUpdateSession session, global::System.Text.Json.JsonElement? obj, global::System.Collections.Generic.ISet<global::StrawberryShake.EntityId> entityIds)
-        {
-            if (!obj.HasValue)
-            {
-                return null;
-            }
-
-            global::StrawberryShake.EntityId entityId = _idSerializer.Parse(obj.Value);
-            entityIds.Add(entityId);
-            if (entityId.Name.Equals("Blob", global::System.StringComparison.Ordinal))
-            {
-                if (session.CurrentSnapshot.TryGetEntity(entityId, out global::RepositoryAnalysis.Internal.GraphQL.State.BlobEntity? entity))
-                {
-                    session.SetEntity(entityId, new global::RepositoryAnalysis.Internal.GraphQL.State.BlobEntity(entity.CommitResourcePath, DeserializeString(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "text"))));
-                }
-                else
-                {
-                    session.SetEntity(entityId, new global::RepositoryAnalysis.Internal.GraphQL.State.BlobEntity(default !, DeserializeString(global::StrawberryShake.Json.JsonElementExtensions.GetPropertyOrNull(obj, "text"))));
-                }
-
-                return entityId;
-            }
-
-            if (entityId.Name.Equals("Commit", global::System.StringComparison.Ordinal))
-            {
-                if (session.CurrentSnapshot.TryGetEntity(entityId, out global::RepositoryAnalysis.Internal.GraphQL.State.CommitEntity? entity))
-                {
-                    session.SetEntity(entityId, new global::RepositoryAnalysis.Internal.GraphQL.State.CommitEntity(entity.CommitResourcePath));
-                }
-                else
-                {
-                    session.SetEntity(entityId, new global::RepositoryAnalysis.Internal.GraphQL.State.CommitEntity(default !));
-                }
-
-                return entityId;
-            }
-
-            if (entityId.Name.Equals("Tag", global::System.StringComparison.Ordinal))
-            {
-                if (session.CurrentSnapshot.TryGetEntity(entityId, out global::RepositoryAnalysis.Internal.GraphQL.State.TagEntity? entity))
-                {
-                    session.SetEntity(entityId, new global::RepositoryAnalysis.Internal.GraphQL.State.TagEntity(entity.CommitResourcePath));
-                }
-                else
-                {
-                    session.SetEntity(entityId, new global::RepositoryAnalysis.Internal.GraphQL.State.TagEntity(default !));
-                }
-
-                return entityId;
-            }
-
-            if (entityId.Name.Equals("Tree", global::System.StringComparison.Ordinal))
-            {
-                if (session.CurrentSnapshot.TryGetEntity(entityId, out global::RepositoryAnalysis.Internal.GraphQL.State.TreeEntity? entity))
-                {
-                    session.SetEntity(entityId, new global::RepositoryAnalysis.Internal.GraphQL.State.TreeEntity(entity.CommitResourcePath));
-                }
-                else
-                {
-                    session.SetEntity(entityId, new global::RepositoryAnalysis.Internal.GraphQL.State.TreeEntity(default !));
-                }
-
-                return entityId;
-            }
-
-            throw new global::System.NotSupportedException();
-        }
-
-        private global::System.String? DeserializeString(global::System.Text.Json.JsonElement? obj)
-        {
-            if (!obj.HasValue)
-            {
-                return null;
-            }
-
-            return _stringParser.Parse(obj.Value.GetString()!);
-        }
+        ///<summary>Identifies the total count of items in the connection.</summary>
+        public global::System.Int32? TotalCount { get; }
     }
 
     ///<summary>The connection type for RepositoryVulnerabilityAlert.</summary>
@@ -7247,6 +7811,22 @@ namespace RepositoryAnalysis.Internal.GraphQL.State
 
     ///<summary>An edge in a connection.</summary>
     [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.15.2.0")]
+    public partial class DiscussionEdgeData
+    {
+        public DiscussionEdgeData(global::System.String __typename, global::StrawberryShake.EntityId? node = default !)
+        {
+            this.__typename = __typename ?? throw new global::System.ArgumentNullException(nameof(__typename));
+            Node = node;
+        }
+
+        public global::System.String __typename { get; }
+
+        ///<summary>The item at the end of the edge.</summary>
+        public global::StrawberryShake.EntityId? Node { get; }
+    }
+
+    ///<summary>An edge in a connection.</summary>
+    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "12.15.2.0")]
     public partial class ReleaseEdgeData
     {
         public ReleaseEdgeData(global::System.String __typename, global::StrawberryShake.EntityId? node = default !)
@@ -7320,16 +7900,17 @@ namespace RepositoryAnalysis.Internal.GraphQL.State
             return __typename switch
             {
                 "Repository" => ParseRepositoryEntityId(obj, __typename),
-                "CodeOfConduct" => ParseCodeOfConductEntityId(obj, __typename),
-                "Ref" => ParseRefEntityId(obj, __typename),
-                "License" => ParseLicenseEntityId(obj, __typename),
-                "Language" => ParseLanguageEntityId(obj, __typename),
                 "Blob" => ParseBlobEntityId(obj, __typename),
                 "Commit" => ParseCommitEntityId(obj, __typename),
                 "Tag" => ParseTagEntityId(obj, __typename),
                 "Tree" => ParseTreeEntityId(obj, __typename),
+                "CodeOfConduct" => ParseCodeOfConductEntityId(obj, __typename),
+                "Ref" => ParseRefEntityId(obj, __typename),
+                "License" => ParseLicenseEntityId(obj, __typename),
+                "Language" => ParseLanguageEntityId(obj, __typename),
                 "BranchProtectionRule" => ParseBranchProtectionRuleEntityId(obj, __typename),
                 "PullRequest" => ParsePullRequestEntityId(obj, __typename),
+                "Discussion" => ParseDiscussionEntityId(obj, __typename),
                 "Release" => ParseReleaseEntityId(obj, __typename),
                 "Issue" => ParseIssueEntityId(obj, __typename),
                 _ => throw new global::System.NotSupportedException()};
@@ -7340,16 +7921,17 @@ namespace RepositoryAnalysis.Internal.GraphQL.State
             return entityId.Name switch
             {
                 "Repository" => FormatRepositoryEntityId(entityId),
-                "CodeOfConduct" => FormatCodeOfConductEntityId(entityId),
-                "Ref" => FormatRefEntityId(entityId),
-                "License" => FormatLicenseEntityId(entityId),
-                "Language" => FormatLanguageEntityId(entityId),
                 "Blob" => FormatBlobEntityId(entityId),
                 "Commit" => FormatCommitEntityId(entityId),
                 "Tag" => FormatTagEntityId(entityId),
                 "Tree" => FormatTreeEntityId(entityId),
+                "CodeOfConduct" => FormatCodeOfConductEntityId(entityId),
+                "Ref" => FormatRefEntityId(entityId),
+                "License" => FormatLicenseEntityId(entityId),
+                "Language" => FormatLanguageEntityId(entityId),
                 "BranchProtectionRule" => FormatBranchProtectionRuleEntityId(entityId),
                 "PullRequest" => FormatPullRequestEntityId(entityId),
+                "Discussion" => FormatDiscussionEntityId(entityId),
                 "Release" => FormatReleaseEntityId(entityId),
                 "Issue" => FormatIssueEntityId(entityId),
                 _ => throw new global::System.NotSupportedException()};
@@ -7361,74 +7943,6 @@ namespace RepositoryAnalysis.Internal.GraphQL.State
         }
 
         private global::System.String FormatRepositoryEntityId(global::StrawberryShake.EntityId entityId)
-        {
-            using var writer = new global::StrawberryShake.Internal.ArrayWriter();
-            using var jsonWriter = new global::System.Text.Json.Utf8JsonWriter(writer, _options);
-            jsonWriter.WriteStartObject();
-            jsonWriter.WriteString("__typename", entityId.Name);
-            jsonWriter.WriteString("id", (global::System.String)entityId.Value);
-            jsonWriter.WriteEndObject();
-            jsonWriter.Flush();
-            return global::System.Text.Encoding.UTF8.GetString(writer.GetInternalBuffer(), 0, writer.Length);
-        }
-
-        private global::StrawberryShake.EntityId ParseCodeOfConductEntityId(global::System.Text.Json.JsonElement obj, global::System.String type)
-        {
-            return new global::StrawberryShake.EntityId(type, obj.GetProperty("id").GetString()!);
-        }
-
-        private global::System.String FormatCodeOfConductEntityId(global::StrawberryShake.EntityId entityId)
-        {
-            using var writer = new global::StrawberryShake.Internal.ArrayWriter();
-            using var jsonWriter = new global::System.Text.Json.Utf8JsonWriter(writer, _options);
-            jsonWriter.WriteStartObject();
-            jsonWriter.WriteString("__typename", entityId.Name);
-            jsonWriter.WriteString("id", (global::System.String)entityId.Value);
-            jsonWriter.WriteEndObject();
-            jsonWriter.Flush();
-            return global::System.Text.Encoding.UTF8.GetString(writer.GetInternalBuffer(), 0, writer.Length);
-        }
-
-        private global::StrawberryShake.EntityId ParseRefEntityId(global::System.Text.Json.JsonElement obj, global::System.String type)
-        {
-            return new global::StrawberryShake.EntityId(type, obj.GetProperty("id").GetString()!);
-        }
-
-        private global::System.String FormatRefEntityId(global::StrawberryShake.EntityId entityId)
-        {
-            using var writer = new global::StrawberryShake.Internal.ArrayWriter();
-            using var jsonWriter = new global::System.Text.Json.Utf8JsonWriter(writer, _options);
-            jsonWriter.WriteStartObject();
-            jsonWriter.WriteString("__typename", entityId.Name);
-            jsonWriter.WriteString("id", (global::System.String)entityId.Value);
-            jsonWriter.WriteEndObject();
-            jsonWriter.Flush();
-            return global::System.Text.Encoding.UTF8.GetString(writer.GetInternalBuffer(), 0, writer.Length);
-        }
-
-        private global::StrawberryShake.EntityId ParseLicenseEntityId(global::System.Text.Json.JsonElement obj, global::System.String type)
-        {
-            return new global::StrawberryShake.EntityId(type, obj.GetProperty("id").GetString()!);
-        }
-
-        private global::System.String FormatLicenseEntityId(global::StrawberryShake.EntityId entityId)
-        {
-            using var writer = new global::StrawberryShake.Internal.ArrayWriter();
-            using var jsonWriter = new global::System.Text.Json.Utf8JsonWriter(writer, _options);
-            jsonWriter.WriteStartObject();
-            jsonWriter.WriteString("__typename", entityId.Name);
-            jsonWriter.WriteString("id", (global::System.String)entityId.Value);
-            jsonWriter.WriteEndObject();
-            jsonWriter.Flush();
-            return global::System.Text.Encoding.UTF8.GetString(writer.GetInternalBuffer(), 0, writer.Length);
-        }
-
-        private global::StrawberryShake.EntityId ParseLanguageEntityId(global::System.Text.Json.JsonElement obj, global::System.String type)
-        {
-            return new global::StrawberryShake.EntityId(type, obj.GetProperty("id").GetString()!);
-        }
-
-        private global::System.String FormatLanguageEntityId(global::StrawberryShake.EntityId entityId)
         {
             using var writer = new global::StrawberryShake.Internal.ArrayWriter();
             using var jsonWriter = new global::System.Text.Json.Utf8JsonWriter(writer, _options);
@@ -7508,6 +8022,74 @@ namespace RepositoryAnalysis.Internal.GraphQL.State
             return global::System.Text.Encoding.UTF8.GetString(writer.GetInternalBuffer(), 0, writer.Length);
         }
 
+        private global::StrawberryShake.EntityId ParseCodeOfConductEntityId(global::System.Text.Json.JsonElement obj, global::System.String type)
+        {
+            return new global::StrawberryShake.EntityId(type, obj.GetProperty("id").GetString()!);
+        }
+
+        private global::System.String FormatCodeOfConductEntityId(global::StrawberryShake.EntityId entityId)
+        {
+            using var writer = new global::StrawberryShake.Internal.ArrayWriter();
+            using var jsonWriter = new global::System.Text.Json.Utf8JsonWriter(writer, _options);
+            jsonWriter.WriteStartObject();
+            jsonWriter.WriteString("__typename", entityId.Name);
+            jsonWriter.WriteString("id", (global::System.String)entityId.Value);
+            jsonWriter.WriteEndObject();
+            jsonWriter.Flush();
+            return global::System.Text.Encoding.UTF8.GetString(writer.GetInternalBuffer(), 0, writer.Length);
+        }
+
+        private global::StrawberryShake.EntityId ParseRefEntityId(global::System.Text.Json.JsonElement obj, global::System.String type)
+        {
+            return new global::StrawberryShake.EntityId(type, obj.GetProperty("id").GetString()!);
+        }
+
+        private global::System.String FormatRefEntityId(global::StrawberryShake.EntityId entityId)
+        {
+            using var writer = new global::StrawberryShake.Internal.ArrayWriter();
+            using var jsonWriter = new global::System.Text.Json.Utf8JsonWriter(writer, _options);
+            jsonWriter.WriteStartObject();
+            jsonWriter.WriteString("__typename", entityId.Name);
+            jsonWriter.WriteString("id", (global::System.String)entityId.Value);
+            jsonWriter.WriteEndObject();
+            jsonWriter.Flush();
+            return global::System.Text.Encoding.UTF8.GetString(writer.GetInternalBuffer(), 0, writer.Length);
+        }
+
+        private global::StrawberryShake.EntityId ParseLicenseEntityId(global::System.Text.Json.JsonElement obj, global::System.String type)
+        {
+            return new global::StrawberryShake.EntityId(type, obj.GetProperty("id").GetString()!);
+        }
+
+        private global::System.String FormatLicenseEntityId(global::StrawberryShake.EntityId entityId)
+        {
+            using var writer = new global::StrawberryShake.Internal.ArrayWriter();
+            using var jsonWriter = new global::System.Text.Json.Utf8JsonWriter(writer, _options);
+            jsonWriter.WriteStartObject();
+            jsonWriter.WriteString("__typename", entityId.Name);
+            jsonWriter.WriteString("id", (global::System.String)entityId.Value);
+            jsonWriter.WriteEndObject();
+            jsonWriter.Flush();
+            return global::System.Text.Encoding.UTF8.GetString(writer.GetInternalBuffer(), 0, writer.Length);
+        }
+
+        private global::StrawberryShake.EntityId ParseLanguageEntityId(global::System.Text.Json.JsonElement obj, global::System.String type)
+        {
+            return new global::StrawberryShake.EntityId(type, obj.GetProperty("id").GetString()!);
+        }
+
+        private global::System.String FormatLanguageEntityId(global::StrawberryShake.EntityId entityId)
+        {
+            using var writer = new global::StrawberryShake.Internal.ArrayWriter();
+            using var jsonWriter = new global::System.Text.Json.Utf8JsonWriter(writer, _options);
+            jsonWriter.WriteStartObject();
+            jsonWriter.WriteString("__typename", entityId.Name);
+            jsonWriter.WriteString("id", (global::System.String)entityId.Value);
+            jsonWriter.WriteEndObject();
+            jsonWriter.Flush();
+            return global::System.Text.Encoding.UTF8.GetString(writer.GetInternalBuffer(), 0, writer.Length);
+        }
+
         private global::StrawberryShake.EntityId ParseBranchProtectionRuleEntityId(global::System.Text.Json.JsonElement obj, global::System.String type)
         {
             return new global::StrawberryShake.EntityId(type, obj.GetProperty("id").GetString()!);
@@ -7531,6 +8113,23 @@ namespace RepositoryAnalysis.Internal.GraphQL.State
         }
 
         private global::System.String FormatPullRequestEntityId(global::StrawberryShake.EntityId entityId)
+        {
+            using var writer = new global::StrawberryShake.Internal.ArrayWriter();
+            using var jsonWriter = new global::System.Text.Json.Utf8JsonWriter(writer, _options);
+            jsonWriter.WriteStartObject();
+            jsonWriter.WriteString("__typename", entityId.Name);
+            jsonWriter.WriteString("id", (global::System.String)entityId.Value);
+            jsonWriter.WriteEndObject();
+            jsonWriter.Flush();
+            return global::System.Text.Encoding.UTF8.GetString(writer.GetInternalBuffer(), 0, writer.Length);
+        }
+
+        private global::StrawberryShake.EntityId ParseDiscussionEntityId(global::System.Text.Json.JsonElement obj, global::System.String type)
+        {
+            return new global::StrawberryShake.EntityId(type, obj.GetProperty("id").GetString()!);
+        }
+
+        private global::System.String FormatDiscussionEntityId(global::StrawberryShake.EntityId entityId)
         {
             using var writer = new global::StrawberryShake.Internal.ArrayWriter();
             using var jsonWriter = new global::System.Text.Json.Utf8JsonWriter(writer, _options);

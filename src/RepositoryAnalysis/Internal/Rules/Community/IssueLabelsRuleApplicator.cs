@@ -27,13 +27,19 @@ internal class IssueLabelsRuleApplicator : IRuleApplicator
                 .Where(x => x.Labels is not null && x.Labels.TotalCount == 0)
                 .ToArray();
 
-            if (nodesWithoutLabels.Length <= 0) return new RuleDiagnostics(Diagnosis.Info, "issues are enabled and all open issues are labeled");
+            if (nodesWithoutLabels.Length <= 0)
+                return new RuleDiagnostics(
+                    Diagnosis.Info,
+                    "issues are enabled and all open issues are labeled",
+                    null,
+                    new Link("issues", Path.Combine(context.Repo.Url.ToString(), "issues")));
 
             var percent = (int)Math.Round((double)(100 * nodesWithoutLabels.Length) / nodes.Length);
             var details = $"""
 Sample of unlabeled issues: <br/>{string.Join("<br/>", nodesWithoutLabels.Take(5).Select(x => GetUrl(x, context)))}
 """;
-            return new RuleDiagnostics(Diagnosis.Warning, $"found {percent}% of {nodes.Length} issues unlabeled", details);
+            return new RuleDiagnostics(Diagnosis.Warning, $"found {percent}% of {nodes.Length} issues unlabeled", details,
+                new Link("unlabeled issues", Path.Combine(context.Repo.Url.ToString(), "issues?q=is%3Aopen+is%3Aissue+no%3Alabel")));
         }
 
         return Rule.Create(this, diagnostics, new Explanation

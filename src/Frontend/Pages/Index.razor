@@ -9,7 +9,8 @@
     <MudContainer MaxWidth="MaxWidth.Medium">
         <MudItem Class="mt-2 pt-2">
             <EditForm Model="RepositoryUrl" OnSubmit="OnFormSubmit">
-                <MudTextField Disabled="@LockUI" InputType="InputType.Text"
+                <label for="repository">Repository:</label>
+                <MudTextField id="repository" Disabled="@LockUI" InputType="InputType.Text"
                               Adornment="Adornment.End" AdornmentIcon="@Icons.Filled.Search"
                               AdornmentColor="Color.Primary"
                               OnAdornmentClick="OnSubmit"

@@ -23,7 +23,7 @@ internal class RulesetRuleApplicator : IRuleApplicator
                 var details = $@"
 Found rulesets:
 <br/>
-{string.Join("<br/>", nodes.Select(x => x.GetUrl(context)))}
+{nodes.GetEmbeddedLinksAsString(context)}
 ";
                 return new RuleDiagnostics(Diagnosis.Warning, $"found {nodes.Count} .ruleset files", details);
             }

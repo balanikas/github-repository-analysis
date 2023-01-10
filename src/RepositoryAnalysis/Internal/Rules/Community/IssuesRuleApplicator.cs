@@ -36,12 +36,12 @@ internal class IssuesRuleApplicator : IRuleApplicator
             var details = "Found old open issues.<br/>";
             if (foundStale)
                 details += $"""
-Oldest one was created {(DateTime.UtcNow - oldestCreationDate).Days} days ago.
+Oldest one was created {Shared.HowLong(DateTime.UtcNow - oldestCreationDate)} ago.
 <br/>
 """;
             if (foundHighAverage)
                 details += $"""
-Issues have been open on average for {(DateTime.UtcNow - avgCreationDate).Days} days.
+Issues have been open on average for {Shared.HowLong(DateTime.UtcNow - avgCreationDate)}.
 """;
 
             return new RuleDiagnostics(Diagnosis.Warning, "found old issues", details, new Link("oldest issues",

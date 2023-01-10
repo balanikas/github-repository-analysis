@@ -1,3 +1,4 @@
+using Humanizer;
 using RepositoryAnalysis.Internal.Rules;
 
 namespace RepositoryAnalysis.Internal;
@@ -56,4 +57,6 @@ internal static class Shared
 
         return result;
     }
+
+    public static string HowLong(TimeSpan t) => t.Humanize();
 }

@@ -8,16 +8,17 @@
 <MudPaper Height="250px" Width="100%" Class="mb-4 pb-4" Elevation="5">
     <MudContainer MaxWidth="MaxWidth.Medium">
         <MudItem Class="mt-2 pt-2">
-            <EditForm Model="RepositoryUrl" OnSubmit="OnFormSubmit">
-                <label for="repository">Repository:</label>
-                <MudTextField id="repository" Disabled="@LockUI" InputType="InputType.Text"
-                              Adornment="Adornment.End" AdornmentIcon="@Icons.Filled.Search"
+            <EditForm Model="Repository" OnSubmit="OnFormSubmit">
+                <MudTextField Disabled="@LockUI"
+                              InputType="InputType.Text"
+                              Adornment="Adornment.End"
+                              AdornmentIcon="@Icons.Filled.Search"
                               AdornmentColor="Color.Primary"
                               OnAdornmentClick="OnSubmit"
                               On
                               InputMode="InputMode.url"
-                              HelperText="Enter a github repository url and scan for any issues"
-                              @bind-Value="RepositoryUrl" Label="https://github.com/owner/repo" Variant="Variant.Outlined">
+                              HelperText="Enter a github owner and repository and scan for any issues"
+                              @bind-Value="Repository" Label="owner/repo" Variant="Variant.Outlined">
                 </MudTextField>
             </EditForm>
 
@@ -35,17 +36,17 @@
         <MudProgressLinear Class=@(LockUI ? "" : "invisible") Color="Color.Primary" Size="Size.Large" Indeterminate="true"/>
         <br/>
         <MudText Align="Align.Center">Try these examples: </MudText>
-        <MudChip Disabled="@LockUI" Size="Size.Small" OnClick='() => OnExampleSubmit("https://github.com/dotnet/runtime")' Variant="Variant.Text">dotnet/runtime</MudChip>
-        <MudChip Disabled="@LockUI" Size="Size.Small" OnClick='() => OnExampleSubmit("https://github.com/JSkimming/Castle.Core.AsyncInterceptor")' Variant="Variant.Text">JSkimming/Castle.Core.AsyncInterceptor</MudChip>
-        <MudChip Disabled="@LockUI" Size="Size.Small" OnClick='() => OnExampleSubmit("https://github.com/dotnet/roslyn")' Variant="Variant.Text">dotnet/roslyn</MudChip>
-        <MudChip Disabled="@LockUI" Size="Size.Small" OnClick='() => OnExampleSubmit("https://github.com/Fody/NullGuard")' Variant="Variant.Text">Fody/NullGuard</MudChip>
-        <MudChip Disabled="@LockUI" Size="Size.Small" OnClick='() => OnExampleSubmit("https://github.com/Azure/azure-sdk-for-net")' Variant="Variant.Text">Azure/azure-sdk-for-net</MudChip>
-        <MudChip Disabled="@LockUI" Size="Size.Small" OnClick='() => OnExampleSubmit("https://github.com/App-vNext/Polly")' Variant="Variant.Text">App-vNext/Polly</MudChip>
-        <MudChip Disabled="@LockUI" Size="Size.Small" OnClick='() => OnExampleSubmit("https://github.com/hakimel/reveal.js")' Variant="Variant.Text">hakimel/reveal.js</MudChip>
-        <MudChip Disabled="@LockUI" Size="Size.Small" OnClick='() => OnExampleSubmit("https://github.com/id-Software/DOOM")' Variant="Variant.Text">id-Software/DOOM</MudChip>
-        <MudChip Disabled="@LockUI" Size="Size.Small" OnClick='() => OnExampleSubmit("https://github.com/id-Software/DOOM-3-BFG")' Variant="Variant.Text">id-Software/DOOM-3-BFG</MudChip>
-        <MudChip Disabled="@LockUI" Size="Size.Small" OnClick='() => OnExampleSubmit("https://github.com/davidfowl/BedrockFramework")' Variant="Variant.Text">davidfowl/BedrockFramework</MudChip>
-        <MudChip Disabled="@LockUI" Size="Size.Small" OnClick='() => OnExampleSubmit("https://github.com/balanikas/github-repository-analysis")' Variant="Variant.Text">balanikas/github-repository-analysis</MudChip>
+        <MudChip Disabled="@LockUI" Size="Size.Small" OnClick='() => OnExampleSubmit("dotnet/runtime")' Variant="Variant.Text">dotnet/runtime</MudChip>
+        <MudChip Disabled="@LockUI" Size="Size.Small" OnClick='() => OnExampleSubmit("JSkimming/Castle.Core.AsyncInterceptor")' Variant="Variant.Text">JSkimming/Castle.Core.AsyncInterceptor</MudChip>
+        <MudChip Disabled="@LockUI" Size="Size.Small" OnClick='() => OnExampleSubmit("dotnet/roslyn")' Variant="Variant.Text">dotnet/roslyn</MudChip>
+        <MudChip Disabled="@LockUI" Size="Size.Small" OnClick='() => OnExampleSubmit("Fody/NullGuard")' Variant="Variant.Text">Fody/NullGuard</MudChip>
+        <MudChip Disabled="@LockUI" Size="Size.Small" OnClick='() => OnExampleSubmit("Azure/azure-sdk-for-net")' Variant="Variant.Text">Azure/azure-sdk-for-net</MudChip>
+        <MudChip Disabled="@LockUI" Size="Size.Small" OnClick='() => OnExampleSubmit("App-vNext/Polly")' Variant="Variant.Text">App-vNext/Polly</MudChip>
+        <MudChip Disabled="@LockUI" Size="Size.Small" OnClick='() => OnExampleSubmit("hakimel/reveal.js")' Variant="Variant.Text">hakimel/reveal.js</MudChip>
+        <MudChip Disabled="@LockUI" Size="Size.Small" OnClick='() => OnExampleSubmit("id-Software/DOOM")' Variant="Variant.Text">id-Software/DOOM</MudChip>
+        <MudChip Disabled="@LockUI" Size="Size.Small" OnClick='() => OnExampleSubmit("id-Software/DOOM-3-BFG")' Variant="Variant.Text">id-Software/DOOM-3-BFG</MudChip>
+        <MudChip Disabled="@LockUI" Size="Size.Small" OnClick='() => OnExampleSubmit("davidfowl/BedrockFramework")' Variant="Variant.Text">davidfowl/BedrockFramework</MudChip>
+        <MudChip Disabled="@LockUI" Size="Size.Small" OnClick='() => OnExampleSubmit("balanikas/github-repository-analysis")' Variant="Variant.Text">balanikas/github-repository-analysis</MudChip>
     </MudContainer>
 </MudPaper>
 
@@ -64,6 +65,7 @@
 @code {
 
     private string RepositoryUrl { get; set; } = "";
+    private string Repository { get; set; } = "";
     private RepoAnalysis Analysis { get; set; } = RepoAnalysis.Empty;
     private bool LockUI { get; set; }
     private IReadOnlyList<Rule> _rules = Array.Empty<Rule>();
@@ -75,15 +77,15 @@
     private async Task ShowInvalidInputMessage()
     {
         await DialogService.ShowMessageBox(
-            "Not a valid repository url",
-            "Needs to be in this form: https://github.com/owner/repo");
+            "Not a valid repository",
+            "Needs to be in this form: owner/repository");
     }
 
     protected override async Task OnParametersSetAsync()
     {
         if (Url is not null)
         {
-            RepositoryUrl = Url;
+            Repository = Url;
         }
         await base.OnParametersSetAsync();
     }
@@ -99,7 +101,7 @@
     {
         await DialogService.ShowMessageBox(
             "Something went wrong",
-            "Please try again later, or try with another repository.");
+            "Please try again later, check that repository actually exist or try with another repository.");
     }
 
     private async Task ShowIssues(
@@ -111,9 +113,9 @@
     }
 
     private async Task OnExampleSubmit(
-        string url)
+        string repo)
     {
-        RepositoryUrl = url;
+        Repository = repo;
         await OnSubmit();
     }
 
@@ -125,15 +127,9 @@
 
     private async Task OnSubmit()
     {
-        RepositoryUrl = RepositoryUrl.Trim();
-        RepositoryUrl = RepositoryUrl.TrimEnd('/');
+        Repository = Repository.Trim().Replace(" ", "").Trim('/');
+        RepositoryUrl = $"https://github.com/{Repository}";
         if (!Uri.TryCreate(RepositoryUrl, UriKind.Absolute, out var uri))
-        {
-            await ShowInvalidInputMessage();
-            return;
-        }
-
-        if (!RepositoryUrl.StartsWith("https://github.com/"))
         {
             await ShowInvalidInputMessage();
             return;

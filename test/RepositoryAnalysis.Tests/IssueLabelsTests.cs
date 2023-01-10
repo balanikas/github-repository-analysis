@@ -1,6 +1,5 @@
 using Moq;
 using RepositoryAnalysis.Internal.GraphQL;
-using RepositoryAnalysis.Internal.Rules;
 using RepositoryAnalysis.Internal.Rules.Community;
 
 namespace Repository.Tests;

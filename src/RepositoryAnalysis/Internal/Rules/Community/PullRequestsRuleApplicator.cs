@@ -31,12 +31,12 @@ internal class PullRequestsRuleApplicator : IRuleApplicator
             var details = "Found stale open pull requests.<br/>";
             if (foundStale)
                 details += $"""
-Oldest one was created {(DateTime.UtcNow - oldestCreationDate).Days} days ago.
+Oldest one was created {Shared.HowLong(DateTime.UtcNow - oldestCreationDate)} ago.
 <br/>
 """;
             if (foundHighAverage)
                 details += $"""
-Pull requests have been open on average for {(DateTime.UtcNow - avgCreationDate).Days} days.
+Pull requests have been open on average for {Shared.HowLong(DateTime.UtcNow - avgCreationDate)}.
 """;
 
             return new RuleDiagnostics(Diagnosis.Warning, "found stale pull requests", details, new Link("stale pull requests",

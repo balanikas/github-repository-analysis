@@ -36,18 +36,18 @@ internal class AnalysisService : IAnalysisService
 
         var (owner, name) = ExtractUrlParts(url);
 
-        var repository = await _context.GraphQlClient.GetUpdatedAt(owner, name);
-        if (repository is null) return RepoAnalysis.NotFound;
-
-        var cachedAnalysis = _cache.Get(repository, owner, name);
-        if (cachedAnalysis is not null)
-        {
-            _logger.LogInformation("Fetched analysis from cache");
-            return cachedAnalysis;
-        }
-
         try
         {
+            var repository = await _context.GraphQlClient.GetUpdatedAt(owner, name);
+            if (repository is null) return RepoAnalysis.NotFound;
+
+            var cachedAnalysis = _cache.Get(repository, owner, name);
+            if (cachedAnalysis is not null)
+            {
+                _logger.LogInformation("Fetched analysis from cache");
+                return cachedAnalysis;
+            }
+
             await _context.Build(owner, name);
         }
         catch (Exception e)

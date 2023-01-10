@@ -30,7 +30,7 @@ internal class DiscussionsRuleApplicator : IRuleApplicator
                 .Where(x => x is not null)
                 .Select(x => x!.Node).ToArray();
             var discussionsWithoutAnswer = context.Repo.Discussions.Edges
-                .Where(x => x?.Node?.AnswerChosenAt is null)
+                .Where(x => x?.Node?.Answer is null || x.Node?.Answer.IsAnswer == false)
                 .Select(x => x.Node).ToArray();
 
             if (discussionsWithoutAnswer.Length == 0)

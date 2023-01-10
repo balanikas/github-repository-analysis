@@ -75,8 +75,12 @@ public class DiscussionsRuleTests
             new GetRepo_Repository_Discussions_DiscussionConnection(
                 new List<IGetRepo_Repository_Discussions_Edges?>
                 {
-                    new GetRepo_Repository_Discussions_Edges_DiscussionEdge(new GetRepo_Repository_Discussions_Edges_Node_Discussion(1, new DateTimeOffset())),
-                    new GetRepo_Repository_Discussions_Edges_DiscussionEdge(new GetRepo_Repository_Discussions_Edges_Node_Discussion(2, new DateTimeOffset()))
+                    new GetRepo_Repository_Discussions_Edges_DiscussionEdge(
+                        new GetRepo_Repository_Discussions_Edges_Node_Discussion(1,
+                            new GetRepo_Repository_Discussions_Edges_Node_Answer_DiscussionComment(true))),
+                    new GetRepo_Repository_Discussions_Edges_DiscussionEdge(
+                        new GetRepo_Repository_Discussions_Edges_Node_Discussion(2,
+                            new GetRepo_Repository_Discussions_Edges_Node_Answer_DiscussionComment(true)))
                 }, 2));
 
         return repo;
@@ -89,9 +93,13 @@ public class DiscussionsRuleTests
             new GetRepo_Repository_Discussions_DiscussionConnection(
                 new List<IGetRepo_Repository_Discussions_Edges?>
                 {
-                    new GetRepo_Repository_Discussions_Edges_DiscussionEdge(new GetRepo_Repository_Discussions_Edges_Node_Discussion(1, new DateTimeOffset())),
+                    new GetRepo_Repository_Discussions_Edges_DiscussionEdge(
+                        new GetRepo_Repository_Discussions_Edges_Node_Discussion(1,
+                            new GetRepo_Repository_Discussions_Edges_Node_Answer_DiscussionComment(true))),
                     new GetRepo_Repository_Discussions_Edges_DiscussionEdge(new GetRepo_Repository_Discussions_Edges_Node_Discussion(2, null)),
-                    new GetRepo_Repository_Discussions_Edges_DiscussionEdge(new GetRepo_Repository_Discussions_Edges_Node_Discussion(3, new DateTimeOffset()))
+                    new GetRepo_Repository_Discussions_Edges_DiscussionEdge(
+                        new GetRepo_Repository_Discussions_Edges_Node_Discussion(3,
+                            new GetRepo_Repository_Discussions_Edges_Node_Answer_DiscussionComment(true)))
                 }, 3));
 
         return repo;
@@ -106,7 +114,9 @@ public class DiscussionsRuleTests
                 {
                     new GetRepo_Repository_Discussions_Edges_DiscussionEdge(new GetRepo_Repository_Discussions_Edges_Node_Discussion(1, null)),
                     new GetRepo_Repository_Discussions_Edges_DiscussionEdge(new GetRepo_Repository_Discussions_Edges_Node_Discussion(2, null)),
-                    new GetRepo_Repository_Discussions_Edges_DiscussionEdge(new GetRepo_Repository_Discussions_Edges_Node_Discussion(3, new DateTimeOffset()))
+                    new GetRepo_Repository_Discussions_Edges_DiscussionEdge(
+                        new GetRepo_Repository_Discussions_Edges_Node_Discussion(3,
+                            new GetRepo_Repository_Discussions_Edges_Node_Answer_DiscussionComment(true)))
                 }, 3));
 
         return repo;

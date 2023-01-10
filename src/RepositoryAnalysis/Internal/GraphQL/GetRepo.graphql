@@ -4,7 +4,9 @@ query GetRepo($name: String!, $owner: String!) {
             edges {
                 node {
                     number
-                    answerChosenAt
+                    answer {
+                        isAnswer
+                    }
                 }
             }
             totalCount

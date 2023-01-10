@@ -17,7 +17,7 @@ internal class EditorConfigRuleApplicator : IRuleApplicator
         RuleDiagnostics GetDiagnosis()
         {
             var rootFile = context.GitTree.FirstFileOrDefault(x => x.PathEquals(".editorconfig"));
-            var nonRootFiles = context.GitTree.FilesRecursive(x => x.PathEquals(".editorconfig"));
+            var nonRootFiles = context.GitTree.FilesRecursive(x => x.PathEndsWith(".editorconfig"));
             if (rootFile is not null)
                 return nonRootFiles.Count > 1
                     ? new RuleDiagnostics(Diagnosis.Info, $"found at root and {nonRootFiles.Count} files at other locations", null, rootFile.GetLink(context))

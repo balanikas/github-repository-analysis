@@ -2,6 +2,7 @@ using Moq;
 using RepositoryAnalysis.Internal.GraphQL;
 using RepositoryAnalysis.Internal.Rules;
 using RepositoryAnalysis.Internal.Rules.Community;
+using RepositoryAnalysis.Internal.TextGeneration;
 
 namespace Repository.Tests;
 
@@ -21,7 +22,7 @@ public class CodeOfConductTests
             .Returns(new GetRepo_Repository_DefaultBranchRef_Ref("", null, null));
         repo.Setup(x => x.CodeOfConduct)
             .Returns(coc);
-        var result = await new CodeOfConductRuleApplicator().ApplyAsync(new AnalysisContext(tree, repo.Object));
+        var result = await new CodeOfConductRuleApplicator(Mock.Of<IGpt3Client>()).ApplyAsync(new AnalysisContext(tree, repo.Object));
         result.Should().NotBeNull();
         result.Should().BeEquivalentTo(expected, o => o.Excluding(x => x.Explanation).Excluding(x => x.Details));
     }

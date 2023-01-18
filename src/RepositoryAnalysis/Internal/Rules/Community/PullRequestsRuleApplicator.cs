@@ -1,17 +1,26 @@
 using RepositoryAnalysis.Internal.GraphQL;
+using RepositoryAnalysis.Internal.TextGeneration;
 using RepositoryAnalysis.Model;
 
 namespace RepositoryAnalysis.Internal.Rules.Community;
 
+[RuleGuidance(HowTo)]
+[RuleGuidance(WhatIs)]
+[RuleGuidance(Staleness)]
 internal class PullRequestsRuleApplicator : IRuleApplicator
 {
+    private const string HowTo = "How to write a great pull request?";
+    private const string Staleness = "When is a pull request considered stale and why is it important close it quickly?";
+    private const string WhatIs = "What is the purpose of a pull request?";
+    private readonly IGpt3Client _gpt3Client;
+
+    public PullRequestsRuleApplicator(IGpt3Client gpt3Client) => _gpt3Client = gpt3Client;
+
     public string RuleName => "pull requests";
     public RuleCategory Category => RuleCategory.Community;
     public Language Language => Language.None;
 
-    public async Task<Rule> ApplyAsync(AnalysisContext context) => await Task.FromResult(Apply(context));
-
-    private Rule Apply(AnalysisContext context)
+    public async Task<Rule> ApplyAsync(AnalysisContext context)
     {
         var diagnostics = GetDiagnosis(context.Repo.PullRequests.Nodes);
 
@@ -45,9 +54,12 @@ Pull requests have been open on average for {Shared.HowLong(DateTime.UtcNow - av
 
         return Rule.Create(this, diagnostics, new Explanation
         {
-            Text = @"
-Pull requests let you tell others about changes you've pushed to a branch in a repository on GitHub. 
-Once a pull request is opened, you can discuss and review the potential changes with collaborators and add follow-up commits before your changes are merged into the base branch.",
+            GeneralGuidance = new Dictionary<string, string>
+            {
+                { HowTo, await _gpt3Client.GetCompletion(HowTo) },
+                { Staleness, await _gpt3Client.GetCompletion(Staleness) }
+            },
+            Text = await _gpt3Client.GetCompletion(WhatIs),
             AboutLink = new Link("about pull requests",
                 "https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests"),
             GuidanceLink = new Link("how to work effectively with pull requests",

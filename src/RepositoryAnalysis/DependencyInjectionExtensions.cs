@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using RepositoryAnalysis.Internal;
 using RepositoryAnalysis.Internal.Rules;
+using RepositoryAnalysis.Internal.TextGeneration;
 
 namespace RepositoryAnalysis;
 
@@ -24,6 +25,7 @@ public static class DependencyInjectionExtensions
         GitHubOptions gitHubOptions)
     {
         services.AddSingleton<GitHubGraphQlClient>();
+        services.AddSingleton<IGpt3Client, Gpt3Client>();
         services.AddTransient<IAnalysisService, AnalysisService>();
         services.AddTransient<GitHubRestClient>();
         services.AddTransient<AnalysisCache>();
@@ -41,6 +43,7 @@ public static class DependencyInjectionExtensions
                 client.DefaultRequestHeaders
                     .Add("Authorization", "Bearer " + Environment.GetEnvironmentVariable("GitHub__Token"));
             });
+        services.AddHostedService<TextGenerationService>();
 
         void AddInterfaceImplementations<T>()
         {

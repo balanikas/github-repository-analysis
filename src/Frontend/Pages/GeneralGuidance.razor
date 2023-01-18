@@ -1,0 +1,24 @@
+<MudDialog DisableSidePadding="true">
+    <DialogContent >
+        <MudContainer Style="height: 600px; max-height: 600px; overflow-y: scroll">
+            <MudText Align="Align.End" Style="color: gray" Typo="Typo.body2">Powered by https://openai.com/api/</MudText>
+            <MudExpansionPanels MultiExpansion="true">
+                @foreach (var item in Content)
+                {
+                    <MudExpansionPanel Style="background-color: #F5F5F5" Text="@item.Key">
+                        @((MarkupString)item.Value)
+                    </MudExpansionPanel>
+                }
+            </MudExpansionPanels>
+        </MudContainer>
+    </DialogContent>
+</MudDialog>
+
+@code {
+
+    [CascadingParameter]
+    MudDialogInstance MudDialog { get; set; }
+
+    [Parameter]
+    public IDictionary<string, string> Content { get; set; }
+}

@@ -1,16 +1,25 @@
+using RepositoryAnalysis.Internal.TextGeneration;
 using RepositoryAnalysis.Model;
 
 namespace RepositoryAnalysis.Internal.Rules.Community;
 
+[RuleGuidance(Importance)]
+[RuleGuidance(WhatIs)]
+[RuleGuidance(HowTo)]
 internal class CodeOfConductRuleApplicator : IRuleApplicator
 {
+    private const string Importance = "Why is it important for a github repository to have a code of conduct?";
+    private const string HowTo = "How to write a great code of conduct file?";
+    private const string WhatIs = "What is the purpose of a code of conduct in open source?";
+    private readonly IGpt3Client _gpt3Client;
+
+    public CodeOfConductRuleApplicator(IGpt3Client gpt3Client) => _gpt3Client = gpt3Client;
+
     public string RuleName => "code of conduct";
     public RuleCategory Category => RuleCategory.Community;
     public Language Language => Language.None;
 
-    public async Task<Rule> ApplyAsync(AnalysisContext context) => await Task.FromResult(Apply(context));
-
-    private Rule Apply(AnalysisContext context)
+    public async Task<Rule> ApplyAsync(AnalysisContext context)
     {
         var diagnostics = context.Repo.CodeOfConduct is not null
             ? new RuleDiagnostics(Diagnosis.Info, "found", null,
@@ -19,10 +28,12 @@ internal class CodeOfConductRuleApplicator : IRuleApplicator
 
         return Rule.Create(this, diagnostics, new Explanation
         {
-            Text = @"
-Adopt a code of conduct to define community standards, signal a welcoming and inclusive project, and outline procedures for handling abuse.
-A code of conduct defines standards for how to engage in a community. It signals an inclusive environment that respects all contributions. 
-It also outlines procedures for addressing problems between members of your project's community. ",
+            GeneralGuidance = new Dictionary<string, string>
+            {
+                { Importance, await _gpt3Client.GetCompletion(Importance) },
+                { HowTo, await _gpt3Client.GetCompletion(HowTo) }
+            },
+            Text = await _gpt3Client.GetCompletion(WhatIs),
             AboutLink = new Link("about code of conduct",
                 "https://docs.github.com/en/communities/setting-up-your-project-for-healthy-contributions/adding-a-code-of-conduct-to-your-project"),
             GuidanceLink = diagnostics.Diagnosis == Diagnosis.Warning ? context.GetCommunityLink() : null

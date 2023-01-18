@@ -1,4 +1,6 @@
 @using RepositoryAnalysis.Model
+@inject IDialogService DialogService
+
 <MudDataGrid Items="@Rules" SortMode="SortMode.Single" Elevation="5" Hover="true" Dense="true" ColumnResizeMode="ResizeMode.Column">
     <Columns>
         <HierarchyColumn T="Rule"/>
@@ -39,34 +41,54 @@
         </Column>
     </Columns>
     <ChildRowContent>
-        <MudCard MaxWidth="800px" Elevation="0">
-            <MudCardHeader >
-                <CardHeaderContent>
-                    <MudText Typo="Typo.body2">@((MarkupString)context.Item.Explanation.Text)</MudText>
+        <MudCard Elevation="0">
+            <MudCardContent >
 
-                    @if (context.Item.Details is not null)
-                    {
-                        <br/>
-                        <MudText Style="background-color: lightgrey" Color="Color.Surface" Typo="Typo.body2">@((MarkupString)context.Item.Details)</MudText>
-                    }
+
+                <MudText Class="d-inline-flex"
+                         Style="width: 90%"
+                         Typo="Typo.body2">
+                    @((MarkupString)context.Item.Explanation.Text)
+                </MudText>
+
+                <MudButton
+                    @onclick="() => ShowGuidance(context.Item)"
+                    Variant="Variant.Outlined"
+                    Color="Color.Primary"
+                    Size="Size.Small">
+                    Guidance
+                </MudButton>
+
+
+                <br/>
+
+                @if (context.Item.Details is not null)
+                {
                     <br/>
-                    @if (context.Item.Explanation.AboutLink is not null)
-                    {
-                        <MudPaper Class="d-flex align-content-start flex-wrap flex-grow-1 gap-2" Elevation="0">
-                            <MudText Typo="Typo.body2">For more information, see</MudText>
-                            <MudLink Typo="Typo.body2" Target="_blank" Href="@context.Item.Explanation.AboutLink.Url">@context.Item.Explanation.AboutLink.Header</MudLink>
-                        </MudPaper>
-                    }
 
-                    @if (context.Item.Explanation.GuidanceLink is not null)
-                    {
-                        <MudPaper Class="d-flex align-content-start flex-wrap flex-grow-1 gap-2" Elevation="0">
-                            <MudText Typo="Typo.body2">For guidance, see</MudText>
-                            <MudLink Typo="Typo.body2" Target="_blank" Href="@context.Item.Explanation.GuidanceLink.Url">@context.Item.Explanation.GuidanceLink.Header</MudLink>
-                        </MudPaper>
-                    }
-                </CardHeaderContent>
-            </MudCardHeader>
+                    <MudText Style="background-color: #F5F5F5" Typo="Typo.body2">@((MarkupString)context.Item.Details)</MudText>
+                }
+                <br/>
+                @if (context.Item.Explanation.AboutLink is not null)
+                {
+                    <MudPaper Class="d-flex align-content-start flex-wrap flex-grow-1 gap-2" Elevation="0">
+                        <MudText Typo="Typo.body2">For more information, see</MudText>
+                        <MudLink Typo="Typo.body2" Target="_blank" Href="@context.Item.Explanation.AboutLink.Url">@context.Item.Explanation.AboutLink.Header</MudLink>
+                    </MudPaper>
+                }
+
+                @if (context.Item.Explanation.GuidanceLink is not null)
+                {
+                    <MudPaper Class="d-flex align-content-start flex-wrap flex-grow-1 gap-2" Elevation="0">
+                        <MudText Typo="Typo.body2">For guidance, see</MudText>
+                        <MudLink Typo="Typo.body2" Target="_blank" Href="@context.Item.Explanation.GuidanceLink.Url">@context.Item.Explanation.GuidanceLink.Header</MudLink>
+                    </MudPaper>
+                }
+
+
+
+
+            </MudCardContent>
         </MudCard>
     </ChildRowContent>
 </MudDataGrid>
@@ -75,5 +97,21 @@
 
     [Parameter]
     public IReadOnlyList<Rule> Rules { get; set; } = new List<Rule>();
+
+    private void ShowGuidance(Rule rule)
+    {
+        DialogService.Show<GeneralGuidance>(
+            $"Guidance for {rule.Name}",
+            new DialogParameters { { "Content", rule.Explanation.GeneralGuidance } },
+            new DialogOptions
+            {
+                CloseButton = true,
+                MaxWidth = MaxWidth.ExtraExtraLarge,
+                CloseOnEscapeKey = true,
+                FullWidth = true,
+                FullScreen = false,
+                Position = DialogPosition.TopCenter
+            });
+    }
 
 }

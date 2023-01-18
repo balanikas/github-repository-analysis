@@ -1,9 +1,19 @@
+using RepositoryAnalysis.Internal.TextGeneration;
 using RepositoryAnalysis.Model;
 
 namespace RepositoryAnalysis.Internal.Rules.Quality;
 
 internal class GitIgnoreRuleApplicator : IRuleApplicator
 {
+    [RuleGuidance] private const string WhereToFind = "Where can i find a good gitignore file for my repository?";
+    [RuleGuidance] private const string MultipleFiles = "When should i have multiple gitignore files in my repository?";
+    [RuleGuidance] private const string WhatIs = "What is gitignore and why should i add it to a repository?";
+    [RuleGuidance] private const string CheckValidity = "How can i check that a gitignore file is valid?";
+
+    private readonly IGpt3Client _gpt3Client;
+
+    public GitIgnoreRuleApplicator(IGpt3Client gpt3Client) => _gpt3Client = gpt3Client;
+
     public string RuleName => "gitignore";
     public RuleCategory Category => RuleCategory.Quality;
     public Language Language => Language.None;
@@ -46,10 +56,13 @@ Showing first {visualCount} files:
 
         return Rule.Create(this, diagnostics, new Explanation
         {
-            Text = @"
-You can create a .gitignore file in your repository's root directory to tell Git which files and directories to ignore when you make a commit. 
-To share the ignore rules with other users who clone the repository, commit the .gitignore file in to your repository.
-",
+            GeneralGuidance = new Dictionary<string, string>
+            {
+                { WhereToFind, await _gpt3Client.GetCompletion(WhereToFind) },
+                { MultipleFiles, await _gpt3Client.GetCompletion(MultipleFiles) },
+                { CheckValidity, await _gpt3Client.GetCompletion(CheckValidity) }
+            },
+            Text = await _gpt3Client.GetCompletion(WhatIs),
             AboutLink = new Link("about git ignore", "https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files")
         });
     }

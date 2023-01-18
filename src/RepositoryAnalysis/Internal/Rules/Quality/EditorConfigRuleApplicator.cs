@@ -1,16 +1,24 @@
+using RepositoryAnalysis.Internal.TextGeneration;
 using RepositoryAnalysis.Model;
 
 namespace RepositoryAnalysis.Internal.Rules.Quality;
 
 internal class EditorConfigRuleApplicator : IRuleApplicator
 {
+    [RuleGuidance] private const string WhereToFind = "Where can i find a good editorconfig file for my repository?";
+    [RuleGuidance] private const string MultipleFiles = "When should i have multiple editorconfig files in my repository?";
+    [RuleGuidance] private const string WhatIs = "What is editorconfig and why should i add it to a repository?";
+    [RuleGuidance] private const string CheckValidity = "How can i check that an editorconfig file is valid?";
+
+    private readonly IGpt3Client _gpt3Client;
+
+    public EditorConfigRuleApplicator(IGpt3Client gpt3Client) => _gpt3Client = gpt3Client;
+
     public string RuleName => "editorconfig";
     public RuleCategory Category => RuleCategory.Quality;
     public Language Language => Language.None;
 
-    public async Task<Rule> ApplyAsync(AnalysisContext context) => await Task.FromResult(Apply(context));
-
-    private Rule Apply(AnalysisContext context)
+    public async Task<Rule> ApplyAsync(AnalysisContext context)
     {
         var diagnostics = GetDiagnosis();
 
@@ -30,10 +38,13 @@ internal class EditorConfigRuleApplicator : IRuleApplicator
 
         return Rule.Create(this, diagnostics, new Explanation
         {
-            Text = @"
-EditorConfig helps maintain consistent coding styles for multiple developers working on the same project across various editors and IDEs. 
-The EditorConfig project consists of a file format for defining coding styles and a collection of text editor plugins that enable editors to read the file format and adhere to defined styles. 
-EditorConfig files are easily readable and they work nicely with version control systems.",
+            GeneralGuidance = new Dictionary<string, string>
+            {
+                { WhereToFind, await _gpt3Client.GetCompletion(WhereToFind) },
+                { MultipleFiles, await _gpt3Client.GetCompletion(MultipleFiles) },
+                { CheckValidity, await _gpt3Client.GetCompletion(CheckValidity) }
+            },
+            Text = await _gpt3Client.GetCompletion(WhatIs),
             AboutLink = new Link("about editor config", "https://editorconfig.org/")
         });
     }

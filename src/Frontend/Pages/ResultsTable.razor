@@ -43,23 +43,22 @@
     <ChildRowContent>
         <MudCard Elevation="0">
             <MudCardContent >
-
-
                 <MudText Class="d-inline-flex"
                          Style="width: 90%"
                          Typo="Typo.body2">
                     @((MarkupString)context.Item.Explanation.Text)
                 </MudText>
 
-                <MudButton
-                    @onclick="() => ShowGuidance(context.Item)"
-                    Variant="Variant.Outlined"
-                    Color="Color.Primary"
-                    Size="Size.Small">
-                    Guidance
-                </MudButton>
-
-
+                @if (context.Item.Explanation.GeneralGuidance.Any())
+                {
+                    <MudButton
+                        @onclick="() => ShowGuidance(context.Item)"
+                        Variant="Variant.Outlined"
+                        Color="Color.Primary"
+                        Size="Size.Small">
+                        Guidance
+                    </MudButton>
+                }
                 <br/>
 
                 @if (context.Item.Details is not null)

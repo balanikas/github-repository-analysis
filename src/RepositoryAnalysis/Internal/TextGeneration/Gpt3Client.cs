@@ -41,10 +41,10 @@ public class Gpt3Client : IGpt3Client
         {
             Prompt = prompt,
             MaxTokens = 500,
-            Temperature = 0.7f,
+            Temperature = 1f,
             TopP = 1f,
-            FrequencyPenalty = 0f,
-            PresencePenalty = 0f
+            FrequencyPenalty = 2f,
+            PresencePenalty = 2f
         };
 
         var completionResult = await _openAiService.Completions.CreateCompletion(request, Models.TextDavinciV3);

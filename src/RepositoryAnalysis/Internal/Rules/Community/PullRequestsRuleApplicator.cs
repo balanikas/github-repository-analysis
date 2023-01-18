@@ -4,14 +4,12 @@ using RepositoryAnalysis.Model;
 
 namespace RepositoryAnalysis.Internal.Rules.Community;
 
-[RuleGuidance(HowTo)]
-[RuleGuidance(WhatIs)]
-[RuleGuidance(Staleness)]
 internal class PullRequestsRuleApplicator : IRuleApplicator
 {
-    private const string HowTo = "How to write a great pull request?";
-    private const string Staleness = "When is a pull request considered stale and why is it important close it quickly?";
-    private const string WhatIs = "What is the purpose of a pull request?";
+    [RuleGuidance] private const string HowTo = "How to write a great pull request?";
+    [RuleGuidance] private const string Staleness = "When is a pull request considered stale and why is it important close it quickly?";
+    [RuleGuidance] private const string WhatIs = "What is the purpose of a pull request?";
+
     private readonly IGpt3Client _gpt3Client;
 
     public PullRequestsRuleApplicator(IGpt3Client gpt3Client) => _gpt3Client = gpt3Client;

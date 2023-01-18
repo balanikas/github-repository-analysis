@@ -1,3 +1,4 @@
+using System.Reflection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using RepositoryAnalysis.Internal.Rules;
@@ -42,10 +43,9 @@ public class TextGenerationService : BackgroundService
             .Where(p => applicator.IsAssignableFrom(p));
 
         var prompts = types
-            .SelectMany(x => Attribute.GetCustomAttributes(x, typeof(RuleGuidanceAttribute)))
-            .Cast<RuleGuidanceAttribute>()
-            .Select(x => x.Prompt)
-            .ToArray();
+            .SelectMany(x => x.GetFields(BindingFlags.Static | BindingFlags.NonPublic))
+            .Where(x => x.GetCustomAttributes().OfType<RuleGuidanceAttribute>().Count() == 1)
+            .Select(x => x.GetRawConstantValue()).Cast<string>().ToArray();
 
         await Parallel.ForEachAsync(prompts, async (
             p,

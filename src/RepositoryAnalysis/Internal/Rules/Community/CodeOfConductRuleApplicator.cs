@@ -3,14 +3,12 @@ using RepositoryAnalysis.Model;
 
 namespace RepositoryAnalysis.Internal.Rules.Community;
 
-[RuleGuidance(Importance)]
-[RuleGuidance(WhatIs)]
-[RuleGuidance(HowTo)]
 internal class CodeOfConductRuleApplicator : IRuleApplicator
 {
-    private const string Importance = "Why is it important for a github repository to have a code of conduct?";
-    private const string HowTo = "How to write a great code of conduct file?";
-    private const string WhatIs = "What is the purpose of a code of conduct in open source?";
+    [RuleGuidance] private const string Importance = "Why is it important for a github repository to have a code of conduct?";
+    [RuleGuidance] private const string HowTo = "How to write a great code of conduct file?";
+    [RuleGuidance] private const string WhatIs = "What is the purpose of a code of conduct in open source?";
+
     private readonly IGpt3Client _gpt3Client;
 
     public CodeOfConductRuleApplicator(IGpt3Client gpt3Client) => _gpt3Client = gpt3Client;

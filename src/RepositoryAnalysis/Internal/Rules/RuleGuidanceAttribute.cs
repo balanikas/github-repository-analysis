@@ -1,9 +1,6 @@
 namespace RepositoryAnalysis.Internal.Rules;
 
-[AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
+[AttributeUsage(AttributeTargets.Field)]
 internal class RuleGuidanceAttribute : Attribute
 {
-    public RuleGuidanceAttribute(string prompt) => Prompt = prompt;
-
-    public string Prompt { get; }
 }

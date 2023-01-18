@@ -5,8 +5,13 @@
             <MudExpansionPanels MultiExpansion="true">
                 @foreach (var item in Content)
                 {
-                    <MudExpansionPanel Style="background-color: #F5F5F5" Text="@item.Key">
-                        @((MarkupString)item.Value)
+                    <MudExpansionPanel Style="background-color: #F5F5F5">
+                        <TitleContent>
+                            <MudText Style="font-style: italic">@item.Key</MudText>
+                        </TitleContent>
+                        <ChildContent>
+                            @((MarkupString)item.Value)
+                        </ChildContent>
                     </MudExpansionPanel>
                 }
             </MudExpansionPanels>
@@ -21,4 +26,5 @@
 
     [Parameter]
     public IDictionary<string, string> Content { get; set; }
+
 }

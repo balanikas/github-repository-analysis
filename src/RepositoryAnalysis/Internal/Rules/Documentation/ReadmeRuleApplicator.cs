@@ -1,16 +1,23 @@
+using RepositoryAnalysis.Internal.TextGeneration;
 using RepositoryAnalysis.Model;
 
 namespace RepositoryAnalysis.Internal.Rules.Documentation;
 
 internal class ReadmeRuleApplicator : IRuleApplicator
 {
+    [RuleGuidance] private const string HowToWrite = "Write a short example of a well designed readme file";
+    [RuleGuidance] private const string MultipleFiles = "How many readme files can a repository have and why should i have more than one?";
+    [RuleGuidance] private const string WhatIs = "What is a github readme file and why is it important?";
+
+    private readonly IGpt3Client _gpt3Client;
+
+    public ReadmeRuleApplicator(IGpt3Client gpt3Client) => _gpt3Client = gpt3Client;
+
     public string RuleName => "readme";
     public RuleCategory Category => RuleCategory.Documentation;
     public Language Language => Language.None;
 
-    public async Task<Rule> ApplyAsync(AnalysisContext context) => await Task.FromResult(Apply(context));
-
-    private Rule Apply(AnalysisContext context)
+    public async Task<Rule> ApplyAsync(AnalysisContext context)
     {
         bool IsReadme(GitTree.Node x) =>
             x.HasFileName("readme", "readme.md", "readme.txt", "readme.rst");
@@ -35,8 +42,12 @@ internal class ReadmeRuleApplicator : IRuleApplicator
 
         return Rule.Create(this, diagnostics, new Explanation
         {
-            Text = @"
-A repository should contain a readme file, to tell other people why your project is useful, what they can do with your project, and how they can use it.",
+            GeneralGuidance = new Dictionary<string, string>
+            {
+                { MultipleFiles, await _gpt3Client.GetCompletion(MultipleFiles) },
+                { HowToWrite, await _gpt3Client.GetCompletion(HowToWrite) }
+            },
+            Text = await _gpt3Client.GetCompletion(WhatIs),
             AboutLink = new Link("about readmes",
                 "https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-readmes"),
             GuidanceLink = diagnostics.Diagnosis == Diagnosis.Error ? context.GetCommunityLink() : null

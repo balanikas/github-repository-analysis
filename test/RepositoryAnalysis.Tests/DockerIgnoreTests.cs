@@ -1,5 +1,6 @@
 using Moq;
 using RepositoryAnalysis.Internal.GraphQL;
+using RepositoryAnalysis.Internal.TextGeneration;
 
 namespace Repository.Tests;
 
@@ -16,7 +17,7 @@ public class DockerIgnoreTests
             .Returns(new Uri("http://dummy.com"));
         repo.Setup(x => x.DefaultBranchRef)
             .Returns(new GetRepo_Repository_DefaultBranchRef_Ref("", null, null));
-        var result = await new DockerIgnoreRuleApplicator().ApplyAsync(new AnalysisContext(tree, repo.Object));
+        var result = await new DockerIgnoreRuleApplicator(Mock.Of<IGpt3Client>()).ApplyAsync(new AnalysisContext(tree, repo.Object));
         result.Diagnosis.Should().Be(diagnosis);
     }
 

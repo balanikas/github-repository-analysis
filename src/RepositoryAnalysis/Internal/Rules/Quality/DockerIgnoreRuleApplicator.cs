@@ -1,16 +1,26 @@
+using RepositoryAnalysis.Internal.TextGeneration;
 using RepositoryAnalysis.Model;
 
 namespace RepositoryAnalysis.Internal.Rules.Quality;
 
 internal class DockerIgnoreRuleApplicator : IRuleApplicator
 {
+    [RuleGuidance] private const string WhereToFind = "Where can i find a good dockerignore file for my repository?";
+    [RuleGuidance] private const string MultipleFiles = "When should i have multiple dockerignore files in my repository?";
+    [RuleGuidance] private const string WhatIs = "What is dockerignore and why should i add it to a repository?";
+    [RuleGuidance] private const string WhereToPlace = "Where should a dockerignore file be placed?";
+    [RuleGuidance] private const string CheckValidity = "How can i check that a dockerignore file is valid?";
+    [RuleGuidance] private const string HowToLink = "send me only a link with instructions on how to create a dockerignore file and skip any other text";
+
+    private readonly IGpt3Client _gpt3Client;
+
+    public DockerIgnoreRuleApplicator(IGpt3Client gpt3Client) => _gpt3Client = gpt3Client;
+
     public string RuleName => "dockerignore";
     public RuleCategory Category => RuleCategory.Quality;
     public Language Language => Language.None;
 
-    public async Task<Rule> ApplyAsync(AnalysisContext context) => await Task.FromResult(Apply(context));
-
-    private Rule Apply(AnalysisContext context)
+    public async Task<Rule> ApplyAsync(AnalysisContext context)
     {
         var diagnostics = GetDiagnosis();
 
@@ -30,11 +40,14 @@ internal class DockerIgnoreRuleApplicator : IRuleApplicator
 
         return Rule.Create(this, diagnostics, new Explanation
         {
-            Text = @"
-Before the docker CLI sends the context to the docker daemon, it looks for a file named .dockerignore in the root directory 
-of the context. If this file exists, the CLI modifies the context to exclude files and directories that match patterns in it. 
-This helps to avoid unnecessarily sending large or sensitive files and directories to the daemon and potentially adding them 
-to images using ADD or COPY.",
+            GeneralGuidance = new Dictionary<string, string>
+            {
+                { WhereToFind, await _gpt3Client.GetCompletion(WhereToFind) },
+                { WhereToPlace, await _gpt3Client.GetCompletion(WhereToPlace) },
+                { MultipleFiles, await _gpt3Client.GetCompletion(MultipleFiles) },
+                { CheckValidity, await _gpt3Client.GetCompletion(CheckValidity) }
+            },
+            Text = await _gpt3Client.GetCompletion(WhatIs),
             AboutLink = new Link("about Dockerfile", "https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#exclude-with-dockerignore")
         });
     }

@@ -23,6 +23,7 @@ Service that provides analysis and guidance for public github repositories.
 ## How it works
 Given a repository, the system will fetch all publicly available data for that repository,
 evaluate it based on a set of rules, and present the results together with additional guidance.
+The guidance is generated dynamically using the Open AI GPT-3 model.
 
 https://user-images.githubusercontent.com/2317329/207807236-684bf53d-96c3-4c2c-ac73-c6d5389ab1fa.mov
 
@@ -97,5 +98,5 @@ The analysis is presented as a set of detections, where each detection is either
 - `Can be improved` - an action can be taken for improvement
 - `Warning` - strongly recommended to address this
 
-This service currently has extra checks for csharp repositories, but any repository should work.
+This service currently has extra checks for csharp repositories, but any repository should work for general rules.
 For feedback, please create a new issue at https://github.com/balanikas/github-repository-analysis/issues

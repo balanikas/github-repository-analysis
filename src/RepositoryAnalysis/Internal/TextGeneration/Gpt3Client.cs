@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using OpenAI.GPT3;
 using OpenAI.GPT3.Managers;
@@ -9,6 +10,7 @@ namespace RepositoryAnalysis.Internal.TextGeneration;
 
 public class Gpt3Client : IGpt3Client
 {
+    private readonly IHostEnvironment _hostEnvironment;
     private readonly ILogger<Gpt3Client> _logger;
     private readonly IMemoryCache _memoryCache;
     private readonly OpenAIService _openAiService;
@@ -16,10 +18,12 @@ public class Gpt3Client : IGpt3Client
     public Gpt3Client(
         ILogger<Gpt3Client> logger,
         IMemoryCache memoryCache,
-        HttpClient httpClient)
+        HttpClient httpClient,
+        IHostEnvironment hostEnvironment)
     {
         _logger = logger;
         _memoryCache = memoryCache;
+        _hostEnvironment = hostEnvironment;
 
         var options = new OpenAiOptions
         {
@@ -51,6 +55,8 @@ public class Gpt3Client : IGpt3Client
 
     private async Task<string> GetCompletionInternal(string prompt)
     {
+        if (_hostEnvironment.IsDevelopment()) return string.Join("", Enumerable.Repeat("loren ipsum ", new Random().Next(2, 50)));
+
         var request = new CompletionCreateRequest
         {
             Prompt = prompt,

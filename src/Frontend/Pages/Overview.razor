@@ -1,6 +1,8 @@
 @using RepositoryAnalysis.Model
 <MudPaper Class=" d-flex flex-row-reverse flex-grow-1 gap-16 mt-4" Elevation="0">
-    <MudImage ObjectFit="ObjectFit.Fill" Width="400" Height="200" Src="@Data.ImageUrl?.ToString()" Alt="@Data.Url.ToString()" Elevation="25" Class="rounded-lg"/>
+    <MudLink Href="@Data.Url.ToString()" Target="_blank">
+        <MudImage ObjectFit="ObjectFit.Fill" Width="400" Height="200" Src="@Data.ImageUrl?.ToString()" Alt="@Data.Url.ToString()" Elevation="25" Class="rounded-lg"/>
+    </MudLink>
     <MudCard Width="800px" Height="200px" Elevation="5">
         <MudCardContent >
             <MudText Typo="Typo.body2">@Data.Description</MudText>

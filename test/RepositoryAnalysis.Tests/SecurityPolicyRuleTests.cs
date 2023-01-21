@@ -2,6 +2,7 @@ using Moq;
 using RepositoryAnalysis.Internal.GraphQL;
 using RepositoryAnalysis.Internal.Rules;
 using RepositoryAnalysis.Internal.Rules.Security;
+using RepositoryAnalysis.Internal.TextGeneration;
 
 namespace Repository.Tests;
 
@@ -14,7 +15,7 @@ public class SecurityPolicyRuleTests
         Rule expected)
     {
         var tree = new GitTree(new TreeResponse("", "", Array.Empty<TreeItem>(), false));
-        var result = await new SecurityPolicyRuleApplicator().ApplyAsync(new AnalysisContext(tree, repo));
+        var result = await new SecurityPolicyRuleApplicator(Mock.Of<IGpt3Client>()).ApplyAsync(new AnalysisContext(tree, repo));
         result.Should().BeEquivalentTo(expected,
             o => o.Excluding(x => x.Diagnostics.Details).Excluding(x => x.Details).Excluding(x => x.Explanation).ComparingByMembers<Rule>());
     }

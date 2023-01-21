@@ -33,11 +33,7 @@ Some examples:
 
         return Rule.Create(this, diagnostics, new Explanation
         {
-            GeneralGuidance = new Dictionary<string, string>
-            {
-                { HowToDetect, await _gpt3Client.GetCompletion(HowToDetect) },
-                { Alternative, await _gpt3Client.GetCompletion(Alternative) }
-            },
+            GeneralGuidance = await _gpt3Client.GetCompletions(HowToDetect, Alternative),
             Text = await _gpt3Client.GetCompletion(WhyBadIdea),
             AboutLink = new Link("about large files",
                 "https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-large-files-on-github")

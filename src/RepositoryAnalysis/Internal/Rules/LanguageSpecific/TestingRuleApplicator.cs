@@ -1,16 +1,23 @@
+using RepositoryAnalysis.Internal.TextGeneration;
 using RepositoryAnalysis.Model;
 
 namespace RepositoryAnalysis.Internal.Rules.LanguageSpecific;
 
 internal class TestingRuleApplicator : IRuleApplicator
 {
+    [RuleGuidance] private const string WhatIs = "Why is it important to have a well tested .net solution?";
+    [RuleGuidance] private const string TestTypes = "What types of testing is typically involved in a .net solution?";
+    [RuleGuidance] private const string CommonFrameworks = "List some common testing frameworks for .net solutions.";
+
+    private readonly IGpt3Client _gpt3Client;
+
+    public TestingRuleApplicator(IGpt3Client gpt3Client) => _gpt3Client = gpt3Client;
+
     public string RuleName => "testing";
     public RuleCategory Category => RuleCategory.LanguageSpecific;
     public Language Language => Language.CSharp;
 
-    public async Task<Rule> ApplyAsync(AnalysisContext context) => await Task.FromResult(Apply(context));
-
-    private Rule Apply(AnalysisContext context)
+    public async Task<Rule> ApplyAsync(AnalysisContext context)
     {
         var diagnostics = GetDiagnosis();
 
@@ -41,9 +48,8 @@ Detected {files.Length} test files.
 
         return Rule.Create(this, diagnostics, new Explanation
         {
-            Text = @"
-Tests increase the quality of software. 
-",
+            GeneralGuidance = await _gpt3Client.GetCompletions(TestTypes, CommonFrameworks),
+            Text = await _gpt3Client.GetCompletion(WhatIs),
             AboutLink = new Link("testing in dotnet", "https://learn.microsoft.com/en-us/dotnet/core/testing/")
         });
     }

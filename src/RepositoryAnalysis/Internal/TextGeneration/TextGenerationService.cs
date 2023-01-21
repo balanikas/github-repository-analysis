@@ -52,7 +52,8 @@ public class TextGenerationService : BackgroundService
             _) =>
         {
             await _gpt3Client.GetCompletion(p);
-            _logger.LogInformation($"Fetched completion for prompt '{p}'");
         });
+
+        _logger.LogInformation("Finished completion generation");
     }
 }

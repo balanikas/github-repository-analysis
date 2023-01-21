@@ -15,14 +15,26 @@ public class Gpt3Client : IGpt3Client
 
     public Gpt3Client(
         ILogger<Gpt3Client> logger,
-        IMemoryCache memoryCache)
+        IMemoryCache memoryCache,
+        HttpClient httpClient)
     {
         _logger = logger;
         _memoryCache = memoryCache;
-        _openAiService = new OpenAIService(new OpenAiOptions
+
+        var options = new OpenAiOptions
         {
             ApiKey = Environment.GetEnvironmentVariable("OpenAI__Token")
-        });
+        };
+
+        _openAiService = new OpenAIService(options, httpClient);
+    }
+
+    public async Task<IDictionary<string, string>> GetCompletions(params string[] prompts)
+    {
+        var completions = new Dictionary<string, string>();
+        foreach (var prompt in prompts) completions.Add(prompt, await GetCompletion(prompt));
+
+        return completions;
     }
 
     public async Task<string> GetCompletion(string prompt)
@@ -30,6 +42,8 @@ public class Gpt3Client : IGpt3Client
         if (_memoryCache.TryGetValue(prompt, out string? cacheValue)) return cacheValue!;
 
         var value = await GetCompletionInternal(prompt);
+        if (string.IsNullOrEmpty(value)) return value;
+
         value = value.Trim('\n').Replace("\n", "<br/>");
         _memoryCache.Set(prompt, value);
         return value;

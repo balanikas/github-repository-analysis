@@ -52,11 +52,7 @@ Pull requests have been open on average for {Shared.HowLong(DateTime.UtcNow - av
 
         return Rule.Create(this, diagnostics, new Explanation
         {
-            GeneralGuidance = new Dictionary<string, string>
-            {
-                { HowTo, await _gpt3Client.GetCompletion(HowTo) },
-                { Staleness, await _gpt3Client.GetCompletion(Staleness) }
-            },
+            GeneralGuidance = await _gpt3Client.GetCompletions(Staleness, HowTo),
             Text = await _gpt3Client.GetCompletion(WhatIs),
             AboutLink = new Link("about pull requests",
                 "https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests"),

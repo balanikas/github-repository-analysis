@@ -1,6 +1,10 @@
+using System.Net;
 using System.Reflection;
+using System.Threading.RateLimiting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Polly;
+using Polly.Extensions.Http;
 using RepositoryAnalysis.Internal;
 using RepositoryAnalysis.Internal.Rules;
 using RepositoryAnalysis.Internal.TextGeneration;
@@ -25,7 +29,17 @@ public static class DependencyInjectionExtensions
         GitHubOptions gitHubOptions)
     {
         services.AddSingleton<GitHubGraphQlClient>();
-        services.AddSingleton<IGpt3Client, Gpt3Client>();
+        services
+            .AddHttpClient<IGpt3Client, Gpt3Client>()
+            .ConfigurePrimaryHttpMessageHandler(x => new ClientSideRateLimitedHandler(new ConcurrencyLimiter(new ConcurrencyLimiterOptions
+            {
+                PermitLimit = 16,
+                QueueLimit = 16,
+                QueueProcessingOrder = QueueProcessingOrder.OldestFirst
+            })))
+            .SetHandlerLifetime(TimeSpan.FromMinutes(5))
+            .AddPolicyHandler(GetRetryPolicy());
+
         services.AddTransient<IAnalysisService, AnalysisService>();
         services.AddTransient<GitHubRestClient>();
         services.AddTransient<AnalysisCache>();
@@ -52,5 +66,15 @@ public static class DependencyInjectionExtensions
 
             foreach (var type in types) services.AddSingleton(typeof(T), type.UnderlyingSystemType);
         }
+    }
+
+    private static IAsyncPolicy<HttpResponseMessage> GetRetryPolicy()
+    {
+        return HttpPolicyExtensions
+            .HandleTransientHttpError()
+            .OrResult(msg => msg.StatusCode != HttpStatusCode.OK)
+            .WaitAndRetryAsync(int.MaxValue, retryAttempt => Math.Pow(2, retryAttempt) < 10
+                ? TimeSpan.FromSeconds(Math.Pow(2, retryAttempt))
+                : TimeSpan.FromSeconds(10));
     }
 }

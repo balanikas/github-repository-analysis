@@ -56,12 +56,7 @@ Showing first {visualCount} files:
 
         return Rule.Create(this, diagnostics, new Explanation
         {
-            GeneralGuidance = new Dictionary<string, string>
-            {
-                { WhereToFind, await _gpt3Client.GetCompletion(WhereToFind) },
-                { MultipleFiles, await _gpt3Client.GetCompletion(MultipleFiles) },
-                { CheckValidity, await _gpt3Client.GetCompletion(CheckValidity) }
-            },
+            GeneralGuidance = await _gpt3Client.GetCompletions(WhereToFind, MultipleFiles, CheckValidity),
             Text = await _gpt3Client.GetCompletion(WhatIs),
             AboutLink = new Link("about git ignore", "https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files")
         });

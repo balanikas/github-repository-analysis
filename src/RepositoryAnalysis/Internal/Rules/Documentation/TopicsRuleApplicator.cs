@@ -25,11 +25,7 @@ internal class TopicsRuleApplicator : IRuleApplicator
 
         return Rule.Create(this, diagnostics, new Explanation
         {
-            GeneralGuidance = new Dictionary<string, string>
-            {
-                { Importance, await _gpt3Client.GetCompletion(Importance) },
-                { IdealTopicCount, await _gpt3Client.GetCompletion(IdealTopicCount) }
-            },
+            GeneralGuidance = await _gpt3Client.GetCompletions(Importance, IdealTopicCount),
             Text = await _gpt3Client.GetCompletion(WhatIs),
             AboutLink = new Link("about topics",
                 "https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/classifying-your-repository-with-topics"),

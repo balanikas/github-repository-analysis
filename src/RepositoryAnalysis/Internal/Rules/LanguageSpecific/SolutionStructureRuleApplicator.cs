@@ -1,16 +1,21 @@
+using RepositoryAnalysis.Internal.TextGeneration;
 using RepositoryAnalysis.Model;
 
 namespace RepositoryAnalysis.Internal.Rules.LanguageSpecific;
 
 internal class SolutionStructureRuleApplicator : IRuleApplicator
 {
+    [RuleGuidance] private const string Importance = "Why is it important to have a well designed and clear .net solution structure?";
+
+    private readonly IGpt3Client _gpt3Client;
+
+    public SolutionStructureRuleApplicator(IGpt3Client gpt3Client) => _gpt3Client = gpt3Client;
+
     public string RuleName => "solution structure";
     public RuleCategory Category => RuleCategory.LanguageSpecific;
     public Language Language => Language.CSharp;
 
-    public async Task<Rule> ApplyAsync(AnalysisContext context) => await Task.FromResult(Apply(context));
-
-    private Rule Apply(AnalysisContext context)
+    public async Task<Rule> ApplyAsync(AnalysisContext context)
     {
         var diagnostics = GetDiagnosis();
 
@@ -53,8 +58,7 @@ Found {warnings.Count} issues.
 
         return Rule.Create(this, diagnostics, new Explanation
         {
-            Text = @"
-It is good practice to follow standard solution structure conventions. "
+            Text = await _gpt3Client.GetCompletion(Importance)
         });
     }
 }

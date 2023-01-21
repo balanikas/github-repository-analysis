@@ -26,11 +26,7 @@ internal class CodeOfConductRuleApplicator : IRuleApplicator
 
         return Rule.Create(this, diagnostics, new Explanation
         {
-            GeneralGuidance = new Dictionary<string, string>
-            {
-                { Importance, await _gpt3Client.GetCompletion(Importance) },
-                { HowTo, await _gpt3Client.GetCompletion(HowTo) }
-            },
+            GeneralGuidance = await _gpt3Client.GetCompletions(Importance, HowTo),
             Text = await _gpt3Client.GetCompletion(WhatIs),
             AboutLink = new Link("about code of conduct",
                 "https://docs.github.com/en/communities/setting-up-your-project-for-healthy-contributions/adding-a-code-of-conduct-to-your-project"),

@@ -10,8 +10,7 @@ internal class DockerIgnoreRuleApplicator : IRuleApplicator
     [RuleGuidance] private const string WhatIs = "What is dockerignore and why should i add it to a repository?";
     [RuleGuidance] private const string WhereToPlace = "Where should a dockerignore file be placed?";
     [RuleGuidance] private const string CheckValidity = "How can i check that a dockerignore file is valid?";
-    [RuleGuidance] private const string HowToLink = "send me only a link with instructions on how to create a dockerignore file and skip any other text";
-
+   
     private readonly IGpt3Client _gpt3Client;
 
     public DockerIgnoreRuleApplicator(IGpt3Client gpt3Client) => _gpt3Client = gpt3Client;
@@ -40,13 +39,7 @@ internal class DockerIgnoreRuleApplicator : IRuleApplicator
 
         return Rule.Create(this, diagnostics, new Explanation
         {
-            GeneralGuidance = new Dictionary<string, string>
-            {
-                { WhereToFind, await _gpt3Client.GetCompletion(WhereToFind) },
-                { WhereToPlace, await _gpt3Client.GetCompletion(WhereToPlace) },
-                { MultipleFiles, await _gpt3Client.GetCompletion(MultipleFiles) },
-                { CheckValidity, await _gpt3Client.GetCompletion(CheckValidity) }
-            },
+            GeneralGuidance = await _gpt3Client.GetCompletions(WhereToFind, WhereToPlace, MultipleFiles, CheckValidity),
             Text = await _gpt3Client.GetCompletion(WhatIs),
             AboutLink = new Link("about Dockerfile", "https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#exclude-with-dockerignore")
         });

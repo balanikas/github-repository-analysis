@@ -1,16 +1,22 @@
+using RepositoryAnalysis.Internal.TextGeneration;
 using RepositoryAnalysis.Model;
 
 namespace RepositoryAnalysis.Internal.Rules.Community;
 
 internal class CodeOwnersRuleApplicator : IRuleApplicator
 {
+    [RuleGuidance] private const string Importance = "Why is it important to have a codeowners file in a github repository?";
+    [RuleGuidance] private const string WhatIs = "What is the purpose of a codeowners file in a github repository?";
+
+    private readonly IGpt3Client _gpt3Client;
+
+    public CodeOwnersRuleApplicator(IGpt3Client gpt3Client) => _gpt3Client = gpt3Client;
+
     public string RuleName => "code owners";
     public RuleCategory Category => RuleCategory.Community;
     public Language Language => Language.None;
 
-    public async Task<Rule> ApplyAsync(AnalysisContext context) => await Task.FromResult(Apply(context));
-
-    private Rule Apply(AnalysisContext context)
+    public async Task<Rule> ApplyAsync(AnalysisContext context)
     {
         var diagnostics = GetDiagnosis();
 
@@ -27,8 +33,8 @@ internal class CodeOwnersRuleApplicator : IRuleApplicator
 
         return Rule.Create(this, diagnostics, new Explanation
         {
-            Text = @"
-You can use a CODEOWNERS file to define individuals or teams that are responsible for code in a repository.",
+            GeneralGuidance = await _gpt3Client.GetCompletions(Importance),
+            Text = await _gpt3Client.GetCompletion(WhatIs),
             AboutLink = new Link("about code owners",
                 "https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners")
         });

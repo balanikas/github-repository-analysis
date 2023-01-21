@@ -53,13 +53,7 @@ Sample of unlabeled issues: <br/>{string.Join("<br/>", nodesWithoutLabels.Take(5
 
         return Rule.Create(this, diagnostics, new Explanation
         {
-            GeneralGuidance = new Dictionary<string, string>
-            {
-                { BadIdea, await _gpt3Client.GetCompletion(BadIdea) },
-                { IdealLabelCount, await _gpt3Client.GetCompletion(IdealLabelCount) },
-                { TooManyLabels, await _gpt3Client.GetCompletion(TooManyLabels) },
-                { Process, await _gpt3Client.GetCompletion(Process) }
-            },
+            GeneralGuidance = await _gpt3Client.GetCompletions(BadIdea, IdealLabelCount, TooManyLabels, Process),
             Text = await _gpt3Client.GetCompletion(WhatIs),
             AboutLink = new Link("about issue labels", "https://docs.github.com/en/issues/using-labels-and-milestones-to-track-work/managing-labels")
         });

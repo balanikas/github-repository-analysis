@@ -1,16 +1,23 @@
+using RepositoryAnalysis.Internal.TextGeneration;
 using RepositoryAnalysis.Model;
 
 namespace RepositoryAnalysis.Internal.Rules.LanguageSpecific;
 
 internal class RulesetRuleApplicator : IRuleApplicator
 {
+    [RuleGuidance] private const string WhatIs = "What is the purpose of a .ruleset file in a .net solution?";
+    [RuleGuidance] private const string Alternatives = "What is the best way to ensure high code quality standards in a .net solution?";
+    [RuleGuidance] private const string IsLegacy = "Is .ruleset files for static code analysis in .net solutions considered legacy?";
+
+    private readonly IGpt3Client _gpt3Client;
+
+    public RulesetRuleApplicator(IGpt3Client gpt3Client) => _gpt3Client = gpt3Client;
+
     public string RuleName => "ruleset";
     public RuleCategory Category => RuleCategory.LanguageSpecific;
     public Language Language => Language.CSharp;
 
-    public async Task<Rule> ApplyAsync(AnalysisContext context) => await Task.FromResult(Apply(context));
-
-    private Rule Apply(AnalysisContext context)
+    public async Task<Rule> ApplyAsync(AnalysisContext context)
     {
         var diagnostics = GetDiagnosis();
 
@@ -33,9 +40,8 @@ Found rulesets:
 
         return Rule.Create(this, diagnostics, new Explanation
         {
-            Text = @"
-Ruleset configuration files for static code analysis are being deprecated in favor of more modern tools, 
-like EditorConfig and dotnet analyzers.",
+            GeneralGuidance = await _gpt3Client.GetCompletions(IsLegacy, Alternatives),
+            Text = await _gpt3Client.GetCompletion(WhatIs),
             AboutLink = new Link("about dotnet analyzers", "https://learn.microsoft.com/en-us/visualstudio/code-quality/analyzers-faq?view=vs-2022")
         });
     }

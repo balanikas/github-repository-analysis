@@ -1,16 +1,23 @@
+using RepositoryAnalysis.Internal.TextGeneration;
 using RepositoryAnalysis.Model;
 
 namespace RepositoryAnalysis.Internal.Rules.Community;
 
 internal class IssuesRuleApplicator : IRuleApplicator
 {
+    [RuleGuidance] private const string Importance = "Why is it important for a github repository to maintain issues?";
+    [RuleGuidance] private const string HowTo = "How to write a great github issue?";
+    [RuleGuidance] private const string WhatIs = "What is the purpose of github issues?";
+
+    private readonly IGpt3Client _gpt3Client;
+
+    public IssuesRuleApplicator(IGpt3Client gpt3Client) => _gpt3Client = gpt3Client;
+
     public string RuleName => "issues";
     public RuleCategory Category => RuleCategory.Community;
     public Language Language => Language.None;
 
-    public async Task<Rule> ApplyAsync(AnalysisContext context) => await Task.FromResult(Apply(context));
-
-    private Rule Apply(AnalysisContext context)
+    public async Task<Rule> ApplyAsync(AnalysisContext context)
     {
         var diagnostics = GetDiagnosis();
 
@@ -50,10 +57,8 @@ Issues have been open on average for {Shared.HowLong(DateTime.UtcNow - avgCreati
 
         return Rule.Create(this, diagnostics, new Explanation
         {
-            Text = @"
-Issues let you categorize your work on GitHub, where development happens.
-You may wish to turn issues off for your repository if you do not accept contributions or bug reports.
-",
+            GeneralGuidance = await _gpt3Client.GetCompletions(Importance, HowTo),
+            Text = await _gpt3Client.GetCompletion(WhatIs),
             AboutLink = new Link("about issues", "https://docs.github.com/en/issues")
         });
     }

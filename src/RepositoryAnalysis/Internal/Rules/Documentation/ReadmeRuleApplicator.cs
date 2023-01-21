@@ -42,11 +42,7 @@ internal class ReadmeRuleApplicator : IRuleApplicator
 
         return Rule.Create(this, diagnostics, new Explanation
         {
-            GeneralGuidance = new Dictionary<string, string>
-            {
-                { MultipleFiles, await _gpt3Client.GetCompletion(MultipleFiles) },
-                { HowToWrite, await _gpt3Client.GetCompletion(HowToWrite) }
-            },
+            GeneralGuidance = await _gpt3Client.GetCompletions(MultipleFiles, HowToWrite),
             Text = await _gpt3Client.GetCompletion(WhatIs),
             AboutLink = new Link("about readmes",
                 "https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-readmes"),

@@ -1,16 +1,25 @@
+using RepositoryAnalysis.Internal.TextGeneration;
 using RepositoryAnalysis.Model;
 
 namespace RepositoryAnalysis.Internal.Rules.Community;
 
 internal class SupportRuleApplicator : IRuleApplicator
 {
+    [RuleGuidance] private const string Importance = "Why are the benefits of having a github support file?";
+    [RuleGuidance] private const string Example = "What is a simple example of a github support file?";
+    [RuleGuidance] private const string LengthAndFormat = "How long should a github repository support file be?";
+    [RuleGuidance] private const string HowTo = "How to create a great github support file, what extension should it have and and where to keep it?";
+    [RuleGuidance] private const string WhatIs = "What is the purpose of github repository support file?";
+
+    private readonly IGpt3Client _gpt3Client;
+
+    public SupportRuleApplicator(IGpt3Client gpt3Client) => _gpt3Client = gpt3Client;
+
     public string RuleName => "support";
     public RuleCategory Category => RuleCategory.Community;
     public Language Language => Language.None;
 
-    public async Task<Rule> ApplyAsync(AnalysisContext context) => await Task.FromResult(Apply(context));
-
-    private Rule Apply(AnalysisContext context)
+    public async Task<Rule> ApplyAsync(AnalysisContext context)
     {
         var diagnostics = GetDiagnosis();
 
@@ -36,11 +45,8 @@ internal class SupportRuleApplicator : IRuleApplicator
 
         return Rule.Create(this, diagnostics, new Explanation
         {
-            Text = @"
-You can create a SUPPORT file to let people know about ways to get help with your project.
-To direct people to specific support resources, you can add a SUPPORT file to your repository's root, docs, or .github folder. 
-When someone creates an issue in your repository, they will see a link to your project's SUPPORT file.
-",
+            GeneralGuidance = await _gpt3Client.GetCompletions(Importance, LengthAndFormat, Example, HowTo),
+            Text = await _gpt3Client.GetCompletion(WhatIs),
             AboutLink = new Link("about support files",
                 "https://docs.github.com/en/communities/setting-up-your-project-for-healthy-contributions/adding-support-resources-to-your-project"),
             GuidanceLink = new Link("how to add a support file",

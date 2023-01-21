@@ -1,16 +1,23 @@
+using RepositoryAnalysis.Internal.TextGeneration;
 using RepositoryAnalysis.Model;
 
 namespace RepositoryAnalysis.Internal.Rules.Documentation;
 
 internal class ChangeLogRuleApplicator : IRuleApplicator
 {
+    [RuleGuidance] private const string Importance = "Why is it important to have a changelog in a github repository?";
+    [RuleGuidance] private const string Format = "What format should a changelog have in a github repository?";
+    [RuleGuidance] private const string WhatIs = "What is the purpose of a changelog in a github repository?";
+
+    private readonly IGpt3Client _gpt3Client;
+
+    public ChangeLogRuleApplicator(IGpt3Client gpt3Client) => _gpt3Client = gpt3Client;
+
     public string RuleName => "changelog";
     public RuleCategory Category => RuleCategory.Documentation;
     public Language Language => Language.None;
 
-    public async Task<Rule> ApplyAsync(AnalysisContext context) => await Task.FromResult(Apply(context));
-
-    private Rule Apply(AnalysisContext context)
+    public async Task<Rule> ApplyAsync(AnalysisContext context)
     {
         var diagnostics = GetDiagnosis();
 
@@ -31,11 +38,8 @@ internal class ChangeLogRuleApplicator : IRuleApplicator
 
         return Rule.Create(this, diagnostics, new Explanation
         {
-            Text = @"
-A changelog is a kind of summary of all your changes. 
-It should be easy to understand both by the users using your project and the developers working on it.
-Adding a CHANGELOG.md file in the repo root is a good start. Or use the Github Releases feature.
-<br/>"
+            GeneralGuidance = await _gpt3Client.GetCompletions(Importance, Format),
+            Text = await _gpt3Client.GetCompletion(WhatIs)
         });
     }
 }

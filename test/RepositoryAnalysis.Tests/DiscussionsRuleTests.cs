@@ -1,6 +1,7 @@
 using Moq;
 using RepositoryAnalysis.Internal.GraphQL;
 using RepositoryAnalysis.Internal.Rules.Community;
+using RepositoryAnalysis.Internal.TextGeneration;
 
 namespace Repository.Tests;
 
@@ -14,7 +15,7 @@ public class DiscussionsRuleTests
     {
         var tree = new GitTree(new TreeResponse("", "", Array.Empty<TreeItem>(), false));
 
-        var result = await new DiscussionsRuleApplicator().ApplyAsync(new AnalysisContext(tree, repo));
+        var result = await new DiscussionsRuleApplicator(Mock.Of<IGpt3Client>()).ApplyAsync(new AnalysisContext(tree, repo));
         result.Should().NotBeNull();
         result.Diagnostics.Diagnosis.Should().Be(diagnosis);
     }

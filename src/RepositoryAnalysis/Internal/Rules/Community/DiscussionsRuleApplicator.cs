@@ -1,17 +1,24 @@
 using RepositoryAnalysis.Internal.GraphQL;
+using RepositoryAnalysis.Internal.TextGeneration;
 using RepositoryAnalysis.Model;
 
 namespace RepositoryAnalysis.Internal.Rules.Community;
 
 internal class DiscussionsRuleApplicator : IRuleApplicator
 {
+    [RuleGuidance] private const string NoDiscussions = "Why are there no discussions or unanswered discussions on my github repository?";
+    [RuleGuidance] private const string HowTo = "How to use github discussions to collaborate?";
+    [RuleGuidance] private const string WhatIs = "What is the discussions feature in github?";
+
+    private readonly IGpt3Client _gpt3Client;
+
+    public DiscussionsRuleApplicator(IGpt3Client gpt3Client) => _gpt3Client = gpt3Client;
+
     public string RuleName => "discussions";
     public RuleCategory Category => RuleCategory.Community;
     public Language Language => Language.None;
 
-    public async Task<Rule> ApplyAsync(AnalysisContext context) => await Task.FromResult(Apply(context));
-
-    private Rule Apply(AnalysisContext context)
+    public async Task<Rule> ApplyAsync(AnalysisContext context)
     {
         var diagnostics = GetDiagnosis();
 
@@ -71,10 +78,8 @@ Sample of unanswered discussions:
 
         return Rule.Create(this, diagnostics, new Explanation
         {
-            Text = @"
-Use discussions to ask and answer questions, share information, make announcements, and conduct or participate in a conversation about a project on GitHub.
-With GitHub Discussions, the community for your project can create and participate in conversations within the project's repository or organization. 
-Discussions empower a project's maintainers, contributors, and visitors to gather and accomplish the following goals in a central location, without third-party tools.",
+            GeneralGuidance = await _gpt3Client.GetCompletions(NoDiscussions, HowTo),
+            Text = await _gpt3Client.GetCompletion(WhatIs),
             AboutLink = new Link("about discussions",
                 "https://docs.github.com/en/discussions/collaborating-with-your-community-using-discussions/about-discussions")
         });

@@ -1,16 +1,24 @@
+using RepositoryAnalysis.Internal.TextGeneration;
 using RepositoryAnalysis.Model;
 
 namespace RepositoryAnalysis.Internal.Rules.Community;
 
 internal class IssueTemplatesRuleApplicator : IRuleApplicator
 {
+    [RuleGuidance] private const string Importance = "Why are the benefits of having github issue templates?";
+    [RuleGuidance] private const string TypesOf = "What types of issue templates should a repository have?";
+    [RuleGuidance] private const string HowTo = "How to create great github issue templates and where to keep them?";
+    [RuleGuidance] private const string WhatIs = "What is the purpose of github issue templates?";
+
+    private readonly IGpt3Client _gpt3Client;
+
+    public IssueTemplatesRuleApplicator(IGpt3Client gpt3Client) => _gpt3Client = gpt3Client;
+
     public string RuleName => "issue templates";
     public RuleCategory Category => RuleCategory.Community;
     public Language Language => Language.None;
 
-    public async Task<Rule> ApplyAsync(AnalysisContext context) => await Task.FromResult(Apply(context));
-
-    private Rule Apply(AnalysisContext context)
+    public async Task<Rule> ApplyAsync(AnalysisContext context)
     {
         var diagnostics = GetDiagnosis();
 
@@ -33,10 +41,8 @@ internal class IssueTemplatesRuleApplicator : IRuleApplicator
 
         return Rule.Create(this, diagnostics, new Explanation
         {
-            Text = @"
-Issues let you track your work on GitHub, where development happens.
-You may wish to turn issues off for your repository if you do not accept contributions or bug reports.
-",
+            GeneralGuidance = await _gpt3Client.GetCompletions(Importance, TypesOf, HowTo),
+            Text = await _gpt3Client.GetCompletion(WhatIs),
             AboutLink = new Link("about issues", "https://docs.github.com/en/issues/tracking-your-work-with-issues/about-issues"),
             GuidanceLink = diagnostics.Diagnosis == Diagnosis.Warning ? context.GetCommunityLink() : null
         });

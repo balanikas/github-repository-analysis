@@ -1,16 +1,23 @@
+using RepositoryAnalysis.Internal.TextGeneration;
 using RepositoryAnalysis.Model;
 
 namespace RepositoryAnalysis.Internal.Rules.Community;
 
 internal class ContributingRuleApplicator : IRuleApplicator
 {
+    [RuleGuidance] private const string Importance = "Why is it important for a github repository to have a contributing file?";
+    [RuleGuidance] private const string HowTo = "How to write a great contributing file?";
+    [RuleGuidance] private const string WhatIs = "What is the purpose of a contributing file in open source?";
+
+    private readonly IGpt3Client _gpt3Client;
+
+    public ContributingRuleApplicator(IGpt3Client gpt3Client) => _gpt3Client = gpt3Client;
+
     public string RuleName => "contributing";
     public RuleCategory Category => RuleCategory.Community;
     public Language Language => Language.None;
 
-    public async Task<Rule> ApplyAsync(AnalysisContext context) => await Task.FromResult(Apply(context));
-
-    private Rule Apply(AnalysisContext context)
+    public async Task<Rule> ApplyAsync(AnalysisContext context)
     {
         var node = context.GitTree.SingleFileOrDefault(
             x => x.PathEquals(
@@ -37,9 +44,8 @@ internal class ContributingRuleApplicator : IRuleApplicator
 
         return Rule.Create(this, diagnostics, new Explanation
         {
-            Text = @"
-To help your project contributors do good work, you can add a file with contribution guidelines to your project repository's root, docs, or .github folder. 
-When someone opens a pull request or creates an issue, they will see a link to that file. The link to the contributing guidelines also appears on your repository's contribute page.",
+            GeneralGuidance = await _gpt3Client.GetCompletions(Importance, HowTo),
+            Text = await _gpt3Client.GetCompletion(WhatIs),
             AboutLink = new Link("about contributing guidelines",
                 "https://docs.github.com/en/communities/setting-up-your-project-for-healthy-contributions/setting-guidelines-for-repository-contributors"),
             GuidanceLink = node is null ? context.GetCommunityLink() : null

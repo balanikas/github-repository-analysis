@@ -9,7 +9,10 @@ internal class IssueLabelsRuleApplicator : IRuleApplicator
     [RuleGuidance] private const string IdealLabelCount = "How many labels should a github issue ideally have?";
     [RuleGuidance] private const string BadIdea = "Why is it a bad idea to not label a github issue?";
     [RuleGuidance] private const string TooManyLabels = "Can a github issue have too many labels?";
-    [RuleGuidance] private const string WhatIs = "What are issue labels in a github repository?";
+
+    [RuleGuidance(200, Tone.Motivational, Complexity.Simple)]
+    private const string WhatIs = "What are issue labels in a github repository?";
+
     [RuleGuidance] private const string Process = "What is the process of adding a label to a github issue?";
 
     private readonly IGpt3Client _gpt3Client;

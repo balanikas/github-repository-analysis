@@ -7,7 +7,9 @@ internal class CodeOfConductRuleApplicator : IRuleApplicator
 {
     [RuleGuidance] private const string Importance = "Why is it important for a github repository to have a code of conduct?";
     [RuleGuidance] private const string HowTo = "How to write a great code of conduct file?";
-    [RuleGuidance] private const string WhatIs = "What is the purpose of a code of conduct in open source?";
+
+    [RuleGuidance(200, Tone.Motivational, Complexity.Simple)]
+    private const string WhatIs = "What is the purpose of a code of conduct in open source?";
 
     private readonly IGpt3Client _gpt3Client;
 

@@ -5,7 +5,9 @@ namespace RepositoryAnalysis.Internal.Rules.Quality;
 
 internal class LargeFilesRuleApplicator : IRuleApplicator
 {
-    [RuleGuidance] private const string WhyBadIdea = "Why is having large files in a github repository a bad idea?";
+    [RuleGuidance(200, Tone.Motivational, Complexity.Simple)]
+    private const string WhyBadIdea = "Why is having large files in a github repository a bad idea?";
+
     [RuleGuidance] private const string Alternative = "What should I do if I need to store large files in a github repository?";
     [RuleGuidance] private const string HowToDetect = "How can I find out if a repository contains large files?";
 

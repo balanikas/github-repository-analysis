@@ -9,7 +9,9 @@ internal class SupportRuleApplicator : IRuleApplicator
     [RuleGuidance] private const string Example = "What is a simple example of a github support file?";
     [RuleGuidance] private const string LengthAndFormat = "How long should a github repository support file be?";
     [RuleGuidance] private const string HowTo = "How to create a great github support file, what extension should it have and and where to keep it?";
-    [RuleGuidance] private const string WhatIs = "What is the purpose of github repository support file?";
+
+    [RuleGuidance(200, Tone.Motivational, Complexity.Simple)]
+    private const string WhatIs = "What is the purpose of github repository support file?";
 
     private readonly IGpt3Client _gpt3Client;
 

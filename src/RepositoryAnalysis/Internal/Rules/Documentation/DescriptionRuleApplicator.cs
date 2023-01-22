@@ -5,7 +5,8 @@ namespace RepositoryAnalysis.Internal.Rules.Documentation;
 
 internal class DescriptionRuleApplicator : IRuleApplicator
 {
-    [RuleGuidance] private const string WhatIs = "What is the purpose of a github repository description?";
+    [RuleGuidance(200, Tone.Motivational, Complexity.Simple)]
+    private const string WhatIs = "What is the purpose of a github repository description?";
 
     private readonly IGpt3Client _gpt3Client;
 

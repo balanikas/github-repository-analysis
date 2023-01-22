@@ -7,7 +7,9 @@ internal class ReadmeRuleApplicator : IRuleApplicator
 {
     [RuleGuidance] private const string HowToWrite = "Write a short example of a well designed readme file";
     [RuleGuidance] private const string MultipleFiles = "How many readme files can a repository have and why should i have more than one?";
-    [RuleGuidance] private const string WhatIs = "What is a github readme file and why is it important?";
+
+    [RuleGuidance(200, Tone.Motivational, Complexity.Simple)]
+    private const string WhatIs = "What is a github readme file and why is it important?";
 
     private readonly IGpt3Client _gpt3Client;
 

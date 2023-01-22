@@ -7,7 +7,9 @@ internal class TopicsRuleApplicator : IRuleApplicator
 {
     [RuleGuidance] private const string Importance = "Why is it important for a github repository to have topics?";
     [RuleGuidance] private const string IdealTopicCount = "What is the ideal number of topics for a github repository?";
-    [RuleGuidance] private const string WhatIs = "What is a github topic?";
+
+    [RuleGuidance(200, Tone.Motivational, Complexity.Simple)]
+    private const string WhatIs = "What is a github topic?";
 
     private readonly IGpt3Client _gpt3Client;
 

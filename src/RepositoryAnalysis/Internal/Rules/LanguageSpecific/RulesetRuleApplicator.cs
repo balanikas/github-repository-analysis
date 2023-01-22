@@ -5,7 +5,9 @@ namespace RepositoryAnalysis.Internal.Rules.LanguageSpecific;
 
 internal class RulesetRuleApplicator : IRuleApplicator
 {
-    [RuleGuidance] private const string WhatIs = "What is the purpose of a .ruleset file in a .net solution?";
+    [RuleGuidance(200, Tone.Motivational, Complexity.Simple)]
+    private const string WhatIs = "What is the purpose of a .ruleset file in a .net solution?";
+
     [RuleGuidance] private const string Alternatives = "What is the best way to ensure high code quality standards in a .net solution?";
     [RuleGuidance] private const string IsLegacy = "Is .ruleset files for static code analysis in .net solutions considered legacy?";
 

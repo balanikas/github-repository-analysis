@@ -6,7 +6,9 @@ namespace RepositoryAnalysis.Internal.Rules.Community;
 internal class CodeOwnersRuleApplicator : IRuleApplicator
 {
     [RuleGuidance] private const string Importance = "Why is it important to have a codeowners file in a github repository?";
-    [RuleGuidance] private const string WhatIs = "What is the purpose of a codeowners file in a github repository?";
+
+    [RuleGuidance(200, Tone.Motivational, Complexity.Simple)]
+    private const string WhatIs = "What is the purpose of a codeowners file in a github repository?";
 
     private readonly IGpt3Client _gpt3Client;
 

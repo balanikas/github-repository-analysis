@@ -7,7 +7,9 @@ internal class IssuesRuleApplicator : IRuleApplicator
 {
     [RuleGuidance] private const string Importance = "Why is it important for a github repository to maintain issues?";
     [RuleGuidance] private const string HowTo = "How to write a great github issue?";
-    [RuleGuidance] private const string WhatIs = "What is the purpose of github issues?";
+
+    [RuleGuidance(200, Tone.Motivational, Complexity.Simple)]
+    private const string WhatIs = "What is the purpose of github issues?";
 
     private readonly IGpt3Client _gpt3Client;
 

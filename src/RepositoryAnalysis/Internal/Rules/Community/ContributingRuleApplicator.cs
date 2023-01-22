@@ -7,7 +7,9 @@ internal class ContributingRuleApplicator : IRuleApplicator
 {
     [RuleGuidance] private const string Importance = "Why is it important for a github repository to have a contributing file?";
     [RuleGuidance] private const string HowTo = "How to write a great contributing file?";
-    [RuleGuidance] private const string WhatIs = "What is the purpose of a contributing file in open source?";
+
+    [RuleGuidance(200, Tone.Motivational, Complexity.Simple)]
+    private const string WhatIs = "What is the purpose of a contributing file in open source?";
 
     private readonly IGpt3Client _gpt3Client;
 

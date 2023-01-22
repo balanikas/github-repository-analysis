@@ -8,7 +8,9 @@ internal class PullRequestTemplatesRuleApplicator : IRuleApplicator
     [RuleGuidance] private const string Importance = "Why are the benefits of having github pull request templates?";
     [RuleGuidance] private const string TypesOf = "What types of pull request templates should a repository have?";
     [RuleGuidance] private const string HowTo = "How to create great github pull request templates and where to keep them?";
-    [RuleGuidance] private const string WhatIs = "What is the purpose of github pull request templates?";
+
+    [RuleGuidance(200, Tone.Motivational, Complexity.Simple)]
+    private const string WhatIs = "What is the purpose of github pull request templates?";
 
     private readonly IGpt3Client _gpt3Client;
 

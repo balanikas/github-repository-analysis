@@ -5,7 +5,8 @@ namespace RepositoryAnalysis.Internal.Rules.LanguageSpecific;
 
 internal class SolutionStructureRuleApplicator : IRuleApplicator
 {
-    [RuleGuidance] private const string Importance = "Why is it important to have a well designed and clear .net solution structure?";
+    [RuleGuidance(200, Tone.Motivational, Complexity.Simple)]
+    private const string Importance = "Why is it important to have a well designed and clear .net solution structure?";
 
     private readonly IGpt3Client _gpt3Client;
 

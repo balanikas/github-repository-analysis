@@ -6,7 +6,10 @@ namespace RepositoryAnalysis.Internal.Rules.Security;
 internal class SecurityPolicyRuleApplicator : IRuleApplicator
 {
     [RuleGuidance] private const string LearnMore = "How can I learn more about security-related topics and contribute to security tools and projects?";
-    [RuleGuidance] private const string WhatIs = "What is a github repository security policy and why do I need it?";
+
+    [RuleGuidance(200, Tone.Motivational, Complexity.Simple)]
+    private const string WhatIs = "What is a github repository security policy and why do I need it?";
+
     [RuleGuidance] private const string WhereToPlace = "Where should a security policy be placed in a github repository ?";
 
     [RuleGuidance] private const string WithoutPolicy =

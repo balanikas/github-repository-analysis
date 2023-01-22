@@ -7,7 +7,10 @@ internal class EditorConfigRuleApplicator : IRuleApplicator
 {
     [RuleGuidance] private const string WhereToFind = "Where can i find a good editorconfig file for my repository?";
     [RuleGuidance] private const string MultipleFiles = "When should i have multiple editorconfig files in my repository?";
-    [RuleGuidance] private const string WhatIs = "What is editorconfig and why should i add it to a repository?";
+
+    [RuleGuidance(200, Tone.Motivational, Complexity.Simple)]
+    private const string WhatIs = "What is editorconfig and why should i add it to a repository?";
+
     [RuleGuidance] private const string CheckValidity = "How can i check that an editorconfig file is valid?";
 
     private readonly IGpt3Client _gpt3Client;

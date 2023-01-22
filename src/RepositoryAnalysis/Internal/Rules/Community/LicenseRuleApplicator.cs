@@ -8,7 +8,9 @@ internal class LicenseRuleApplicator : IRuleApplicator
     [RuleGuidance] private const string Importance = "Why is it important to carefully choose a license for a github repository?";
     [RuleGuidance] private const string HowTo = "How to create a great github repository license file, in what format and where to put it?";
     [RuleGuidance] private const string LicenseType = "How to choose a license for a github repository?";
-    [RuleGuidance] private const string WhatIs = "What is the purpose of a license file in a github repository?";
+
+    [RuleGuidance(200, Tone.Motivational, Complexity.Simple)]
+    private const string WhatIs = "What is the purpose of a license file in a github repository?";
 
     private readonly IGpt3Client _gpt3Client;
 

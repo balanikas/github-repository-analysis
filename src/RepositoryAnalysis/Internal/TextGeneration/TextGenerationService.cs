@@ -45,13 +45,24 @@ public class TextGenerationService : BackgroundService
         var prompts = types
             .SelectMany(x => x.GetFields(BindingFlags.Static | BindingFlags.NonPublic))
             .Where(x => x.GetCustomAttributes().OfType<RuleGuidanceAttribute>().Count() == 1)
-            .Select(x => x.GetRawConstantValue()).Cast<string>().ToArray();
+            .Select(x => new
+            {
+                Prompt = x.GetRawConstantValue()?.ToString(),
+                Meta = x.GetCustomAttributes().OfType<RuleGuidanceAttribute>().Single()
+            })
+            .ToArray();
+
+        foreach (var prompt in prompts)
+        {
+            if (string.IsNullOrEmpty(prompt.Prompt)) throw new Exception("Missing prompt for rule guidance field.");
+            _gpt3Client.AddPromptMetaData(prompt.Prompt, prompt.Meta);
+        }
 
         await Parallel.ForEachAsync(prompts, async (
             p,
             _) =>
         {
-            await _gpt3Client.GetCompletion(p);
+            await _gpt3Client.GetCompletion(p.Prompt);
         });
 
         _logger.LogInformation("Finished completion generation");

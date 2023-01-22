@@ -8,7 +8,9 @@ internal class DiscussionsRuleApplicator : IRuleApplicator
 {
     [RuleGuidance] private const string NoDiscussions = "Why are there no discussions or unanswered discussions on my github repository?";
     [RuleGuidance] private const string HowTo = "How to use github discussions to collaborate?";
-    [RuleGuidance] private const string WhatIs = "What is the discussions feature in github?";
+
+    [RuleGuidance(200, Tone.Motivational, Complexity.Simple)]
+    private const string WhatIs = "What is the discussions feature in github?";
 
     private readonly IGpt3Client _gpt3Client;
 

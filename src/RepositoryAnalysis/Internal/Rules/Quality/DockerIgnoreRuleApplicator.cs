@@ -7,10 +7,13 @@ internal class DockerIgnoreRuleApplicator : IRuleApplicator
 {
     [RuleGuidance] private const string WhereToFind = "Where can i find a good dockerignore file for my repository?";
     [RuleGuidance] private const string MultipleFiles = "When should i have multiple dockerignore files in my repository?";
-    [RuleGuidance] private const string WhatIs = "What is dockerignore and why should i add it to a repository?";
+
+    [RuleGuidance(200, Tone.Motivational, Complexity.Simple)]
+    private const string WhatIs = "What is dockerignore and why should i add it to a repository?";
+
     [RuleGuidance] private const string WhereToPlace = "Where should a dockerignore file be placed?";
     [RuleGuidance] private const string CheckValidity = "How can i check that a dockerignore file is valid?";
-   
+
     private readonly IGpt3Client _gpt3Client;
 
     public DockerIgnoreRuleApplicator(IGpt3Client gpt3Client) => _gpt3Client = gpt3Client;

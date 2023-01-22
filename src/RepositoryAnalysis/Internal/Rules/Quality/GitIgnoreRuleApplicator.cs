@@ -5,7 +5,9 @@ namespace RepositoryAnalysis.Internal.Rules.Quality;
 
 internal class GitIgnoreRuleApplicator : IRuleApplicator
 {
-    [RuleGuidance] private const string WhereToFind = "Where can i find a good gitignore file for my repository?";
+    [RuleGuidance(200, Tone.Motivational, Complexity.Simple)]
+    private const string WhereToFind = "Where can i find a good gitignore file for my repository?";
+
     [RuleGuidance] private const string MultipleFiles = "When should i have multiple gitignore files in my repository?";
     [RuleGuidance] private const string WhatIs = "What is gitignore and why should i add it to a repository?";
     [RuleGuidance] private const string CheckValidity = "How can i check that a gitignore file is valid?";

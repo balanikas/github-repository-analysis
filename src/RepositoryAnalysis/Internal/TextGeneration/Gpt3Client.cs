@@ -5,6 +5,7 @@ using OpenAI.GPT3;
 using OpenAI.GPT3.Managers;
 using OpenAI.GPT3.ObjectModels;
 using OpenAI.GPT3.ObjectModels.RequestModels;
+using RepositoryAnalysis.Internal.Rules;
 
 namespace RepositoryAnalysis.Internal.TextGeneration;
 
@@ -14,6 +15,7 @@ public class Gpt3Client : IGpt3Client
     private readonly ILogger<Gpt3Client> _logger;
     private readonly IMemoryCache _memoryCache;
     private readonly OpenAIService _openAiService;
+    private readonly Dictionary<string, RuleGuidanceAttribute> _promptMetaDataMap = new();
 
     public Gpt3Client(
         ILogger<Gpt3Client> logger,
@@ -31,6 +33,13 @@ public class Gpt3Client : IGpt3Client
         };
 
         _openAiService = new OpenAIService(options, httpClient);
+    }
+
+    public void AddPromptMetaData(
+        string prompt,
+        RuleGuidanceAttribute promptMetaData)
+    {
+        _promptMetaDataMap[prompt] = promptMetaData;
     }
 
     public async Task<IDictionary<string, string>> GetCompletions(params string[] prompts)
@@ -56,6 +65,17 @@ public class Gpt3Client : IGpt3Client
     private async Task<string> GetCompletionInternal(string prompt)
     {
         if (_hostEnvironment.IsDevelopment()) return string.Join("", Enumerable.Repeat("loren ipsum ", new Random().Next(2, 50)));
+
+        var meta = _promptMetaDataMap[prompt];
+
+        prompt = new PromptBuilder(prompt, meta)
+            .WithContext()
+            .WithComplexity()
+            .WithTone()
+            .WithLength()
+            .ToString();
+
+        Console.WriteLine(prompt);
 
         var request = new CompletionCreateRequest
         {

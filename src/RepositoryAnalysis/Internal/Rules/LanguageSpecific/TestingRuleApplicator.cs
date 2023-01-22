@@ -5,7 +5,9 @@ namespace RepositoryAnalysis.Internal.Rules.LanguageSpecific;
 
 internal class TestingRuleApplicator : IRuleApplicator
 {
-    [RuleGuidance] private const string WhatIs = "Why is it important to have a well tested .net solution?";
+    [RuleGuidance(200, Tone.Motivational, Complexity.Simple)]
+    private const string WhatIs = "Why is it important to have a well tested .net solution?";
+
     [RuleGuidance] private const string TestTypes = "What types of testing is typically involved in a .net solution?";
     [RuleGuidance] private const string CommonFrameworks = "List some common testing frameworks for .net solutions.";
 

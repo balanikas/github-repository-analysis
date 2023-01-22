@@ -7,7 +7,9 @@ internal class CitationRuleApplicator : IRuleApplicator
 {
     [RuleGuidance] private const string WhenAppropriate = "When is it appropriate and when unappropriate to use citation files in github repositories?";
     [RuleGuidance] private const string HowTo = "How to write an open source citations file?";
-    [RuleGuidance] private const string WhatIs = "What is the purpose of citations in open source?";
+
+    [RuleGuidance(200, Tone.Motivational, Complexity.Simple)]
+    private const string WhatIs = "What is the purpose of citations in open source?";
 
     private readonly IGpt3Client _gpt3Client;
 

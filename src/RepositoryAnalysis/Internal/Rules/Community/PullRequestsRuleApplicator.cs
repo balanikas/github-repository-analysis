@@ -8,7 +8,9 @@ internal class PullRequestsRuleApplicator : IRuleApplicator
 {
     [RuleGuidance] private const string HowTo = "How to write a great pull request?";
     [RuleGuidance] private const string Staleness = "When is a pull request considered stale and why is it important close it quickly?";
-    [RuleGuidance] private const string WhatIs = "What is the purpose of a pull request?";
+
+    [RuleGuidance(200, Tone.Motivational, Complexity.Simple)]
+    private const string WhatIs = "What is the purpose of a pull request?";
 
     private readonly IGpt3Client _gpt3Client;
 

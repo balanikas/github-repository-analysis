@@ -7,7 +7,9 @@ internal class ChangeLogRuleApplicator : IRuleApplicator
 {
     [RuleGuidance] private const string Importance = "Why is it important to have a changelog in a github repository?";
     [RuleGuidance] private const string Format = "What format should a changelog have in a github repository?";
-    [RuleGuidance] private const string WhatIs = "What is the purpose of a changelog in a github repository?";
+
+    [RuleGuidance(200, Tone.Motivational, Complexity.Simple)]
+    private const string WhatIs = "What is the purpose of a changelog in a github repository?";
 
     private readonly IGpt3Client _gpt3Client;
 

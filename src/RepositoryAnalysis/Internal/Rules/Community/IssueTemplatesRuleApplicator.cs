@@ -8,7 +8,9 @@ internal class IssueTemplatesRuleApplicator : IRuleApplicator
     [RuleGuidance] private const string Importance = "Why are the benefits of having github issue templates?";
     [RuleGuidance] private const string TypesOf = "What types of issue templates should a repository have?";
     [RuleGuidance] private const string HowTo = "How to create great github issue templates and where to keep them?";
-    [RuleGuidance] private const string WhatIs = "What is the purpose of github issue templates?";
+
+    [RuleGuidance(200, Tone.Motivational, Complexity.Simple)]
+    private const string WhatIs = "What is the purpose of github issue templates?";
 
     private readonly IGpt3Client _gpt3Client;
 

@@ -1,3 +1,4 @@
+using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.AspNetCore.Hosting.StaticWebAssets;
 using MudBlazor.Services;
 using RepositoryAnalysis;
@@ -21,16 +22,18 @@ builder.Host.ConfigureAppConfiguration((
 
 builder.Services.AddRazorPages();
 
-Log.Logger = new LoggerConfiguration()
-    .Enrich.FromLogContext()
-    .WriteTo.Console(new RenderedCompactJsonFormatter())
-    .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
-    .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning)
-    .MinimumLevel.Override("System.Net.Http", LogEventLevel.Warning)
-    .MinimumLevel.Override("System.Net.Http.HttpClient", LogEventLevel.Information)
-    .CreateLogger();
 
-builder.Host.UseSerilog();
+builder.Host.UseSerilog((
+    context,
+    configuration) =>
+{
+    configuration.Enrich.FromLogContext();
+    configuration.MinimumLevel.Override("Microsoft", LogEventLevel.Warning);
+    configuration.MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning);
+    configuration.MinimumLevel.Override("System.Net.Http", LogEventLevel.Warning);
+    configuration.WriteTo.Console();
+    configuration.WriteTo.ApplicationInsights(TelemetryConfiguration.CreateDefault(), TelemetryConverter.Traces);
+});
 
 builder.Services.AddServerSideBlazor();
 builder.Services.AddMudServices();

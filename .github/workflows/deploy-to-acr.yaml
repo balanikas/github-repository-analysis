@@ -20,7 +20,17 @@ jobs:
             # Checkout the repository to the GitHub Actions runner
             - name: Checkout
               uses: actions/checkout@v3
-
+            - name: Setup .NET Core SDK 7.x.x
+              uses: actions/setup-dotnet@v3
+              with:
+                  dotnet-version: 7.x.x
+            - name: Install dependencies
+              run: dotnet restore
+            - name: Build
+              run: dotnet build --configuration Release --no-restore
+            - name: Test
+              run: dotnet test --no-restore
+              
             - name: 'Docker Login'
               uses: azure/docker-login@v1
               with:
@@ -32,5 +42,5 @@ jobs:
               uses: docker/build-push-action@v2
               with:
                   push: true
-                  tags: githubrepositoryanalysis.azurecr.io/tag:${{ latest }}
+                  tags: githubrepositoryanalysis.azurecr.io/image:${{ github.sha }}
                   file: src/Dockerfile

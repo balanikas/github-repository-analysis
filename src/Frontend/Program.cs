@@ -4,7 +4,6 @@ using MudBlazor.Services;
 using RepositoryAnalysis;
 using Serilog;
 using Serilog.Events;
-using Serilog.Formatting.Compact;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddApplicationInsightsTelemetry();
@@ -21,7 +20,6 @@ builder.Host.ConfigureAppConfiguration((
 });
 
 builder.Services.AddRazorPages();
-
 
 builder.Host.UseSerilog((
     context,

@@ -44,21 +44,22 @@
         <MudCard Elevation="0">
             <MudCardContent >
                 <MudText Class="d-inline-flex"
-                         Style="width: 90%"
+                         Style="width: 1000px"
                          Typo="Typo.body2">
                     @((MarkupString)context.Item.Explanation.Text)
                 </MudText>
 
-                @if (context.Item.Explanation.GeneralGuidance.Any())
-                {
-                    <MudButton
-                        @onclick="() => ShowGuidance(context.Item)"
-                        Variant="Variant.Outlined"
-                        Color="Color.Primary"
-                        Size="Size.Small">
-                        Guidance
-                    </MudButton>
-                }
+
+                <MudButton
+
+                    @onclick="() => ShowGuidance(context.Item)"
+                    Variant="Variant.Outlined"
+                    Color="Color.Primary"
+                    Disabled="!context.Item.Explanation.GeneralGuidance.Any()"
+                    Size="Size.Small">
+                    Guidance
+                </MudButton>
+
                 <br/>
 
                 @if (context.Item.Details is not null)
@@ -83,9 +84,6 @@
                         <MudLink Typo="Typo.body2" Target="_blank" Href="@context.Item.Explanation.GuidanceLink.Url">@context.Item.Explanation.GuidanceLink.Header</MudLink>
                     </MudPaper>
                 }
-
-
-
 
             </MudCardContent>
         </MudCard>

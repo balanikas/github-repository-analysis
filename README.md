@@ -1,8 +1,12 @@
 # Github Repository Analysis
 Service that provides analysis and guidance for public github repositories. 
+- Do you already have a public github project you want to check?
+- Do you plan to make a project public?
+
+Then this is for you.
 
 #### Status
-[![build and test](https://github.com/balanikas/github-repository-analysis/actions/workflows/deploy.yml/badge.svg)](https://github.com/balanikas/github-repository-analysis/actions/workflows/deploy.yml)
+[![build and test](https://github.com/balanikas/github-repository-analysis/actions/workflows/deploy-to-acr.yaml/badge.svg)](https://github.com/balanikas/github-repository-analysis/actions/workflows/deploy-to-acr.yaml)
 [![CodeQL](https://github.com/balanikas/github-repository-analysis/actions/workflows/codeql.yml/badge.svg)](https://github.com/balanikas/github-repository-analysis/actions/workflows/codeql.yml)
 ![Website](https://img.shields.io/website?down_message=offline&label=service&up_message=online&url=https%3A%2F%2Fgithubrepositoryanalysis.com%2F)
 
@@ -35,6 +39,14 @@ Create a rule class in an appropriate category. In this case we choose category 
 ```csharp
 public class ReadmeRuleApplicator : IRuleApplicator
 {
+    // annotate questions to be answered by openai gpt-3 model.
+    [RuleGuidance] 
+    private const string HowToWrite = "Write a short example of a well designed readme file";
+    [RuleGuidance] 
+    private const string MultipleFiles = "How many readme files can a repository have and why should i have more than one?";
+    [RuleGuidance(200, Tone.Motivational, Complexity.Simple)]
+    private const string WhatIs = "What is a github readme file and why is it important?";
+    
     public string RuleName => "readme";
     public RuleCategory Category => RuleCategory.Documentation;
     public Language Language => Language.None; // set to None since the rule is language agnostic
@@ -45,37 +57,26 @@ public class ReadmeRuleApplicator : IRuleApplicator
 ```
 #### Implement the rule
 ```csharp
-    public async Task<Rule> ApplyAsync(AnalysisContext context)
+public async Task<Rule> ApplyAsync(AnalysisContext context)
+{
+    // apply the rule using the context object
+    var node = context.GitTree.FirstFileOrDefault(x => x.PathEquals("readme.md"));
+    var (diagnosis, note) = GetDiagnosis(node);
+    (Diagnosis, string) GetDiagnosis(GitTree.Node? n) =>
+        n is not null
+            ? (Diagnosis.Info, "found")
+            : (Diagnosis.Error, "missing");
+    
+    // compose the results
+    return Rule.Create(this, diagnostics, new Explanation
     {
-        // apply the rule using the context object
-        var node = context.GitTree.FirstFileOrDefault(x => x.PathEquals("readme.md"));
-        var (diagnosis, note) = GetDiagnosis(node);
-        (Diagnosis, string) GetDiagnosis(GitTree.Node? n) =>
-            n is not null
-                ? (Diagnosis.Info, "found")
-                : (Diagnosis.Error, "missing");
-        
-        // compose the results
-        var rule = new Rule
-        {
-            Name = RuleName,
-            Category = Category,
-            Note = note,
-            Diagnosis = diagnosis,
-            Explanation = new Explanation
-            {
-                Text = "explanation and guidance...",
-                AboutUrl = "https://about-readmes.com",
-                AboutHeader = "about readmes",
-                GuidanceUrl = "https://how-to-use-readmes.com",
-                GuidanceHeader = "see this guide"
-            },
-            ResourceName = node?.Item.Path, 
-            ResourceUrl = node.GetUrl(context)
-        };
-
-        return await Task.FromResult(rule);
-    }
+        GeneralGuidance = await _gpt3Client.GetCompletions(MultipleFiles, HowToWrite),
+        Text = await _gpt3Client.GetCompletion(WhatIs),
+        AboutLink = new Link("about readmes",
+            "https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-readmes"),
+        GuidanceLink = diagnostics.Diagnosis == Diagnosis.Error ? context.GetCommunityLink() : null
+    });
+}
 ```
 
 #### See the rule in the UI
